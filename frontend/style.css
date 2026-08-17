@@ -1,0 +1,2181 @@
+/* =========================================
+   TRACKX — KOCHI METRO SCHEDULER
+   DARK / PURPLE NEON DESIGN
+========================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background:
+        radial-gradient(circle at 70% 10%, rgba(110, 25, 190, 0.12), transparent 30%),
+        radial-gradient(circle at 10% 90%, rgba(90, 20, 170, 0.10), transparent 30%),
+        #050509;
+    color: #f5f2ff;
+    min-height: 100vh;
+}
+
+
+/* =========================================
+   SIDEBAR
+========================================= */
+
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 218px;
+    height: 100vh;
+
+    background:
+        linear-gradient(
+            180deg,
+            #090711 0%,
+            #08060e 70%,
+            #050409 100%
+        );
+
+    border-right: 1px solid rgba(160, 70, 255, 0.35);
+
+    display: flex;
+    flex-direction: column;
+
+    z-index: 100;
+
+    box-shadow:
+        4px 0 35px rgba(100, 20, 180, 0.08);
+}
+
+
+/* =========================================
+   LOGO
+========================================= */
+
+.logo-area {
+    padding: 27px 25px 20px;
+}
+
+.small-logo {
+    font-size: 31px;
+    font-weight: 800;
+    font-style: italic;
+    letter-spacing: -2px;
+}
+
+.small-logo span {
+    color: #a844ff;
+}
+
+.logo-subtitle {
+    margin-top: 8px;
+
+    color: #a94cff;
+
+    font-size: 10px;
+    font-weight: 700;
+
+    letter-spacing: 4px;
+    line-height: 1.8;
+}
+
+
+/* =========================================
+   NAVIGATION
+========================================= */
+
+.navigation {
+    margin-top: 28px;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 8px;
+
+    padding: 0 16px;
+}
+
+.nav-item {
+    height: 47px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 16px;
+
+    padding: 0 16px;
+
+    border-radius: 11px;
+
+    color: #c5c0d1;
+
+    text-decoration: none;
+
+    font-size: 14px;
+    font-weight: 500;
+
+    transition: 0.25s ease;
+}
+
+.nav-item:hover {
+    color: white;
+
+    background: rgba(137, 47, 230, 0.12);
+
+    transform: translateX(2px);
+}
+
+.nav-item.active {
+    color: white;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(130, 43, 220, 0.35),
+            rgba(100, 35, 160, 0.12)
+        );
+
+    border: 1px solid rgba(170, 70, 255, 0.55);
+
+    box-shadow:
+        0 0 18px rgba(150, 50, 255, 0.12);
+}
+
+.nav-icon {
+    width: 20px;
+
+    color: #c35aff;
+
+    font-size: 19px;
+
+    text-align: center;
+}
+
+
+/* =========================================
+   SIDEBAR BOTTOM
+========================================= */
+
+.sidebar-bottom {
+    margin-top: auto;
+
+    height: 150px;
+
+    border-top: 1px solid rgba(145, 55, 230, 0.15);
+
+    position: relative;
+
+    overflow: hidden;
+}
+
+.bridge-glow {
+    position: absolute;
+
+    bottom: -70px;
+    left: 20px;
+
+    width: 150px;
+    height: 120px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            ellipse,
+            rgba(130, 40, 255, 0.22),
+            transparent 70%
+        );
+
+    filter: blur(15px);
+}
+
+
+/* =========================================
+   MAIN CONTENT
+========================================= */
+
+.main-content {
+    margin-left: 218px;
+
+    padding: 14px 32px 30px;
+
+    max-width: 1700px;
+}
+
+
+/* =========================================
+   HERO
+========================================= */
+
+.hero {
+    min-height: 155px;
+
+    position: relative;
+
+    overflow: hidden;
+
+    border-bottom: 1px solid rgba(160, 60, 255, 0.2);
+
+    display: flex;
+    align-items: center;
+
+    padding: 20px 65px;
+
+    background:
+        radial-gradient(
+            ellipse at 75% 50%,
+            rgba(111, 28, 190, 0.22),
+            transparent 48%
+        ),
+        linear-gradient(
+            90deg,
+            #07060c,
+            #090611 55%,
+            #0d0717
+        );
+}
+
+.hero::after {
+    content: "";
+
+    position: absolute;
+
+    right: -80px;
+    top: 0;
+
+    width: 65%;
+    height: 100%;
+
+    background:
+        linear-gradient(
+            120deg,
+            transparent 20%,
+            rgba(135, 48, 255, 0.08),
+            transparent 75%
+        );
+
+    transform: skewX(-15deg);
+}
+
+.hero-content {
+    position: relative;
+    z-index: 3;
+}
+
+.main-logo {
+    font-size: clamp(58px, 6vw, 92px);
+
+    font-weight: 900;
+
+    font-style: italic;
+
+    letter-spacing: -6px;
+
+    line-height: 0.85;
+}
+
+.main-logo span {
+    color: #a844ff;
+
+    text-shadow:
+        0 0 22px rgba(165, 60, 255, 0.55);
+}
+
+.hero-subtitle {
+    margin-top: 20px;
+
+    color: #b34cff;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    letter-spacing: 7px;
+}
+
+.metro-background {
+    position: absolute;
+
+    right: 7%;
+    top: 8px;
+
+    font-size: 125px;
+
+    opacity: 0.13;
+
+    filter:
+        drop-shadow(0 0 20px #8e32ff);
+
+    transform: scaleX(1.8);
+
+    z-index: 1;
+}
+
+.date-time {
+    position: absolute;
+
+    right: 25px;
+    top: 15px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 9px 17px;
+
+    border: 1px solid rgba(160, 70, 255, 0.45);
+
+    border-radius: 12px;
+
+    background: rgba(10, 7, 18, 0.7);
+
+    font-size: 12px;
+
+    color: #ddd7e9;
+
+    z-index: 5;
+}
+
+.date-time span:first-child,
+.date-time span:nth-child(4) {
+    color: #b34cff;
+}
+
+.separator {
+    color: #60596d;
+}
+
+
+/* =========================================
+   COMMON CARDS
+========================================= */
+
+.journey-card,
+.dashboard-card,
+.upcoming-card {
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(18, 14, 27, 0.94),
+            rgba(8, 7, 12, 0.96)
+        );
+
+    border: 1px solid rgba(145, 55, 235, 0.38);
+
+    border-radius: 15px;
+
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.025),
+        0 10px 40px rgba(0,0,0,0.2);
+
+}
+
+
+/* =========================================
+   JOURNEY
+========================================= */
+
+.journey-card {
+    margin-top: 16px;
+
+    padding: 18px 28px 20px;
+}
+
+.section-title,
+.card-title {
+    display: flex;
+    align-items: center;
+
+    gap: 13px;
+}
+
+.section-title h2,
+.card-title h2 {
+    font-size: 18px;
+
+    letter-spacing: 0.8px;
+
+    color: #ffffff;
+}
+
+.title-icon {
+    color: #ad43ff;
+
+    font-size: 22px;
+
+    text-shadow:
+        0 0 12px rgba(165, 60, 255, 0.6);
+}
+
+
+/* =========================================
+   JOURNEY FORM
+========================================= */
+
+.journey-form {
+
+    display: grid;
+
+    grid-template-columns:
+        1.2fr
+        45px
+        1.2fr
+        0.9fr
+        0.9fr;
+
+    gap: 14px;
+
+    align-items: end;
+
+    margin-top: 17px;
+}
+
+.form-group {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 7px;
+}
+
+.form-group label {
+
+    color: #92889e;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    letter-spacing: 1.5px;
+}
+
+select,
+input {
+
+    width: 100%;
+
+    height: 40px;
+
+    padding: 0 13px;
+
+    border-radius: 9px;
+
+    border: 1px solid #30283a;
+
+    outline: none;
+
+    background: #09080e;
+
+    color: #eeeaf5;
+
+    font-size: 13px;
+
+    transition: 0.2s ease;
+}
+
+select:hover,
+input:hover,
+select:focus,
+input:focus {
+
+    border-color: #a43fff;
+
+    box-shadow:
+        0 0 12px rgba(160, 50, 255, 0.14);
+}
+
+select option {
+    background: #100b17;
+
+    color: white;
+}
+
+input::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+
+    opacity: 0.75;
+}
+
+.swap-button {
+
+    width: 42px;
+    height: 42px;
+
+    border-radius: 50%;
+
+    border: 1px solid rgba(166, 62, 255, 0.65);
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(145, 40, 255, 0.4),
+            rgba(30, 10, 45, 0.7)
+        );
+
+    color: white;
+
+    font-size: 20px;
+
+    cursor: pointer;
+
+    transition: 0.25s ease;
+}
+
+.swap-button:hover {
+
+    transform: rotate(180deg);
+
+    box-shadow:
+        0 0 20px rgba(170, 55, 255, 0.45);
+}
+
+
+/* =========================================
+   FIND TRAINS BUTTON
+========================================= */
+
+.find-trains-button {
+
+    display: block;
+
+    width: 340px;
+
+    height: 39px;
+
+    margin: 14px auto 0;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #7620ce,
+            #a943ff
+        );
+
+    color: white;
+
+    font-size: 14px;
+
+    font-weight: 800;
+
+    letter-spacing: 0.5px;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 5px 22px rgba(145, 35, 255, 0.25);
+
+    transition: 0.25s ease;
+}
+
+.find-trains-button:hover {
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 8px 28px rgba(165, 45, 255, 0.42);
+}
+
+.find-trains-button span {
+    font-size: 20px;
+
+    margin-right: 7px;
+}
+
+
+/* =========================================
+   TWO COLUMN SECTION
+========================================= */
+
+.two-column {
+
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 16px;
+
+    margin-top: 16px;
+}
+
+.dashboard-card {
+
+    padding: 16px 18px 13px;
+
+    min-height: 290px;
+}
+
+
+/* =========================================
+   TRAIN RUNNING
+========================================= */
+
+#trainList {
+
+    margin-top: 12px;
+}
+
+.train-row {
+
+    min-height: 58px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+
+    padding: 8px 10px;
+
+    margin-bottom: 7px;
+
+    border: 1px solid rgba(65, 57, 76, 0.5);
+
+    border-radius: 11px;
+
+    background:
+        rgba(10, 9, 14, 0.7);
+}
+
+.train-icon {
+
+    width: 45px;
+    height: 43px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 9px;
+
+    background:
+        rgba(120, 35, 190, 0.16);
+
+    color: #b347ff;
+
+    font-size: 20px;
+}
+
+.train-info {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 4px;
+
+    flex: 1;
+}
+
+.train-info strong {
+
+    font-size: 14px;
+
+    color: #ffffff;
+}
+
+.train-info span {
+
+    color: #9991a6;
+
+    font-size: 11px;
+}
+
+.running-status {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    font-size: 11px;
+
+    color: #d2ccd9;
+}
+
+.running-status span {
+
+    width: 8px;
+    height: 8px;
+
+    border-radius: 50%;
+
+    background: #23d36d;
+
+    box-shadow:
+        0 0 10px rgba(35, 211, 109, 0.7);
+}
+
+
+/* =========================================
+   STATIONS
+========================================= */
+
+.station-list {
+
+    margin-top: 9px;
+
+    padding-left: 10px;
+
+    position: relative;
+}
+
+.station-list::before {
+
+    content: "";
+
+    position: absolute;
+
+    left: 7px;
+    top: 8px;
+    bottom: 8px;
+
+    width: 2px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #a93fff,
+            rgba(169, 63, 255, 0.18)
+        );
+}
+
+.station {
+
+    position: relative;
+
+    min-height: 22px;
+
+    padding-left: 22px;
+
+    display: flex;
+
+    align-items: center;
+
+    color: #ddd8e4;
+
+    font-size: 12px;
+}
+
+.station-dot {
+
+    position: absolute;
+
+    left: 1px;
+
+    width: 13px;
+    height: 13px;
+
+    border-radius: 50%;
+
+    border: 2px solid #8e38e9;
+
+    background: #0b0810;
+
+    z-index: 2;
+}
+
+.active-station {
+
+    color: white;
+
+    font-weight: 700;
+}
+
+.active-station .station-dot {
+
+    background: #b34cff;
+
+    border-color: #d18bff;
+
+    box-shadow:
+        0 0 13px rgba(180, 65, 255, 0.8);
+}
+
+
+/* =========================================
+   VIEW BUTTON
+========================================= */
+
+.view-button {
+
+    width: 100%;
+
+    height: 38px;
+
+    margin-top: 12px;
+
+    border-radius: 9px;
+
+    border: 1px solid rgba(65, 56, 76, 0.6);
+
+    background: transparent;
+
+    color: #bb52ff;
+
+    font-size: 12px;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+.view-button:hover {
+
+    background: rgba(160, 45, 255, 0.08);
+
+    border-color: rgba(170, 65, 255, 0.45);
+}
+
+.view-button span {
+
+    margin-left: 10px;
+
+    font-size: 18px;
+}
+
+
+/* =========================================
+   UPCOMING TRAINS
+========================================= */
+
+.upcoming-card {
+
+    margin-top: 16px;
+
+    padding: 16px 18px 14px;
+}
+
+.upcoming-header {
+
+    display: grid;
+
+    grid-template-columns:
+        1fr
+        1.2fr
+        0.8fr
+        1.5fr;
+
+    padding: 12px 14px 8px;
+
+    color: #a64cff;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    letter-spacing: 1px;
+
+    border-bottom: 1px solid rgba(70, 58, 82, 0.45);
+}
+
+.upcoming-row {
+
+    display: grid;
+
+    grid-template-columns:
+        1fr
+        1.2fr
+        0.8fr
+        1.5fr;
+
+    align-items: center;
+
+    min-height: 52px;
+
+    margin-top: 7px;
+
+    padding: 6px 14px;
+
+    border: 1px solid rgba(55, 48, 65, 0.55);
+
+    border-radius: 10px;
+
+    background: rgba(8, 7, 12, 0.65);
+
+    color: #d9d4df;
+
+    font-size: 12px;
+}
+
+.upcoming-train {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    color: white;
+
+    font-weight: 600;
+}
+
+.mini-train {
+
+    width: 32px;
+    height: 32px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 8px;
+
+    background: rgba(125, 35, 190, 0.16);
+
+    font-size: 16px;
+}
+
+.departure {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    color: #ddd6e4;
+}
+
+.departure span {
+
+    color: #ad43ff;
+
+    font-size: 17px;
+}
+
+
+/* =========================================
+   ROUTE
+========================================= */
+
+.route {
+
+    padding: 3px 5px;
+}
+
+.route-line {
+
+    display: flex;
+
+    align-items: center;
+
+    height: 8px;
+}
+
+.route-line::before {
+
+    content: "";
+
+    height: 2px;
+
+    flex: 1;
+
+    background: #48404e;
+}
+
+.route-line span {
+
+    width: 6px;
+    height: 6px;
+
+    border-radius: 50%;
+
+    background: #77717c;
+
+    margin: 0 8px;
+}
+
+.route-line .route-point {
+
+    width: 9px;
+    height: 9px;
+
+    background: #a842ff;
+
+    box-shadow:
+        0 0 7px rgba(168, 66, 255, 0.6);
+}
+
+.route-labels {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    margin-top: 2px;
+}
+
+.route-labels small {
+
+    color: #aaa3b0;
+
+    font-size: 9px;
+}
+
+.upcoming-view {
+
+    width: 280px;
+
+    display: block;
+
+    margin: 10px auto 0;
+}
+
+
+/* =========================================
+   FOOTER
+========================================= */
+
+footer {
+
+    text-align: center;
+
+    padding: 25px 0 8px;
+
+    color: #77717f;
+
+    font-size: 12px;
+}
+
+footer strong {
+
+    color: #a842ff;
+
+    font-size: 13px;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 1100px) {
+
+    .sidebar {
+        width: 190px;
+    }
+
+    .main-content {
+        margin-left: 190px;
+
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .journey-form {
+
+        grid-template-columns:
+            1fr
+            45px
+            1fr;
+
+    }
+
+    .journey-form .form-group:nth-last-child(2),
+    .journey-form .form-group:last-child {
+
+        grid-column: span 1;
+
+    }
+
+    .two-column {
+
+        grid-template-columns: 1fr;
+
+    }
+
+    .upcoming-header,
+    .upcoming-row {
+
+        grid-template-columns:
+            1fr
+            1fr
+            1fr
+            1.4fr;
+
+    }
+}
+
+
+@media (max-width: 750px) {
+
+    .sidebar {
+
+        position: relative;
+
+        width: 100%;
+
+        height: auto;
+
+        border-right: none;
+
+        border-bottom: 1px solid rgba(160, 70, 255, 0.3);
+
+    }
+
+    .logo-area {
+
+        padding-bottom: 10px;
+
+    }
+
+    .navigation {
+
+        flex-direction: row;
+
+        overflow-x: auto;
+
+        margin-top: 5px;
+
+        padding-bottom: 12px;
+
+    }
+
+    .nav-item {
+
+        min-width: max-content;
+
+    }
+
+    .sidebar-bottom {
+
+        display: none;
+
+    }
+
+    .main-content {
+
+        margin-left: 0;
+
+        padding: 10px;
+
+    }
+
+    .hero {
+
+        padding: 45px 25px 25px;
+
+    }
+
+    .main-logo {
+
+        font-size: 55px;
+
+    }
+
+    .hero-subtitle {
+
+        font-size: 9px;
+
+        letter-spacing: 3px;
+
+    }
+
+    .date-time {
+
+        top: 8px;
+
+        right: 10px;
+
+    }
+
+    .journey-form {
+
+        display: flex;
+
+        flex-direction: column;
+
+        align-items: stretch;
+
+    }
+
+    .swap-button {
+
+        align-self: center;
+
+    }
+
+    .find-trains-button {
+
+        width: 100%;
+
+    }
+
+    .upcoming-header {
+
+        display: none;
+
+    }
+
+    .upcoming-row {
+
+        grid-template-columns: 1fr;
+
+        gap: 8px;
+
+        padding: 12px;
+
+    }
+
+    .route {
+
+        margin-top: 5px;
+
+    }
+}
+/* =========================================
+   EMPLOYEE ACCESS
+========================================= */
+
+.employee-section {
+
+    margin-top: 16px;
+
+    padding: 20px 22px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(18, 14, 27, 0.96),
+            rgba(8, 7, 12, 0.98)
+        );
+
+    border: 1px solid rgba(145, 55, 235, 0.42);
+
+    border-radius: 15px;
+
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.025),
+        0 10px 40px rgba(0,0,0,0.25);
+}
+
+
+/* =========================================
+   EMPLOYEE LOGIN
+========================================= */
+
+.employee-login {
+
+    max-width: 520px;
+
+    margin: 25px auto 10px;
+
+    padding: 25px;
+
+    border: 1px solid rgba(105, 55, 145, 0.45);
+
+    border-radius: 13px;
+
+    background:
+        rgba(7, 6, 12, 0.75);
+
+    box-shadow:
+        0 0 30px rgba(130, 40, 220, 0.08);
+}
+
+
+.employee-form {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 15px;
+}
+
+
+.employee-form .form-group {
+
+    gap: 7px;
+}
+
+
+.employee-form input {
+
+    height: 43px;
+}
+
+
+.employee-button {
+
+    width: 100%;
+
+    height: 42px;
+
+    margin-top: 5px;
+
+    border: none;
+
+    border-radius: 9px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #7620ce,
+            #a943ff
+        );
+
+    color: white;
+
+    font-size: 13px;
+
+    font-weight: 800;
+
+    letter-spacing: 0.6px;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 5px 20px rgba(145, 35, 255, 0.22);
+
+    transition: 0.25s ease;
+}
+
+
+.employee-button:hover {
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 8px 27px rgba(165, 45, 255, 0.4);
+}
+
+
+.login-message {
+
+    min-height: 18px;
+
+    text-align: center;
+
+    color: #ff6b8a;
+
+    font-size: 12px;
+}
+
+
+/* =========================================
+   EMPLOYEE DASHBOARD
+========================================= */
+
+.employee-dashboard {
+
+    margin-top: 20px;
+}
+
+
+.employee-header {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding: 15px 17px;
+
+    margin-bottom: 16px;
+
+    border: 1px solid rgba(145, 55, 235, 0.3);
+
+    border-radius: 11px;
+
+    background:
+        rgba(9, 7, 15, 0.8);
+}
+
+
+.employee-label {
+
+    color: #a943ff;
+
+    font-size: 9px;
+
+    font-weight: 800;
+
+    letter-spacing: 2px;
+}
+
+
+.employee-header h3 {
+
+    margin-top: 5px;
+
+    font-size: 17px;
+
+    color: white;
+}
+
+
+.logout-button {
+
+    padding: 9px 16px;
+
+    border: 1px solid rgba(255, 80, 120, 0.4);
+
+    border-radius: 8px;
+
+    background: rgba(120, 20, 50, 0.12);
+
+    color: #ff7595;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+
+.logout-button:hover {
+
+    background: rgba(180, 30, 70, 0.18);
+
+    border-color: rgba(255, 80, 120, 0.7);
+}
+
+
+/* =========================================
+   EMPLOYEE CARDS
+========================================= */
+
+.employee-card {
+
+    margin-top: 16px;
+
+    padding: 17px;
+
+    border: 1px solid rgba(65, 57, 76, 0.55);
+
+    border-radius: 12px;
+
+    background:
+        rgba(8, 7, 13, 0.75);
+}
+
+
+.employee-card-title {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin-bottom: 13px;
+}
+
+
+.employee-card-title span {
+
+    font-size: 19px;
+}
+
+
+.employee-card-title h3 {
+
+    color: white;
+
+    font-size: 14px;
+
+    letter-spacing: 0.6px;
+}
+
+
+/* =========================================
+   EMPLOYEE TRAIN STATUS
+========================================= */
+
+.employee-train-row {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    padding: 12px;
+
+    margin-top: 8px;
+
+    border: 1px solid rgba(55, 48, 65, 0.6);
+
+    border-radius: 10px;
+
+    background:
+        rgba(12, 10, 17, 0.8);
+}
+
+
+.employee-train-row > div {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 4px;
+}
+
+
+.employee-train-row strong {
+
+    color: white;
+
+    font-size: 13px;
+}
+
+
+.employee-train-row span {
+
+    color: #928a9c;
+
+    font-size: 11px;
+}
+
+
+.status-button {
+
+    min-width: 120px;
+
+    padding: 8px 12px;
+
+    border-radius: 8px;
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+
+.status-button.available {
+
+    border: 1px solid rgba(35, 211, 109, 0.45);
+
+    background: rgba(35, 211, 109, 0.08);
+
+    color: #39e77e;
+
+}
+
+
+.status-button.available:hover {
+
+    background: rgba(35, 211, 109, 0.15);
+
+    box-shadow:
+        0 0 14px rgba(35, 211, 109, 0.15);
+}
+
+
+/* =========================================
+   PREDICTION FORM
+========================================= */
+
+.prediction-form {
+
+    display: grid;
+
+    grid-template-columns:
+        1fr
+        1fr
+        1fr
+        1fr;
+
+    gap: 12px;
+
+    margin-top: 15px;
+}
+
+
+.prediction-result {
+
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 12px;
+
+    margin-top: 16px;
+}
+
+
+.prediction-result > div {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 7px;
+
+    padding: 15px;
+
+    border: 1px solid rgba(125, 45, 200, 0.35);
+
+    border-radius: 10px;
+
+    background:
+        rgba(80, 25, 130, 0.08);
+}
+
+
+.prediction-result span {
+
+    color: #958b9e;
+
+    font-size: 10px;
+
+    text-transform: uppercase;
+
+    letter-spacing: 1px;
+}
+
+
+.prediction-result strong {
+
+    color: #c25aff;
+
+    font-size: 24px;
+
+    text-shadow:
+        0 0 12px rgba(185, 70, 255, 0.35);
+}
+
+
+/* =========================================
+   EMPLOYEE RESPONSIVE
+========================================= */
+
+@media (max-width: 900px) {
+
+    .prediction-form {
+
+        grid-template-columns: 1fr 1fr;
+
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .employee-header {
+
+        align-items: flex-start;
+
+        gap: 12px;
+
+        flex-direction: column;
+
+    }
+
+
+    .employee-train-row {
+
+        align-items: flex-start;
+
+        flex-direction: column;
+
+    }
+
+
+    .status-button {
+
+        width: 100%;
+
+    }
+
+
+    .prediction-form {
+
+        grid-template-columns: 1fr;
+
+    }
+
+
+    .prediction-result {
+
+        grid-template-columns: 1fr;
+
+    }
+
+}
+/* =========================================
+   EMPLOYEE ACCESS
+========================================= */
+
+.employee-section {
+
+    margin-top: 16px;
+
+    padding: 18px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(18, 14, 27, 0.94),
+            rgba(8, 7, 12, 0.96)
+        );
+
+    border: 1px solid rgba(145, 55, 235, 0.38);
+
+    border-radius: 15px;
+
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.025),
+        0 10px 40px rgba(0,0,0,0.2);
+}
+
+
+/* =========================================
+   EMPLOYEE LOGIN
+========================================= */
+
+.employee-login {
+
+    margin-top: 18px;
+
+    display: flex;
+
+    justify-content: center;
+}
+
+
+.employee-form {
+
+    width: 100%;
+
+    max-width: 500px;
+
+    padding: 20px;
+
+    border: 1px solid rgba(65, 57, 76, 0.55);
+
+    border-radius: 12px;
+
+    background:
+        rgba(8, 7, 12, 0.65);
+}
+
+
+.employee-form .form-group {
+
+    margin-bottom: 14px;
+}
+
+
+.employee-button {
+
+    width: 100%;
+
+    height: 42px;
+
+    margin-top: 5px;
+
+    border: none;
+
+    border-radius: 9px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #7620ce,
+            #a943ff
+        );
+
+    color: white;
+
+    font-size: 13px;
+
+    font-weight: 800;
+
+    cursor: pointer;
+
+    transition: 0.25s ease;
+}
+
+
+.employee-button:hover {
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 7px 25px rgba(165, 45, 255, 0.4);
+}
+
+
+.login-message {
+
+    margin-top: 12px;
+
+    text-align: center;
+
+    color: #ff6b6b;
+
+    font-size: 12px;
+}
+
+
+/* =========================================
+   EMPLOYEE DASHBOARD
+========================================= */
+
+.employee-dashboard {
+
+    margin-top: 18px;
+
+    padding: 18px;
+
+    border: 1px solid rgba(145, 55, 235, 0.3);
+
+    border-radius: 12px;
+
+    background:
+        rgba(8, 7, 12, 0.65);
+}
+
+
+/* =========================================
+   DASHBOARD HEADER
+========================================= */
+
+.employee-dashboard-header {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-bottom: 16px;
+
+    padding-bottom: 14px;
+
+    border-bottom:
+        1px solid rgba(70, 58, 82, 0.45);
+}
+
+
+.employee-dashboard-header h3 {
+
+    color: white;
+
+    font-size: 15px;
+
+    letter-spacing: 0.8px;
+}
+
+
+.employee-dashboard-header p {
+
+    margin-top: 5px;
+
+    color: #8f879b;
+
+    font-size: 11px;
+}
+
+
+/* =========================================
+   LOGOUT
+========================================= */
+
+.logout-button {
+
+    height: 35px;
+
+    padding: 0 18px;
+
+    border-radius: 8px;
+
+    border:
+        1px solid rgba(255, 80, 120, 0.4);
+
+    background:
+        rgba(255, 50, 100, 0.08);
+
+    color: #ff7d9d;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+
+.logout-button:hover {
+
+    background:
+        rgba(255, 50, 100, 0.16);
+
+    border-color:
+        rgba(255, 80, 120, 0.7);
+}
+
+
+/* =========================================
+   EMPLOYEE TRAIN ROW
+========================================= */
+
+.employee-train-row {
+
+    display: grid;
+
+    grid-template-columns:
+        1fr
+        150px
+        190px;
+
+    align-items: center;
+
+    gap: 15px;
+
+    min-height: 62px;
+
+    margin-bottom: 8px;
+
+    padding: 10px 14px;
+
+    border:
+        1px solid rgba(55, 48, 65, 0.6);
+
+    border-radius: 10px;
+
+    background:
+        rgba(10, 9, 14, 0.75);
+
+    transition: 0.2s ease;
+}
+
+
+.employee-train-row:hover {
+
+    border-color:
+        rgba(150, 55, 240, 0.45);
+
+    background:
+        rgba(25, 16, 38, 0.75);
+}
+
+
+/* =========================================
+   TRAIN INFORMATION
+========================================= */
+
+.employee-train-info {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 5px;
+}
+
+
+.employee-train-info strong {
+
+    color: white;
+
+    font-size: 14px;
+}
+
+
+.employee-train-info span {
+
+    color: #8f879b;
+
+    font-size: 11px;
+}
+
+
+/* =========================================
+   STATUS
+========================================= */
+
+.employee-status {
+
+    text-align: center;
+
+    padding: 8px 10px;
+
+    border-radius: 7px;
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+    letter-spacing: 0.7px;
+}
+
+
+.employee-status.available {
+
+    color: #36e58a;
+
+    background:
+        rgba(35, 211, 109, 0.08);
+
+    border:
+        1px solid rgba(35, 211, 109, 0.25);
+}
+
+
+.employee-status.unavailable {
+
+    color: #ff647c;
+
+    background:
+        rgba(255, 70, 100, 0.08);
+
+    border:
+        1px solid rgba(255, 70, 100, 0.25);
+}
+
+
+/* =========================================
+   STATUS BUTTON
+========================================= */
+
+.status-button {
+
+    height: 36px;
+
+    border-radius: 8px;
+
+    border:
+        1px solid rgba(145, 55, 235, 0.45);
+
+    background:
+        rgba(120, 35, 190, 0.1);
+
+    color: #c45aff;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+
+.status-button:hover {
+
+    background:
+        rgba(150, 45, 240, 0.2);
+
+    border-color:
+        rgba(175, 70, 255, 0.7);
+
+    box-shadow:
+        0 0 15px rgba(160, 50, 255, 0.15);
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 750px) {
+
+    .employee-train-row {
+
+        grid-template-columns: 1fr;
+
+        gap: 10px;
+
+    }
+
+    .employee-status {
+
+        width: 100%;
+
+    }
+
+    .status-button {
+
+        width: 100%;
+
+    }
+
+    .employee-dashboard-header {
+
+        align-items: flex-start;
+
+        gap: 12px;
+
+    }
+
+}/* =========================================
+   ML SCHEDULE
+========================================= */
+
+#mlScheduleSection {
+    margin: 40px 0;
+}
+
+.section-header {
+    margin-bottom: 20px;
+}
+
+.section-header h2 {
+    margin-bottom: 5px;
+}
+
+.section-header p {
+    opacity: 0.7;
+}
+
+.schedule-row {
+    display: grid;
+    grid-template-columns: 100px 1fr 150px 100px;
+    gap: 20px;
+    align-items: center;
+    padding: 16px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.schedule-time {
+    font-weight: bold;
+}
+
+.schedule-route {
+    font-size: 15px;
+}
+
+.schedule-demand {
+    font-size: 14px;
+}
+
+.schedule-trains {
+    font-weight: bold;
+}

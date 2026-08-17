@@ -1,0 +1,596 @@
+day_of_week,hour,is_weekend,from_station,to_station,demand
+Monday,6,0,Companypady,Muttom,82
+Monday,6,0,Edappally,Companypady,94
+Monday,6,0,Companypady,Edappally,83
+Monday,6,0,Edappally,Cochin University,33
+Monday,6,0,Changampuzha Park,Companypady,100
+Monday,7,0,Ambattukavu,Edappally,172
+Monday,7,0,Aluva,Muttom,116
+Monday,7,0,Companypady,Ambattukavu,164
+Monday,7,0,Ambattukavu,Companypady,148
+Monday,7,0,Companypady,Ambattukavu,180
+Monday,8,0,Pulinchodu,Cochin University,169
+Monday,8,0,Cochin University,Aluva,170
+Monday,8,0,Kalamassery,Changampuzha Park,200
+Monday,8,0,Kalamassery,Ambattukavu,189
+Monday,8,0,Pulinchodu,Cochin University,155
+Monday,9,0,Pulinchodu,Changampuzha Park,150
+Monday,9,0,Muttom,Edappally,175
+Monday,9,0,Cochin University,Edappally,173
+Monday,9,0,Cochin University,Pulinchodu,180
+Monday,9,0,Muttom,Kalamassery,170
+Monday,10,0,Edappally,Pulinchodu,163
+Monday,10,0,Pathadipalam,MG Road,192
+Monday,10,0,Changampuzha Park,Kalamassery,160
+Monday,10,0,Muttom,Ambattukavu,126
+Monday,10,0,Muttom,Ambattukavu,180
+Monday,11,0,Companypady,Ambattukavu,53
+Monday,11,0,Edappally,Pathadipalam,81
+Monday,11,0,Companypady,Edappally,79
+Monday,11,0,Muttom,Pulinchodu,99
+Monday,11,0,Edappally,Cochin University,36
+Monday,12,0,Pulinchodu,Ambattukavu,53
+Monday,12,0,Muttom,Edappally,82
+Monday,12,0,Aluva,Ambattukavu,61
+Monday,12,0,Pathadipalam,Edappally,97
+Monday,12,0,Muttom,Pulinchodu,94
+Monday,13,0,Changampuzha Park,Companypady,99
+Monday,13,0,Edappally,MG Road,68
+Monday,13,0,Pathadipalam,Kalamassery,44
+Monday,13,0,Companypady,Aluva,68
+Monday,13,0,Pulinchodu,Kalamassery,69
+Monday,14,0,Aluva,Kalamassery,74
+Monday,14,0,Aluva,Cochin University,96
+Monday,14,0,Edappally,MG Road,50
+Monday,14,0,Companypady,Kalamassery,56
+Monday,14,0,Kalamassery,Muttom,61
+Monday,15,0,Pulinchodu,Edappally,87
+Monday,15,0,MG Road,Pulinchodu,99
+Monday,15,0,Edappally,Pulinchodu,43
+Monday,15,0,Aluva,Cochin University,38
+Monday,15,0,MG Road,Ambattukavu,49
+Monday,16,0,Companypady,Edappally,125
+Monday,16,0,Cochin University,Pathadipalam,177
+Monday,16,0,Muttom,Ambattukavu,217
+Monday,16,0,Ambattukavu,MG Road,170
+Monday,16,0,Cochin University,Pulinchodu,223
+Monday,17,0,Pathadipalam,Kalamassery,214
+Monday,17,0,Cochin University,MG Road,173
+Monday,17,0,MG Road,Aluva,179
+Monday,17,0,Pathadipalam,Pulinchodu,164
+Monday,17,0,MG Road,Aluva,167
+Monday,18,0,MG Road,Companypady,196
+Monday,18,0,Ambattukavu,Companypady,174
+Monday,18,0,Cochin University,Pulinchodu,153
+Monday,18,0,Changampuzha Park,Kalamassery,106
+Monday,18,0,Pathadipalam,MG Road,159
+Monday,19,0,Aluva,Kalamassery,167
+Monday,19,0,Cochin University,Pulinchodu,167
+Monday,19,0,Companypady,Kalamassery,169
+Monday,19,0,Aluva,Cochin University,177
+Monday,19,0,Edappally,Pathadipalam,166
+Monday,20,0,Cochin University,Muttom,179
+Monday,20,0,Aluva,MG Road,194
+Monday,20,0,Kalamassery,Ambattukavu,220
+Monday,20,0,Muttom,Aluva,175
+Monday,20,0,Kalamassery,Edappally,141
+Monday,21,0,Aluva,Ambattukavu,93
+Monday,21,0,Aluva,Cochin University,95
+Monday,21,0,Pulinchodu,Cochin University,47
+Monday,21,0,Kalamassery,MG Road,66
+Monday,21,0,Pathadipalam,Muttom,93
+Monday,22,0,Pathadipalam,Ambattukavu,57
+Monday,22,0,Cochin University,Changampuzha Park,51
+Monday,22,0,Edappally,Pulinchodu,89
+Monday,22,0,Edappally,Aluva,86
+Monday,22,0,Aluva,Edappally,47
+Tuesday,6,0,Changampuzha Park,Companypady,59
+Tuesday,6,0,Kalamassery,Ambattukavu,85
+Tuesday,6,0,Pathadipalam,MG Road,47
+Tuesday,6,0,Cochin University,MG Road,87
+Tuesday,6,0,Aluva,Ambattukavu,84
+Tuesday,7,0,Edappally,Ambattukavu,128
+Tuesday,7,0,Pathadipalam,Companypady,119
+Tuesday,7,0,Pulinchodu,Pathadipalam,115
+Tuesday,7,0,Pulinchodu,Cochin University,166
+Tuesday,7,0,Pathadipalam,Kalamassery,200
+Tuesday,8,0,Kalamassery,MG Road,200
+Tuesday,8,0,Changampuzha Park,Aluva,179
+Tuesday,8,0,Kalamassery,Cochin University,152
+Tuesday,8,0,Cochin University,Muttom,156
+Tuesday,8,0,Pulinchodu,Aluva,186
+Tuesday,9,0,Aluva,Companypady,148
+Tuesday,9,0,Pulinchodu,Companypady,177
+Tuesday,9,0,Muttom,Changampuzha Park,176
+Tuesday,9,0,Pulinchodu,Changampuzha Park,182
+Tuesday,9,0,Pathadipalam,Changampuzha Park,161
+Tuesday,10,0,Pathadipalam,MG Road,161
+Tuesday,10,0,Aluva,Edappally,168
+Tuesday,10,0,Changampuzha Park,Ambattukavu,127
+Tuesday,10,0,Cochin University,Changampuzha Park,186
+Tuesday,10,0,Kalamassery,Ambattukavu,156
+Tuesday,11,0,MG Road,Muttom,55
+Tuesday,11,0,Pathadipalam,Companypady,87
+Tuesday,11,0,Cochin University,Kalamassery,108
+Tuesday,11,0,Changampuzha Park,MG Road,77
+Tuesday,11,0,Edappally,Kalamassery,105
+Tuesday,12,0,Pathadipalam,MG Road,51
+Tuesday,12,0,Edappally,MG Road,93
+Tuesday,12,0,Cochin University,Ambattukavu,44
+Tuesday,12,0,Aluva,Pathadipalam,47
+Tuesday,12,0,Muttom,MG Road,87
+Tuesday,13,0,Changampuzha Park,MG Road,92
+Tuesday,13,0,Changampuzha Park,Kalamassery,84
+Tuesday,13,0,Cochin University,Pathadipalam,79
+Tuesday,13,0,Ambattukavu,Changampuzha Park,90
+Tuesday,13,0,Muttom,Pathadipalam,67
+Tuesday,14,0,MG Road,Ambattukavu,64
+Tuesday,14,0,Ambattukavu,Companypady,69
+Tuesday,14,0,Muttom,MG Road,74
+Tuesday,14,0,Companypady,Ambattukavu,99
+Tuesday,14,0,Pulinchodu,Edappally,56
+Tuesday,15,0,Kalamassery,Edappally,56
+Tuesday,15,0,Pathadipalam,Companypady,63
+Tuesday,15,0,Muttom,MG Road,71
+Tuesday,15,0,Companypady,Kalamassery,70
+Tuesday,15,0,MG Road,Cochin University,72
+Tuesday,16,0,Changampuzha Park,Aluva,141
+Tuesday,16,0,Companypady,Pathadipalam,179
+Tuesday,16,0,Ambattukavu,Cochin University,177
+Tuesday,16,0,Muttom,MG Road,196
+Tuesday,16,0,Cochin University,MG Road,175
+Tuesday,17,0,Companypady,Aluva,167
+Tuesday,17,0,Companypady,MG Road,137
+Tuesday,17,0,Aluva,Pathadipalam,202
+Tuesday,17,0,Pathadipalam,Cochin University,142
+Tuesday,17,0,MG Road,Kalamassery,143
+Tuesday,18,0,Kalamassery,Companypady,222
+Tuesday,18,0,MG Road,Muttom,186
+Tuesday,18,0,Ambattukavu,Companypady,177
+Tuesday,18,0,Edappally,Kalamassery,210
+Tuesday,18,0,Edappally,Muttom,179
+Tuesday,19,0,Ambattukavu,Cochin University,130
+Tuesday,19,0,Companypady,Changampuzha Park,185
+Tuesday,19,0,Kalamassery,Cochin University,143
+Tuesday,19,0,Pathadipalam,Muttom,217
+Tuesday,19,0,Ambattukavu,Companypady,210
+Tuesday,20,0,MG Road,Pulinchodu,176
+Tuesday,20,0,Pathadipalam,Changampuzha Park,202
+Tuesday,20,0,Changampuzha Park,Aluva,175
+Tuesday,20,0,Companypady,MG Road,161
+Tuesday,20,0,Muttom,Changampuzha Park,169
+Tuesday,21,0,Edappally,Companypady,52
+Tuesday,21,0,Companypady,Edappally,53
+Tuesday,21,0,Cochin University,Kalamassery,88
+Tuesday,21,0,Edappally,Ambattukavu,92
+Tuesday,21,0,Edappally,Muttom,57
+Tuesday,22,0,Changampuzha Park,Kalamassery,59
+Tuesday,22,0,Muttom,Ambattukavu,58
+Tuesday,22,0,Muttom,Kalamassery,75
+Tuesday,22,0,Ambattukavu,Edappally,71
+Tuesday,22,0,Cochin University,Changampuzha Park,43
+Wednesday,6,0,Kalamassery,MG Road,45
+Wednesday,6,0,Edappally,Pulinchodu,96
+Wednesday,6,0,MG Road,Kalamassery,74
+Wednesday,6,0,Edappally,Ambattukavu,75
+Wednesday,6,0,Kalamassery,Pulinchodu,97
+Wednesday,7,0,Edappally,Ambattukavu,152
+Wednesday,7,0,Companypady,Edappally,146
+Wednesday,7,0,Pathadipalam,Muttom,191
+Wednesday,7,0,Companypady,Muttom,169
+Wednesday,7,0,Changampuzha Park,Kalamassery,149
+Wednesday,8,0,Edappally,Muttom,135
+Wednesday,8,0,Pathadipalam,MG Road,128
+Wednesday,8,0,Kalamassery,MG Road,126
+Wednesday,8,0,Companypady,MG Road,207
+Wednesday,8,0,Aluva,Pulinchodu,135
+Wednesday,9,0,Cochin University,Aluva,165
+Wednesday,9,0,Cochin University,MG Road,153
+Wednesday,9,0,Pulinchodu,Pathadipalam,195
+Wednesday,9,0,Aluva,Ambattukavu,164
+Wednesday,9,0,Aluva,Cochin University,165
+Wednesday,10,0,Cochin University,Aluva,136
+Wednesday,10,0,Ambattukavu,Edappally,167
+Wednesday,10,0,Kalamassery,Aluva,165
+Wednesday,10,0,Aluva,Muttom,134
+Wednesday,10,0,Ambattukavu,Changampuzha Park,135
+Wednesday,11,0,Pulinchodu,Aluva,84
+Wednesday,11,0,Companypady,Pulinchodu,109
+Wednesday,11,0,Changampuzha Park,Cochin University,39
+Wednesday,11,0,Cochin University,Kalamassery,84
+Wednesday,11,0,Muttom,Companypady,87
+Wednesday,12,0,Cochin University,Edappally,81
+Wednesday,12,0,Muttom,Kalamassery,90
+Wednesday,12,0,Kalamassery,Changampuzha Park,84
+Wednesday,12,0,Pathadipalam,Companypady,68
+Wednesday,12,0,Aluva,Kalamassery,43
+Wednesday,13,0,MG Road,Pathadipalam,87
+Wednesday,13,0,MG Road,Edappally,48
+Wednesday,13,0,Pulinchodu,Ambattukavu,58
+Wednesday,13,0,Pathadipalam,Edappally,63
+Wednesday,13,0,Pathadipalam,Cochin University,75
+Wednesday,14,0,MG Road,Pathadipalam,61
+Wednesday,14,0,MG Road,Cochin University,47
+Wednesday,14,0,MG Road,Pulinchodu,54
+Wednesday,14,0,Pathadipalam,Ambattukavu,70
+Wednesday,14,0,Cochin University,Changampuzha Park,63
+Wednesday,15,0,Aluva,Ambattukavu,98
+Wednesday,15,0,MG Road,Kalamassery,86
+Wednesday,15,0,MG Road,Aluva,79
+Wednesday,15,0,Edappally,Aluva,65
+Wednesday,15,0,Pathadipalam,Aluva,42
+Wednesday,16,0,Companypady,Kalamassery,210
+Wednesday,16,0,Cochin University,Pulinchodu,145
+Wednesday,16,0,Ambattukavu,Aluva,128
+Wednesday,16,0,Kalamassery,Muttom,167
+Wednesday,16,0,Muttom,Companypady,183
+Wednesday,17,0,Changampuzha Park,Aluva,190
+Wednesday,17,0,Cochin University,Pathadipalam,158
+Wednesday,17,0,Edappally,Muttom,169
+Wednesday,17,0,MG Road,Cochin University,141
+Wednesday,17,0,Pulinchodu,Companypady,197
+Wednesday,18,0,Muttom,Pulinchodu,163
+Wednesday,18,0,Aluva,Edappally,175
+Wednesday,18,0,Changampuzha Park,Pathadipalam,204
+Wednesday,18,0,Cochin University,Ambattukavu,152
+Wednesday,18,0,Ambattukavu,Pathadipalam,141
+Wednesday,19,0,Aluva,Muttom,192
+Wednesday,19,0,Pathadipalam,Kalamassery,159
+Wednesday,19,0,Changampuzha Park,Aluva,195
+Wednesday,19,0,Pulinchodu,Changampuzha Park,170
+Wednesday,19,0,Cochin University,Pathadipalam,143
+Wednesday,20,0,Edappally,Ambattukavu,148
+Wednesday,20,0,Kalamassery,Changampuzha Park,224
+Wednesday,20,0,Aluva,Pathadipalam,138
+Wednesday,20,0,Ambattukavu,Muttom,169
+Wednesday,20,0,Cochin University,Pathadipalam,170
+Wednesday,21,0,Aluva,Cochin University,72
+Wednesday,21,0,Kalamassery,MG Road,73
+Wednesday,21,0,Kalamassery,Aluva,69
+Wednesday,21,0,Edappally,Aluva,73
+Wednesday,21,0,Pulinchodu,Pathadipalam,63
+Wednesday,22,0,MG Road,Cochin University,62
+Wednesday,22,0,Ambattukavu,MG Road,69
+Wednesday,22,0,Edappally,Kalamassery,93
+Wednesday,22,0,Kalamassery,Pulinchodu,73
+Wednesday,22,0,Edappally,Muttom,50
+Thursday,6,0,Muttom,Cochin University,56
+Thursday,6,0,Kalamassery,Changampuzha Park,53
+Thursday,6,0,Muttom,Pathadipalam,90
+Thursday,6,0,Changampuzha Park,Edappally,73
+Thursday,6,0,Pathadipalam,Edappally,67
+Thursday,7,0,MG Road,Edappally,182
+Thursday,7,0,Kalamassery,Aluva,152
+Thursday,7,0,Changampuzha Park,Aluva,199
+Thursday,7,0,Aluva,MG Road,172
+Thursday,7,0,Changampuzha Park,Pulinchodu,150
+Thursday,8,0,Muttom,Aluva,204
+Thursday,8,0,Changampuzha Park,Edappally,161
+Thursday,8,0,Pathadipalam,Muttom,169
+Thursday,8,0,Aluva,Cochin University,166
+Thursday,8,0,Pathadipalam,Ambattukavu,135
+Thursday,9,0,Companypady,Changampuzha Park,209
+Thursday,9,0,Edappally,Ambattukavu,195
+Thursday,9,0,Companypady,Aluva,150
+Thursday,9,0,Pulinchodu,Cochin University,176
+Thursday,9,0,Cochin University,Pathadipalam,201
+Thursday,10,0,Kalamassery,Edappally,181
+Thursday,10,0,Muttom,Changampuzha Park,203
+Thursday,10,0,Changampuzha Park,Kalamassery,136
+Thursday,10,0,Muttom,Cochin University,177
+Thursday,10,0,Ambattukavu,Edappally,140
+Thursday,11,0,Cochin University,Pulinchodu,64
+Thursday,11,0,Pulinchodu,Ambattukavu,61
+Thursday,11,0,Pathadipalam,Changampuzha Park,40
+Thursday,11,0,Aluva,Cochin University,76
+Thursday,11,0,MG Road,Companypady,85
+Thursday,12,0,Pathadipalam,Kalamassery,49
+Thursday,12,0,Companypady,Changampuzha Park,91
+Thursday,12,0,Aluva,MG Road,82
+Thursday,12,0,Companypady,MG Road,103
+Thursday,12,0,Aluva,Ambattukavu,59
+Thursday,13,0,Kalamassery,MG Road,104
+Thursday,13,0,Edappally,Cochin University,74
+Thursday,13,0,Ambattukavu,Muttom,102
+Thursday,13,0,Edappally,Muttom,51
+Thursday,13,0,Ambattukavu,Muttom,104
+Thursday,14,0,Muttom,Cochin University,98
+Thursday,14,0,Companypady,Pathadipalam,56
+Thursday,14,0,Muttom,Pathadipalam,78
+Thursday,14,0,Muttom,Edappally,70
+Thursday,14,0,Ambattukavu,Companypady,53
+Thursday,15,0,Ambattukavu,Cochin University,87
+Thursday,15,0,Changampuzha Park,Edappally,92
+Thursday,15,0,Changampuzha Park,Pathadipalam,46
+Thursday,15,0,Muttom,Cochin University,72
+Thursday,15,0,Muttom,MG Road,95
+Thursday,16,0,Changampuzha Park,Edappally,156
+Thursday,16,0,Ambattukavu,Pathadipalam,171
+Thursday,16,0,Edappally,Muttom,166
+Thursday,16,0,Pulinchodu,Cochin University,161
+Thursday,16,0,Edappally,Aluva,161
+Thursday,17,0,Pulinchodu,Ambattukavu,159
+Thursday,17,0,Pulinchodu,Cochin University,186
+Thursday,17,0,Changampuzha Park,Muttom,175
+Thursday,17,0,Muttom,Cochin University,157
+Thursday,17,0,Companypady,Cochin University,186
+Thursday,18,0,Pulinchodu,Changampuzha Park,132
+Thursday,18,0,Companypady,Pathadipalam,139
+Thursday,18,0,MG Road,Aluva,187
+Thursday,18,0,Cochin University,Edappally,188
+Thursday,18,0,Aluva,Edappally,162
+Thursday,19,0,Kalamassery,Pulinchodu,216
+Thursday,19,0,Edappally,Changampuzha Park,129
+Thursday,19,0,MG Road,Aluva,140
+Thursday,19,0,Changampuzha Park,Kalamassery,145
+Thursday,19,0,Pathadipalam,Aluva,212
+Thursday,20,0,Kalamassery,Cochin University,184
+Thursday,20,0,Muttom,Kalamassery,188
+Thursday,20,0,Kalamassery,Pathadipalam,222
+Thursday,20,0,Changampuzha Park,Aluva,151
+Thursday,20,0,Pulinchodu,Pathadipalam,199
+Thursday,21,0,Cochin University,Ambattukavu,64
+Thursday,21,0,MG Road,Pulinchodu,100
+Thursday,21,0,Pulinchodu,MG Road,37
+Thursday,21,0,Kalamassery,Edappally,69
+Thursday,21,0,Ambattukavu,Companypady,74
+Thursday,22,0,Ambattukavu,MG Road,96
+Thursday,22,0,Edappally,Aluva,94
+Thursday,22,0,MG Road,Aluva,66
+Thursday,22,0,Companypady,Ambattukavu,56
+Thursday,22,0,Ambattukavu,Pulinchodu,108
+Friday,6,0,Changampuzha Park,Edappally,47
+Friday,6,0,Muttom,MG Road,57
+Friday,6,0,Cochin University,Pulinchodu,84
+Friday,6,0,Changampuzha Park,Cochin University,91
+Friday,6,0,Pulinchodu,Companypady,79
+Friday,7,0,Aluva,Ambattukavu,148
+Friday,7,0,Edappally,Changampuzha Park,167
+Friday,7,0,Edappally,Kalamassery,117
+Friday,7,0,Pathadipalam,MG Road,161
+Friday,7,0,Edappally,Pulinchodu,209
+Friday,8,0,Pathadipalam,Ambattukavu,141
+Friday,8,0,MG Road,Cochin University,121
+Friday,8,0,Pulinchodu,Muttom,133
+Friday,8,0,Changampuzha Park,Pulinchodu,120
+Friday,8,0,Kalamassery,MG Road,137
+Friday,9,0,Pulinchodu,Changampuzha Park,200
+Friday,9,0,Pathadipalam,Ambattukavu,148
+Friday,9,0,Cochin University,Kalamassery,144
+Friday,9,0,Cochin University,Edappally,116
+Friday,9,0,Pulinchodu,MG Road,143
+Friday,10,0,MG Road,Kalamassery,151
+Friday,10,0,Pathadipalam,Kalamassery,138
+Friday,10,0,Kalamassery,Pulinchodu,168
+Friday,10,0,MG Road,Muttom,179
+Friday,10,0,Ambattukavu,Aluva,189
+Friday,11,0,Changampuzha Park,Pulinchodu,70
+Friday,11,0,Companypady,Changampuzha Park,85
+Friday,11,0,Cochin University,Aluva,104
+Friday,11,0,Kalamassery,Edappally,72
+Friday,11,0,Muttom,Pathadipalam,91
+Friday,12,0,Changampuzha Park,Edappally,52
+Friday,12,0,Companypady,Ambattukavu,71
+Friday,12,0,Pathadipalam,Muttom,72
+Friday,12,0,Companypady,Pulinchodu,59
+Friday,12,0,Kalamassery,Edappally,71
+Friday,13,0,Edappally,Ambattukavu,62
+Friday,13,0,Companypady,MG Road,99
+Friday,13,0,Ambattukavu,Aluva,65
+Friday,13,0,Edappally,Cochin University,59
+Friday,13,0,MG Road,Ambattukavu,61
+Friday,14,0,MG Road,Aluva,75
+Friday,14,0,Pathadipalam,Companypady,73
+Friday,14,0,Aluva,Kalamassery,96
+Friday,14,0,Aluva,Cochin University,78
+Friday,14,0,Pathadipalam,Muttom,85
+Friday,15,0,Muttom,Companypady,68
+Friday,15,0,MG Road,Kalamassery,48
+Friday,15,0,Kalamassery,MG Road,45
+Friday,15,0,Kalamassery,Muttom,52
+Friday,15,0,Kalamassery,Edappally,66
+Friday,16,0,Cochin University,Aluva,168
+Friday,16,0,Cochin University,Aluva,163
+Friday,16,0,Pulinchodu,Cochin University,169
+Friday,16,0,Aluva,Ambattukavu,167
+Friday,16,0,Cochin University,MG Road,157
+Friday,17,0,Aluva,Pulinchodu,173
+Friday,17,0,Edappally,MG Road,209
+Friday,17,0,Kalamassery,Cochin University,117
+Friday,17,0,Changampuzha Park,Cochin University,187
+Friday,17,0,Pathadipalam,Edappally,212
+Friday,18,0,Companypady,Aluva,171
+Friday,18,0,Pathadipalam,Companypady,165
+Friday,18,0,Companypady,Pathadipalam,126
+Friday,18,0,Cochin University,Changampuzha Park,194
+Friday,18,0,Pathadipalam,Edappally,136
+Friday,19,0,Pulinchodu,Companypady,121
+Friday,19,0,Companypady,Ambattukavu,212
+Friday,19,0,Edappally,Pathadipalam,130
+Friday,19,0,Pulinchodu,Companypady,165
+Friday,19,0,MG Road,Pulinchodu,196
+Friday,20,0,Muttom,Edappally,189
+Friday,20,0,Pulinchodu,Kalamassery,152
+Friday,20,0,Kalamassery,MG Road,208
+Friday,20,0,MG Road,Pulinchodu,134
+Friday,20,0,Ambattukavu,MG Road,201
+Friday,21,0,Pathadipalam,Ambattukavu,86
+Friday,21,0,Cochin University,Ambattukavu,70
+Friday,21,0,Changampuzha Park,Muttom,82
+Friday,21,0,Ambattukavu,Kalamassery,47
+Friday,21,0,Cochin University,Ambattukavu,42
+Friday,22,0,Pulinchodu,Companypady,76
+Friday,22,0,MG Road,Pulinchodu,91
+Friday,22,0,Edappally,MG Road,55
+Friday,22,0,Muttom,Pathadipalam,58
+Friday,22,0,Pulinchodu,Cochin University,101
+Saturday,6,1,Muttom,Aluva,34
+Saturday,6,1,Companypady,Kalamassery,20
+Saturday,6,1,Muttom,MG Road,15
+Saturday,6,1,Cochin University,Pathadipalam,75
+Saturday,6,1,Companypady,Cochin University,52
+Saturday,7,1,Pulinchodu,Companypady,179
+Saturday,7,1,Changampuzha Park,Kalamassery,154
+Saturday,7,1,Pathadipalam,Companypady,116
+Saturday,7,1,Pathadipalam,Ambattukavu,146
+Saturday,7,1,Aluva,Pulinchodu,159
+Saturday,8,1,Kalamassery,Aluva,147
+Saturday,8,1,Aluva,Cochin University,165
+Saturday,8,1,Aluva,MG Road,113
+Saturday,8,1,Muttom,Kalamassery,115
+Saturday,8,1,MG Road,Kalamassery,139
+Saturday,9,1,MG Road,Pulinchodu,164
+Saturday,9,1,Pathadipalam,MG Road,188
+Saturday,9,1,Kalamassery,Edappally,117
+Saturday,9,1,Changampuzha Park,MG Road,126
+Saturday,9,1,Kalamassery,Aluva,137
+Saturday,10,1,Kalamassery,Cochin University,121
+Saturday,10,1,Edappally,Aluva,141
+Saturday,10,1,Companypady,Pathadipalam,145
+Saturday,10,1,Cochin University,Kalamassery,145
+Saturday,10,1,MG Road,Companypady,143
+Saturday,11,1,Pathadipalam,Cochin University,38
+Saturday,11,1,Changampuzha Park,MG Road,65
+Saturday,11,1,Cochin University,Muttom,59
+Saturday,11,1,Cochin University,Ambattukavu,32
+Saturday,11,1,Pathadipalam,Cochin University,72
+Saturday,12,1,Companypady,Muttom,26
+Saturday,12,1,Aluva,Ambattukavu,57
+Saturday,12,1,MG Road,Aluva,40
+Saturday,12,1,Changampuzha Park,Kalamassery,48
+Saturday,12,1,Pathadipalam,Ambattukavu,25
+Saturday,13,1,Companypady,MG Road,80
+Saturday,13,1,Cochin University,Aluva,83
+Saturday,13,1,Cochin University,Muttom,24
+Saturday,13,1,Edappally,Companypady,64
+Saturday,13,1,Companypady,Ambattukavu,81
+Saturday,14,1,Pulinchodu,Edappally,37
+Saturday,14,1,Cochin University,Aluva,54
+Saturday,14,1,Cochin University,Changampuzha Park,69
+Saturday,14,1,Companypady,Edappally,78
+Saturday,14,1,Muttom,Changampuzha Park,15
+Saturday,15,1,Pulinchodu,Companypady,26
+Saturday,15,1,Aluva,Ambattukavu,50
+Saturday,15,1,Kalamassery,Changampuzha Park,81
+Saturday,15,1,Aluva,MG Road,80
+Saturday,15,1,Muttom,Changampuzha Park,75
+Saturday,16,1,Muttom,Pathadipalam,139
+Saturday,16,1,Ambattukavu,Changampuzha Park,177
+Saturday,16,1,Edappally,Kalamassery,98
+Saturday,16,1,Companypady,Cochin University,201
+Saturday,16,1,MG Road,Pulinchodu,155
+Saturday,17,1,Edappally,Companypady,171
+Saturday,17,1,Changampuzha Park,Cochin University,142
+Saturday,17,1,Pathadipalam,Companypady,181
+Saturday,17,1,Companypady,Ambattukavu,192
+Saturday,17,1,Changampuzha Park,Companypady,123
+Saturday,18,1,Edappally,MG Road,120
+Saturday,18,1,Edappally,MG Road,156
+Saturday,18,1,Aluva,Changampuzha Park,171
+Saturday,18,1,Edappally,Changampuzha Park,156
+Saturday,18,1,Changampuzha Park,MG Road,159
+Saturday,19,1,Companypady,Ambattukavu,108
+Saturday,19,1,Aluva,Kalamassery,139
+Saturday,19,1,MG Road,Muttom,132
+Saturday,19,1,Pathadipalam,Edappally,203
+Saturday,19,1,Ambattukavu,Pathadipalam,186
+Saturday,20,1,Ambattukavu,Cochin University,167
+Saturday,20,1,Pulinchodu,Cochin University,130
+Saturday,20,1,Kalamassery,MG Road,202
+Saturday,20,1,Aluva,Kalamassery,116
+Saturday,20,1,Muttom,MG Road,155
+Saturday,21,1,Changampuzha Park,MG Road,42
+Saturday,21,1,Ambattukavu,Aluva,72
+Saturday,21,1,Edappally,Changampuzha Park,37
+Saturday,21,1,Pulinchodu,Aluva,61
+Saturday,21,1,MG Road,Aluva,10
+Saturday,22,1,Pathadipalam,Edappally,71
+Saturday,22,1,Edappally,Ambattukavu,78
+Saturday,22,1,Cochin University,Kalamassery,57
+Saturday,22,1,Muttom,Ambattukavu,35
+Saturday,22,1,Muttom,MG Road,69
+Sunday,6,1,Changampuzha Park,Cochin University,85
+Sunday,6,1,Edappally,Changampuzha Park,37
+Sunday,6,1,Kalamassery,Pathadipalam,76
+Sunday,6,1,Edappally,Pulinchodu,52
+Sunday,6,1,MG Road,Cochin University,43
+Sunday,7,1,MG Road,Cochin University,144
+Sunday,7,1,Pathadipalam,Cochin University,155
+Sunday,7,1,Changampuzha Park,Edappally,141
+Sunday,7,1,Kalamassery,Pulinchodu,133
+Sunday,7,1,Companypady,Pulinchodu,108
+Sunday,8,1,Kalamassery,Edappally,170
+Sunday,8,1,Muttom,Pulinchodu,110
+Sunday,8,1,Muttom,Ambattukavu,101
+Sunday,8,1,Kalamassery,Pulinchodu,166
+Sunday,8,1,Companypady,Kalamassery,166
+Sunday,9,1,MG Road,Aluva,138
+Sunday,9,1,Changampuzha Park,Edappally,167
+Sunday,9,1,Muttom,Pathadipalam,193
+Sunday,9,1,Aluva,Cochin University,122
+Sunday,9,1,Kalamassery,Aluva,135
+Sunday,10,1,Companypady,Aluva,161
+Sunday,10,1,Pulinchodu,Companypady,120
+Sunday,10,1,Ambattukavu,MG Road,118
+Sunday,10,1,Ambattukavu,Pulinchodu,122
+Sunday,10,1,Changampuzha Park,Cochin University,175
+Sunday,11,1,Changampuzha Park,Cochin University,76
+Sunday,11,1,Cochin University,Pathadipalam,58
+Sunday,11,1,Muttom,Aluva,56
+Sunday,11,1,MG Road,Ambattukavu,65
+Sunday,11,1,Aluva,Muttom,42
+Sunday,12,1,Ambattukavu,Muttom,10
+Sunday,12,1,Pulinchodu,Aluva,52
+Sunday,12,1,Cochin University,Ambattukavu,72
+Sunday,12,1,MG Road,Companypady,39
+Sunday,12,1,Companypady,Pathadipalam,28
+Sunday,13,1,Muttom,Pulinchodu,28
+Sunday,13,1,Edappally,Pathadipalam,42
+Sunday,13,1,Ambattukavu,Kalamassery,75
+Sunday,13,1,Changampuzha Park,Ambattukavu,62
+Sunday,13,1,Kalamassery,MG Road,74
+Sunday,14,1,Ambattukavu,Pulinchodu,32
+Sunday,14,1,Cochin University,Changampuzha Park,25
+Sunday,14,1,Edappally,Muttom,95
+Sunday,14,1,Muttom,Aluva,64
+Sunday,14,1,Cochin University,Changampuzha Park,22
+Sunday,15,1,Pathadipalam,MG Road,38
+Sunday,15,1,Edappally,Cochin University,57
+Sunday,15,1,Aluva,Pathadipalam,37
+Sunday,15,1,Kalamassery,Changampuzha Park,24
+Sunday,15,1,Kalamassery,Aluva,51
+Sunday,16,1,Pathadipalam,Kalamassery,120
+Sunday,16,1,Aluva,Companypady,164
+Sunday,16,1,Muttom,Aluva,179
+Sunday,16,1,Kalamassery,Ambattukavu,165
+Sunday,16,1,Companypady,Kalamassery,149
+Sunday,17,1,Pulinchodu,MG Road,181
+Sunday,17,1,Cochin University,Aluva,166
+Sunday,17,1,Kalamassery,Cochin University,182
+Sunday,17,1,Kalamassery,MG Road,145
+Sunday,17,1,Companypady,Aluva,140
+Sunday,18,1,Cochin University,Pulinchodu,122
+Sunday,18,1,Pulinchodu,Muttom,162
+Sunday,18,1,Ambattukavu,Edappally,186
+Sunday,18,1,Kalamassery,Cochin University,145
+Sunday,18,1,Pathadipalam,Kalamassery,173
+Sunday,19,1,Kalamassery,Pulinchodu,176
+Sunday,19,1,Changampuzha Park,Muttom,131
+Sunday,19,1,Cochin University,Changampuzha Park,115
+Sunday,19,1,Aluva,MG Road,214
+Sunday,19,1,Pulinchodu,Ambattukavu,129
+Sunday,20,1,Pulinchodu,Ambattukavu,123
+Sunday,20,1,Ambattukavu,Pathadipalam,175
+Sunday,20,1,Edappally,Kalamassery,122
+Sunday,20,1,Changampuzha Park,Muttom,106
+Sunday,20,1,MG Road,Kalamassery,167
+Sunday,21,1,Kalamassery,Edappally,16
+Sunday,21,1,Kalamassery,Muttom,42
+Sunday,21,1,Companypady,Changampuzha Park,20
+Sunday,21,1,Cochin University,Kalamassery,51
+Sunday,21,1,Edappally,Ambattukavu,10
+Sunday,22,1,Aluva,Changampuzha Park,71
+Sunday,22,1,Companypady,Changampuzha Park,67
+Sunday,22,1,Muttom,Kalamassery,78
+Sunday,22,1,Companypady,MG Road,46
+Sunday,22,1,Pulinchodu,Kalamassery,32

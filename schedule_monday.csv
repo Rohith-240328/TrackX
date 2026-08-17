@@ -1,0 +1,181 @@
+time,from_station,to_station,predicted_demand,trains_required
+06:00,Aluva,Companypady,92,1
+06:00,Ambattukavu,Companypady,92,1
+06:00,Changampuzha Park,Companypady,92,1
+06:00,Cochin University,Companypady,91,1
+06:00,Aluva,Kalamassery,90,1
+06:00,Ambattukavu,Kalamassery,90,1
+06:00,Aluva,Edappally,89,1
+06:00,Ambattukavu,Edappally,89,1
+06:00,Changampuzha Park,Kalamassery,89,1
+06:00,Cochin University,Kalamassery,89,1
+07:00,Kalamassery,Changampuzha Park,183,1
+07:00,Changampuzha Park,Aluva,181,1
+07:00,Cochin University,Changampuzha Park,181,1
+07:00,Companypady,Changampuzha Park,181,1
+07:00,MG Road,Changampuzha Park,180,1
+07:00,Cochin University,Aluva,179,1
+07:00,Edappally,Changampuzha Park,179,1
+07:00,Kalamassery,MG Road,179,1
+07:00,Muttom,Changampuzha Park,178,1
+07:00,Ambattukavu,Aluva,177,1
+08:00,Kalamassery,Changampuzha Park,194,1
+08:00,Companypady,Changampuzha Park,193,1
+08:00,Edappally,Changampuzha Park,189,1
+08:00,MG Road,Changampuzha Park,189,1
+08:00,Cochin University,Changampuzha Park,186,1
+08:00,Companypady,MG Road,186,1
+08:00,Kalamassery,MG Road,185,1
+08:00,Muttom,Changampuzha Park,184,1
+08:00,Kalamassery,Ambattukavu,182,1
+08:00,Cochin University,Aluva,180,1
+09:00,Companypady,Changampuzha Park,190,1
+09:00,Kalamassery,Changampuzha Park,189,1
+09:00,Edappally,Changampuzha Park,186,1
+09:00,MG Road,Changampuzha Park,185,1
+09:00,Cochin University,Changampuzha Park,184,1
+09:00,Companypady,MG Road,182,1
+09:00,Muttom,Changampuzha Park,182,1
+09:00,Kalamassery,MG Road,179,1
+09:00,Pathadipalam,MG Road,179,1
+09:00,Companypady,Pulinchodu,178,1
+10:00,Companypady,Changampuzha Park,185,1
+10:00,Kalamassery,Changampuzha Park,185,1
+10:00,Edappally,Changampuzha Park,183,1
+10:00,MG Road,Changampuzha Park,183,1
+10:00,Pathadipalam,MG Road,183,1
+10:00,Muttom,Changampuzha Park,181,1
+10:00,Cochin University,Changampuzha Park,180,1
+10:00,Companypady,MG Road,179,1
+10:00,Pathadipalam,Kalamassery,179,1
+10:00,Pathadipalam,Muttom,179,1
+11:00,Muttom,Pulinchodu,93,1
+11:00,MG Road,Pulinchodu,91,1
+11:00,Cochin University,Kalamassery,88,1
+11:00,MG Road,Pathadipalam,88,1
+11:00,Muttom,Pathadipalam,88,1
+11:00,Companypady,Kalamassery,87,1
+11:00,Companypady,MG Road,87,1
+11:00,Ambattukavu,Muttom,86,1
+11:00,Cochin University,MG Road,86,1
+11:00,Edappally,Kalamassery,86,1
+12:00,Muttom,Pulinchodu,91,1
+12:00,MG Road,Pulinchodu,89,1
+12:00,Ambattukavu,Muttom,87,1
+12:00,Companypady,MG Road,87,1
+12:00,Muttom,Pathadipalam,87,1
+12:00,MG Road,Pathadipalam,86,1
+12:00,Pulinchodu,Edappally,86,1
+12:00,Cochin University,Kalamassery,85,1
+12:00,Cochin University,MG Road,85,1
+12:00,Pathadipalam,Edappally,85,1
+13:00,Ambattukavu,Muttom,94,1
+13:00,Aluva,Muttom,91,1
+13:00,Ambattukavu,MG Road,89,1
+13:00,Ambattukavu,Pathadipalam,88,1
+13:00,Changampuzha Park,Companypady,88,1
+13:00,Ambattukavu,Companypady,87,1
+13:00,Aluva,Companypady,86,1
+13:00,Aluva,MG Road,86,1
+13:00,Aluva,Pathadipalam,86,1
+13:00,Ambattukavu,Kalamassery,86,1
+14:00,Aluva,Cochin University,87,1
+14:00,Aluva,Changampuzha Park,84,1
+14:00,Aluva,Companypady,84,1
+14:00,Ambattukavu,Cochin University,84,1
+14:00,Ambattukavu,Companypady,83,1
+14:00,Changampuzha Park,Cochin University,83,1
+14:00,Changampuzha Park,Companypady,83,1
+14:00,Muttom,Cochin University,83,1
+14:00,Muttom,Pulinchodu,83,1
+14:00,Ambattukavu,Changampuzha Park,82,1
+15:00,MG Road,Pulinchodu,85,1
+15:00,Muttom,Pulinchodu,84,1
+15:00,Muttom,Pathadipalam,79,1
+15:00,Pathadipalam,Pulinchodu,78,1
+15:00,Pulinchodu,Edappally,78,1
+15:00,Pulinchodu,Pathadipalam,78,1
+15:00,MG Road,Pathadipalam,77,1
+15:00,Pulinchodu,Muttom,76,1
+15:00,Pulinchodu,Companypady,75,1
+15:00,Pathadipalam,Edappally,73,1
+16:00,Cochin University,Pulinchodu,200,1
+16:00,Aluva,Pulinchodu,197,1
+16:00,Ambattukavu,Pulinchodu,197,1
+16:00,Changampuzha Park,Pulinchodu,197,1
+16:00,Muttom,Ambattukavu,196,1
+16:00,Pathadipalam,Ambattukavu,194,1
+16:00,Pathadipalam,Aluva,193,1
+16:00,Muttom,Aluva,191,1
+16:00,Companypady,Pulinchodu,186,1
+16:00,Edappally,Pulinchodu,185,1
+17:00,Aluva,Pulinchodu,193,1
+17:00,Ambattukavu,Pulinchodu,190,1
+17:00,Pathadipalam,Aluva,190,1
+17:00,Changampuzha Park,Pulinchodu,189,1
+17:00,Muttom,Ambattukavu,187,1
+17:00,Pathadipalam,Ambattukavu,187,1
+17:00,Cochin University,Pulinchodu,186,1
+17:00,Muttom,Aluva,185,1
+17:00,Pathadipalam,Edappally,182,1
+17:00,Aluva,Pathadipalam,181,1
+18:00,Pathadipalam,Aluva,190,1
+18:00,Muttom,Ambattukavu,185,1
+18:00,Pathadipalam,Ambattukavu,185,1
+18:00,Muttom,Aluva,183,1
+18:00,Companypady,Ambattukavu,181,1
+18:00,Cochin University,Ambattukavu,180,1
+18:00,Cochin University,Changampuzha Park,180,1
+18:00,Aluva,MG Road,179,1
+18:00,Aluva,Muttom,179,1
+18:00,Aluva,Pathadipalam,178,1
+19:00,Pathadipalam,Aluva,196,1
+19:00,Pathadipalam,Ambattukavu,192,1
+19:00,Muttom,Ambattukavu,185,1
+19:00,Companypady,Ambattukavu,184,1
+19:00,Aluva,MG Road,182,1
+19:00,Kalamassery,Pulinchodu,182,1
+19:00,Aluva,Pulinchodu,180,1
+19:00,Ambattukavu,Companypady,180,1
+19:00,Muttom,Aluva,180,1
+19:00,Ambattukavu,MG Road,179,1
+20:00,Kalamassery,MG Road,190,1
+20:00,Ambattukavu,MG Road,189,1
+20:00,Kalamassery,Pathadipalam,189,1
+20:00,Pathadipalam,Aluva,188,1
+20:00,Pathadipalam,Ambattukavu,188,1
+20:00,Aluva,MG Road,187,1
+20:00,Ambattukavu,Pathadipalam,185,1
+20:00,Pathadipalam,Changampuzha Park,185,1
+20:00,Ambattukavu,Muttom,184,1
+20:00,Changampuzha Park,MG Road,184,1
+21:00,Aluva,Pulinchodu,91,1
+21:00,Changampuzha Park,Pulinchodu,90,1
+21:00,Ambattukavu,Pulinchodu,89,1
+21:00,Aluva,Ambattukavu,84,1
+21:00,Cochin University,Pulinchodu,84,1
+21:00,Aluva,Changampuzha Park,83,1
+21:00,Aluva,Cochin University,80,1
+21:00,Aluva,Pathadipalam,80,1
+21:00,Ambattukavu,Aluva,80,1
+21:00,Aluva,Muttom,79,1
+22:00,Aluva,Pulinchodu,96,1
+22:00,Ambattukavu,Pulinchodu,94,1
+22:00,Changampuzha Park,Pulinchodu,94,1
+22:00,Cochin University,Pulinchodu,87,1
+22:00,Aluva,Pathadipalam,84,1
+22:00,Aluva,Ambattukavu,83,1
+22:00,Aluva,Changampuzha Park,82,1
+22:00,Aluva,Cochin University,82,1
+22:00,Aluva,Muttom,82,1
+22:00,Ambattukavu,Aluva,82,1
+23:00,Aluva,Pulinchodu,96,1
+23:00,Ambattukavu,Pulinchodu,94,1
+23:00,Changampuzha Park,Pulinchodu,94,1
+23:00,Cochin University,Pulinchodu,87,1
+23:00,Aluva,Pathadipalam,84,1
+23:00,Aluva,Ambattukavu,83,1
+23:00,Aluva,Changampuzha Park,82,1
+23:00,Aluva,Cochin University,82,1
+23:00,Aluva,Muttom,82,1
+23:00,Ambattukavu,Aluva,82,1

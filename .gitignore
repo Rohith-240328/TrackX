@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+*.log
+frontend/ML Model Training Plan_files/
+frontend/ML Model Training Plan.html
+kochi_metro.db

@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>TrackX — Kochi Metro Scheduler</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- ================= SIDEBAR ================= -->
+
+    <aside class="sidebar">
+
+        <div class="logo-area">
+
+            <div class="small-logo">
+                Track<span>X</span>
+            </div>
+
+            <div class="logo-subtitle">
+                KOCHI METRO<br>
+                SCHEDULER
+            </div>
+
+        </div>
+
+
+        <nav class="navigation">
+
+            <a href="#home" class="nav-item active">
+                <span class="nav-icon">⌂</span>
+                <span>Home</span>
+            </a>
+
+            <a href="#journey" class="nav-item">
+                <span class="nav-icon">⌘</span>
+                <span>Plan Journey</span>
+            </a>
+
+            <a href="#trains" class="nav-item">
+                <span class="nav-icon">▣</span>
+                <span>Trains Running</span>
+            </a>
+
+            <a href="#stations" class="nav-item">
+                <span class="nav-icon">⌾</span>
+                <span>Train Stations</span>
+            </a>
+
+            <a href="#about" class="nav-item">
+                <span class="nav-icon">ⓘ</span>
+                <span>About TrackX</span>
+            </a>
+
+            <a href="#employee" class="nav-item">
+                <span class="nav-icon">🔐</span>
+                <span>Employee Access</span>
+            </a>
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+            <div class="bridge-glow"></div>
+        </div>
+
+    </aside>
+
+
+
+    <!-- ================= MAIN CONTENT ================= -->
+
+    <main class="main-content">
+
+
+        <!-- ================= HERO ================= -->
+
+        <section class="hero" id="home">
+
+            <div class="hero-content">
+
+                <div class="main-logo">
+                    Track<span>X</span>
+                </div>
+
+                <div class="hero-subtitle">
+                    K O C H I &nbsp; M E T R O &nbsp; S C H E D U L E R
+                </div>
+
+            </div>
+
+
+            <div class="metro-background">
+                🚇
+            </div>
+
+
+            <div class="date-time">
+
+                <span>◷</span>
+
+                <span id="currentTime">
+                    10:24 AM
+                </span>
+
+                <span class="separator">
+                    |
+                </span>
+
+                <span>▣</span>
+
+                <span id="currentDate">
+                    17 Aug 2026
+                </span>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================= PLAN JOURNEY ================= -->
+
+        <section class="journey-card" id="journey">
+
+            <div class="section-title">
+
+                <span class="title-icon">
+                    ⌘
+                </span>
+
+                <h2>
+                    PLAN YOUR JOURNEY
+                </h2>
+
+            </div>
+
+
+            <div class="journey-form">
+
+
+                <!-- FROM -->
+
+                <div class="form-group">
+
+                    <label for="fromStation">
+                        FROM STATION
+                    </label>
+
+                    <select id="fromStation">
+
+                        <option value="">
+                            Select Station
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- SWAP -->
+
+                <button
+                    id="swapButton"
+                    class="swap-button"
+                    type="button"
+                >
+                    ⇄
+                </button>
+
+
+
+                <!-- TO -->
+
+                <div class="form-group">
+
+                    <label for="toStation">
+                        TO STATION
+                    </label>
+
+                    <select id="toStation">
+
+                        <option value="">
+                            Select Station
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- DATE -->
+
+                <div class="form-group">
+
+                    <label for="journeyDate">
+                        DATE
+                    </label>
+
+                    <input
+                        type="date"
+                        id="journeyDate"
+                    >
+
+                </div>
+
+
+
+                <!-- TIME -->
+
+                <div class="form-group">
+
+                    <label for="journeyTime">
+                        TIME
+                    </label>
+
+                    <input
+                        type="time"
+                        id="journeyTime"
+                    >
+
+                </div>
+
+            </div>
+
+
+
+            <button
+                id="findTrainsButton"
+                class="find-trains-button"
+                type="button"
+            >
+
+                <span>
+                    ⌕
+                </span>
+
+                FIND TRAINS
+
+            </button>
+
+        </section>
+
+
+
+        <!-- ================= TWO COLUMN AREA ================= -->
+
+        <div class="two-column">
+
+
+
+            <!-- ================= TRAINS RUNNING ================= -->
+
+            <section
+                class="dashboard-card"
+                id="trains"
+            >
+
+                <div class="card-title">
+
+                    <span class="title-icon">
+                        ▣
+                    </span>
+
+                    <h2>
+                        TRAINS RUNNING
+                    </h2>
+
+                </div>
+
+
+
+                <!-- IMPORTANT:
+                     JavaScript will put search results here -->
+
+                <div id="trainList">
+<!-- =========================================
+     ML GENERATED TRAIN SCHEDULE
+========================================= -->
+
+<section id="mlScheduleSection">
+
+    <div class="section-header">
+        <h2>TrackX AI Train Schedule</h2>
+        <p>ML-generated schedule based on predicted passenger demand</p>
+    </div>
+
+    <div id="scheduleList">
+
+        <p class="no-trains">
+            Loading AI schedule...
+        </p>
+
+    </div>
+
+</section>
+                    <p class="no-trains">
+                        Select your journey and click
+                        FIND TRAINS.
+                    </p>
+
+                </div>
+
+
+            </section>
+
+
+
+            <!-- ================= TRAIN STATIONS ================= -->
+
+            <section
+                class="dashboard-card"
+                id="stations"
+            >
+
+                <div class="card-title">
+
+                    <span class="title-icon">
+                        ⌾
+                    </span>
+
+                    <h2>
+                        TRAIN STATIONS
+                    </h2>
+
+                </div>
+
+
+
+                <div class="station-list">
+
+
+                    <div class="station active-station">
+                        <span class="station-dot"></span>
+                        Aluva
+                    </div>
+
+
+                    <div class="station">
+                        <span class="station-dot"></span>
+                        Pulinchodu
+                    </div>
+
+
+                    <div class="station">
+                        <span class="station-dot"></span>
+                        Companypady
+                    </div>
+
+
+                    <div class="station">
+                        <span class="station-dot"></span>
+                        Ambattukavu
+                    </div>
+
+
+                    <div class="station">
+                        <span class="station-dot"></span>
+                        Muttom
+                    </div>
+
+
+                    <div class="station">
+                        <span class="station-dot"></span>
+                        Kalamassery
+                    </div>
+
+
+                    <div class="station">
+                        <span class="station-dot"></span>
+                        Cochin University
+                    </div>
+
+
+                    <div class="station">
+                        <span class="station-dot"></span>
+                        Pathadipalam
+                    </div>
+
+
+                    <div class="station">
+                        <span class="station-dot"></span>
+                        Edappally
+                    </div>
+
+
+                    <div class="station">
+                        <span class="station-dot"></span>
+                        Changampuzha Park
+                    </div>
+
+
+                    <div class="station">
+                        <span class="station-dot"></span>
+                        Palarivattom
+                    </div>
+
+
+                    <div class="station">
+                        <span class="station-dot"></span>
+                        JLN Stadium
+                    </div>
+
+
+                    <div class="station">
+                        <span class="station-dot"></span>
+                        Kaloor
+                    </div>
+
+
+                    <div class="station">
+                        <span class="station-dot"></span>
+                        Town Hall
+                    </div>
+
+
+                    <div class="station">
+                        <span class="station-dot"></span>
+                        MG Road
+                    </div>
+
+
+                    <div class="station">
+                        <span class="station-dot"></span>
+                        Maharaja's College
+                    </div>
+
+
+                    <div class="station">
+                        <span class="station-dot"></span>
+                        Ernakulam South
+                    </div>
+
+
+                    <div class="station">
+                        <span class="station-dot"></span>
+                        Kadavanthra
+                    </div>
+
+
+                    <div class="station">
+                        <span class="station-dot"></span>
+                        Elamkulam
+                    </div>
+
+
+                    <div class="station">
+                        <span class="station-dot"></span>
+                        Vyttila
+                    </div>
+
+
+                    <div class="station">
+                        <span class="station-dot"></span>
+                        Thaikoodam
+                    </div>
+
+
+                    <div class="station">
+                        <span class="station-dot"></span>
+                        Petta
+                    </div>
+
+
+                    <div class="station">
+                        <span class="station-dot"></span>
+                        Vadakkekotta
+                    </div>
+
+
+                    <div class="station">
+                        <span class="station-dot"></span>
+                        SN Junction
+                    </div>
+
+
+                    <div class="station">
+                        <span class="station-dot"></span>
+                        Tripunithura Terminal
+                    </div>
+
+                </div>
+
+
+            </section>
+
+        </div>
+
+
+
+        <!-- ================= EMPLOYEE ACCESS ================= -->
+
+        <section
+            class="employee-section"
+            id="employee"
+        >
+
+
+            <div class="card-title">
+
+                <span class="title-icon">
+                    🔐
+                </span>
+
+                <h2>
+                    EMPLOYEE ACCESS
+                </h2>
+
+            </div>
+
+
+
+            <!-- ================= LOGIN ================= -->
+
+            <div
+                id="employeeLogin"
+                class="employee-login"
+            >
+
+                <div class="employee-form">
+
+
+                    <div class="form-group">
+
+                        <label for="employeeUsername">
+                            USERNAME
+                        </label>
+
+                        <input
+                            type="text"
+                            id="employeeUsername"
+                            placeholder="Enter username"
+                        >
+
+                    </div>
+
+
+
+                    <div class="form-group">
+
+                        <label for="employeePassword">
+                            PASSWORD
+                        </label>
+
+                        <input
+                            type="password"
+                            id="employeePassword"
+                            placeholder="Enter password"
+                        >
+
+                    </div>
+
+
+
+                    <button
+                        id="employeeLoginButton"
+                        class="employee-button"
+                        type="button"
+                    >
+                        🔐 LOGIN
+                    </button>
+
+
+
+                    <p
+                        id="loginMessage"
+                        class="login-message"
+                    ></p>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ================= EMPLOYEE DASHBOARD ================= -->
+
+            <div
+                id="employeeDashboard"
+                class="employee-dashboard"
+                style="display: none;"
+            >
+
+
+                <div class="employee-dashboard-header">
+
+                    <div>
+
+                        <h3>
+                            EMPLOYEE CONTROL PANEL
+                        </h3>
+
+                        <p>
+                            Manage live train availability
+                        </p>
+
+                    </div>
+
+
+                    <button
+                        id="employeeLogoutButton"
+                        class="logout-button"
+                        type="button"
+                    >
+                        LOGOUT
+                    </button>
+
+                </div>
+
+
+
+                <!-- ================= EMPLOYEE TRAIN STATUS ================= -->
+
+                <div class="employee-card">
+
+                    <div class="employee-card-title">
+
+                        <span>
+                            🚆
+                        </span>
+
+                        <h3>
+                            TRAIN STATUS
+                        </h3>
+
+                    </div>
+
+
+                   <!-- ================= TRAIN AVAILABILITY ================= -->
+
+<div class="employee-train-columns">
+
+    <!-- AVAILABLE TRAINS -->
+
+    <div class="train-status-column available-column">
+
+        <div class="train-column-title">
+
+            <span>🟢</span>
+
+            <h4>
+                AVAILABLE TRAINS
+            </h4>
+
+        </div>
+
+        <div id="availableTrainList">
+
+            <p class="empty-train-message">
+                Loading available trains...
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- UNAVAILABLE TRAINS -->
+
+    <div class="train-status-column unavailable-column">
+
+        <div class="train-column-title">
+
+            <span>🔴</span>
+
+            <h4>
+                UNAVAILABLE TRAINS
+            </h4>
+
+        </div>
+
+        <div id="unavailableTrainList">
+
+            <p class="empty-train-message">
+                Loading unavailable trains...
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+                <!-- ================= DEMAND PREDICTION ================= -->
+
+                <div class="employee-card">
+
+                    <div class="employee-card-title">
+
+                        <span>
+                            🤖
+                        </span>
+
+                        <h3>
+                            PASSENGER DEMAND PREDICTION
+                        </h3>
+
+                    </div>
+
+
+
+                    <div class="prediction-form">
+
+
+                        <div class="form-group">
+
+                            <label for="predictionDay">
+                                DAY
+                            </label>
+
+                            <select id="predictionDay">
+
+                                <option>
+                                    Monday
+                                </option>
+
+                                <option>
+                                    Tuesday
+                                </option>
+
+                                <option>
+                                    Wednesday
+                                </option>
+
+                                <option>
+                                    Thursday
+                                </option>
+
+                                <option>
+                                    Friday
+                                </option>
+
+                                <option>
+                                    Saturday
+                                </option>
+
+                                <option>
+                                    Sunday
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+
+                        <div class="form-group">
+
+                            <label for="predictionTime">
+                                TIME
+                            </label>
+
+                            <input
+                                type="time"
+                                id="predictionTime"
+                            >
+
+                        </div>
+
+
+
+                        <div class="form-group">
+
+                            <label for="predictionFrom">
+                                FROM
+                            </label>
+
+                            <select id="predictionFrom">
+
+                                <option value="">
+                                    Select Station
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+
+                        <div class="form-group">
+
+                            <label for="predictionTo">
+                                TO
+                            </label>
+
+                            <select id="predictionTo">
+
+                                <option value="">
+                                    Select Station
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <button
+                        id="predictDemandButton"
+                        class="employee-button"
+                        type="button"
+                    >
+                        🤖 PREDICT DEMAND
+                    </button>
+
+
+
+                    <div
+                        id="predictionResult"
+                        class="prediction-result"
+                    >
+
+                        <div>
+
+                            <span>
+                                Predicted passengers
+                            </span>
+
+                            <strong id="predictedPassengers">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>
+                                Recommended trains
+                            </span>
+
+                            <strong id="recommendedTrains">
+                                —
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================= ABOUT ================= -->
+
+        <footer id="about">
+
+            <strong>
+                TrackX
+            </strong>
+
+            <span>
+                – Smart Scheduling. Better Connectivity. Smarter Kochi.
+            </span>
+
+        </footer>
+
+    </main>
+
+
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
