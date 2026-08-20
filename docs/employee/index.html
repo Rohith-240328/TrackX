@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        TrackX — Employee Control Center
+    </title>
+
+    <link rel="stylesheet"
+          href="style.css">
+
+</head>
+
+<body>
+
+<div class="employee-app">
+
+    <!-- HEADER -->
+
+    <header class="employee-header">
+
+        <div class="brand">
+
+            <div class="logo">
+                TX
+            </div>
+
+            <div>
+                <h1>TrackX</h1>
+                <span>EMPLOYEE CONTROL CENTER</span>
+            </div>
+
+        </div>
+
+        <div class="header-right">
+
+            <div id="backendStatus"
+                 class="backend-status checking">
+                ● Checking backend...
+            </div>
+
+            <div id="currentDay">
+                --
+            </div>
+
+            <button onclick="refreshAll()"
+                    class="refresh-btn">
+                ↻ Refresh
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <!-- LOGIN -->
+
+    <section id="loginSection"
+             class="login-section">
+
+        <div class="login-card">
+
+            <div class="login-icon">
+                🔒
+            </div>
+
+            <div class="small-label">
+                AUTHORIZED PERSONNEL
+            </div>
+
+            <h2>
+                Employee Login
+            </h2>
+
+            <p>
+                Sign in to access TrackX train operations.
+            </p>
+
+            <label>
+                Employee ID
+            </label>
+
+            <input id="employeeId"
+                   type="text"
+                   placeholder="Enter Employee ID">
+
+            <label>
+                Password
+            </label>
+
+            <input id="employeePassword"
+                   type="password"
+                   placeholder="Enter Password">
+
+            <button onclick="loginEmployee()"
+                    class="login-btn">
+                Login →
+            </button>
+
+            <div id="loginMessage"
+                 class="login-message">
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- DASHBOARD -->
+
+    <main id="dashboard"
+          class="dashboard hidden">
+
+
+        <!-- TITLE -->
+
+        <div class="page-title">
+
+            <div>
+                <div class="small-label">
+                    KOCHI METRO SMART OPERATIONS
+                </div>
+
+                <h2>
+                    Train Control Center
+                </h2>
+
+                <p>
+                    Manage live train availability and
+                    monitor AI-generated schedules.
+                </p>
+            </div>
+
+            <button onclick="logout()"
+                    class="logout-btn">
+                Logout
+            </button>
+
+        </div>
+
+
+        <!-- FLEET SUMMARY -->
+
+        <section class="fleet-summary">
+
+            <div class="summary-card">
+                <span>TOTAL</span>
+                <strong id="totalTrains">--</strong>
+            </div>
+
+            <div class="summary-card available">
+                <span>AVAILABLE</span>
+                <strong id="availableCount">--</strong>
+            </div>
+
+            <div class="summary-card unavailable">
+                <span>UNAVAILABLE</span>
+                <strong id="unavailableCount">--</strong>
+            </div>
+
+            <div class="summary-card backup">
+                <span>BACKUP</span>
+                <strong id="backupCount">--</strong>
+            </div>
+
+        </section>
+
+
+        <!-- TRAIN MANAGEMENT -->
+
+        <section class="control-section">
+
+            <div class="section-header">
+
+                <div>
+                    <div class="small-label">
+                        FLEET MANAGEMENT
+                    </div>
+
+                    <h2>
+                        Train Availability
+                    </h2>
+
+                    <p>
+                        Move trains between available
+                        and unavailable status.
+                    </p>
+                </div>
+
+                <button onclick="loadFleet()"
+                        class="refresh-btn">
+                    ↻ Refresh Fleet
+                </button>
+
+            </div>
+
+
+            <div class="train-columns">
+
+
+                <!-- AVAILABLE -->
+
+                <div class="train-column available-column">
+
+                    <div class="column-header">
+
+                        <div>
+                            <h3>
+                                ✓ Available Trains
+                            </h3>
+
+                            <span>
+                                Ready for operation
+                            </span>
+                        </div>
+
+                        <strong id="availableColumnCount">
+                            0
+                        </strong>
+
+                    </div>
+
+                    <div id="availableTrains"
+                         class="train-list">
+
+                    </div>
+
+                </div>
+
+
+                <!-- UNAVAILABLE -->
+
+                <div class="train-column unavailable-column">
+
+                    <div class="column-header">
+
+                        <div>
+                            <h3>
+                                ! Unavailable Trains
+                            </h3>
+
+                            <span>
+                                Not available for operation
+                            </span>
+                        </div>
+
+                        <strong id="unavailableColumnCount">
+                            0
+                        </strong>
+
+                    </div>
+
+                    <div id="unavailableTrains"
+                         class="train-list">
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- BACKUP -->
+
+        <section class="control-section">
+
+            <div class="section-header">
+
+                <div>
+                    <div class="small-label">
+                        RESERVE FLEET
+                    </div>
+
+                    <h2>
+                        Backup Trains
+                    </h2>
+                </div>
+
+            </div>
+
+            <div id="backupTrains"
+                 class="backup-grid">
+
+            </div>
+
+        </section>
+
+
+        <!-- STATIONS -->
+
+        <section class="control-section">
+
+            <div class="section-header">
+
+                <div>
+                    <div class="small-label">
+                        METRO NETWORK
+                    </div>
+
+                    <h2>
+                        Stations
+                    </h2>
+                </div>
+
+                <button onclick="loadStations()"
+                        class="refresh-btn">
+                    ↻ Refresh
+                </button>
+
+            </div>
+
+            <div id="stations"
+                 class="stations-grid">
+
+            </div>
+
+        </section>
+
+
+        <!-- AI SCHEDULE -->
+
+        <section class="control-section">
+
+            <div class="section-header">
+
+                <div>
+                    <div class="small-label">
+                        AI OPERATIONS
+                    </div>
+
+                    <h2>
+                        AI Train Schedule
+                    </h2>
+
+                </div>
+
+                <select id="scheduleDay"
+                        onchange="loadSchedule()">
+
+                    <option>Monday</option>
+                    <option>Tuesday</option>
+                    <option>Wednesday</option>
+                    <option>Thursday</option>
+                    <option>Friday</option>
+                    <option>Saturday</option>
+                    <option>Sunday</option>
+
+                </select>
+
+            </div>
+
+            <div id="schedule"
+                 class="schedule">
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
