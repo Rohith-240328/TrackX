@@ -19,3 +19,5 @@ kochi_metro_backup_before_reset.db
 
 # Old standalone schedule
 schedule_monday.csv
+ml/metro_demand_model_v2.pkl
+ml/metro_demand_model_v2.pkl
