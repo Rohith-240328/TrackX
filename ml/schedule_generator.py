@@ -1,371 +1,514 @@
+# ============================================================
+# TRACKX — KOCHI METRO
+# AI TRAIN SCHEDULE GENERATOR
+# ============================================================
+#
+# FLEET
+# ------------------------------------------------------------
+# TRAIN-01 → TRAIN-25 = RUNNING TRAINS
+# TRAIN-26 → TRAIN-30 = BACKUP TRAINS
+#
+# The normal AI schedule uses ONLY TRAIN-01 → TRAIN-25.
+#
+# FREQUENCY
+# ------------------------------------------------------------
+# MONDAY-FRIDAY
+# 06:00-07:00  = 8m 30s
+# 07:00-09:00  = 6m 45s
+# 09:00-11:00  = 8m 30s
+# 11:00-17:00  = 10m
+# 17:00-20:00  = 6m 45s
+# 20:00-21:00  = 8m 30s
+# 21:00-23:00  = 10m
+#
+# SATURDAY
+# 06:00-07:00  = 10m
+# 07:00-09:00  = 8m 30s
+# 09:00-17:00  = 10m
+# 17:00-20:00  = 8m 30s
+# 20:00-23:00  = 10m
+#
+# SUNDAY
+# 06:00-23:00  = 10m
+#
+# OUTPUT
+# ------------------------------------------------------------
+# schedule_monday.csv
+# schedule_tuesday.csv
+# schedule_wednesday.csv
+# schedule_thursday.csv
+# schedule_friday.csv
+# schedule_saturday.csv
+# schedule_sunday.csv
+# ============================================================
 
-import pandas as pd
-import joblib
-import math
+from pathlib import Path
+import csv
 
 
 # ============================================================
-# LOAD SAVED MODEL AND ENCODERS
+# PATH
 # ============================================================
 
-import os
-import joblib
-
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
-model = joblib.load(os.path.join(BASE_DIR, "metro_demand_model.pkl"))
-day_encoder = joblib.load(os.path.join(BASE_DIR, "day_encoder.pkl"))
-from_encoder = joblib.load(os.path.join(BASE_DIR, "from_encoder.pkl"))
-to_encoder = joblib.load(os.path.join(BASE_DIR, "to_encoder.pkl"))
+BASE_DIR = Path(__file__).resolve().parent
 
 
 # ============================================================
-# LOAD DATASET
+# TRAIN FLEET
 # ============================================================
 
-data = pd.read_csv(os.path.join(BASE_DIR, "dataset.csv"))
+TOTAL_TRAINS = 30
+RUNNING_TRAINS = 25
+BACKUP_TRAINS = 5
 
-print("Dataset loaded successfully!")
+
+ALL_TRAINS = [
+    f"TRAIN-{i:02d}"
+    for i in range(1, TOTAL_TRAINS + 1)
+]
+
+
+RUNNING_TRAIN_IDS = [
+    f"TRAIN-{i:02d}"
+    for i in range(1, RUNNING_TRAINS + 1)
+]
+
+
+BACKUP_TRAIN_IDS = [
+    f"TRAIN-{i:02d}"
+    for i in range(
+        RUNNING_TRAINS + 1,
+        TOTAL_TRAINS + 1
+    )
+]
 
 
 # ============================================================
-# TRAIN CAPACITY
+# FREQUENCY RULES
 # ============================================================
 
-TRAIN_CAPACITY = 200
+WEEKDAY_RULES = [
+    ("06:00", "07:00", 8 * 60 + 30),
+    ("07:00", "09:00", 6 * 60 + 45),
+    ("09:00", "11:00", 8 * 60 + 30),
+    ("11:00", "17:00", 10 * 60),
+    ("17:00", "20:00", 6 * 60 + 45),
+    ("20:00", "21:00", 8 * 60 + 30),
+    ("21:00", "23:00", 10 * 60),
+]
+
+
+SATURDAY_RULES = [
+    ("06:00", "07:00", 10 * 60),
+    ("07:00", "09:00", 8 * 60 + 30),
+    ("09:00", "17:00", 10 * 60),
+    ("17:00", "20:00", 8 * 60 + 30),
+    ("20:00", "23:00", 10 * 60),
+]
+
+
+SUNDAY_RULES = [
+    ("06:00", "07:00", 10 * 60),
+    ("07:00", "09:00", 10 * 60),
+    ("09:00", "17:00", 10 * 60),
+    ("17:00", "20:00", 10 * 60),
+    ("20:00", "23:00", 10 * 60),
+]
 
 
 # ============================================================
-# GET STATIONS
+# DAY RULE SELECTOR
 # ============================================================
 
-stations = list(from_encoder.classes_)
+def get_rules(day):
+
+    day = day.strip().lower()
+
+    if day in [
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday"
+    ]:
+        return WEEKDAY_RULES
+
+    if day == "saturday":
+        return SATURDAY_RULES
+
+    if day == "sunday":
+        return SUNDAY_RULES
+
+    raise ValueError(f"Invalid day: {day}")
 
 
 # ============================================================
-# CALCULATE REQUIRED TRAINS
+# TIME CONVERSION
 # ============================================================
 
-def calculate_trains(demand):
+def time_to_seconds(time_string):
 
-    if demand <= 0:
-        return 0
+    hour, minute = map(
+        int,
+        time_string.split(":")
+    )
 
-    return max(
-        1,
-        math.ceil(demand / TRAIN_CAPACITY)
+    return (
+        hour * 3600
+        +
+        minute * 60
     )
 
 
-# ============================================================
-# PREDICT DEMAND
-# ============================================================
+def seconds_to_time(seconds):
 
-def predict_demand(
-    day,
-    hour,
-    from_station,
-    to_station
-):
+    hour = seconds // 3600
 
-    if day in ["Saturday", "Sunday"]:
-        is_weekend = 1
-    else:
-        is_weekend = 0
+    minute = (
+        seconds % 3600
+    ) // 60
 
-    try:
-
-        day_encoded = day_encoder.transform(
-            [day]
-        )[0]
-
-        from_encoded = from_encoder.transform(
-            [from_station]
-        )[0]
-
-        to_encoded = to_encoder.transform(
-            [to_station]
-        )[0]
-
-    except ValueError:
-
-        return 0
-
-    input_data = pd.DataFrame(
-        [[
-            day_encoded,
-            hour,
-            is_weekend,
-            from_encoded,
-            to_encoded
-        ]],
-        columns=[
-            "day_of_week",
-            "hour",
-            "is_weekend",
-            "from_station",
-            "to_station"
-        ]
-    )
-
-    prediction = model.predict(
-        input_data
-    )[0]
-
-    return max(
-        0,
-        round(prediction)
-    )
+    return f"{hour:02d}:{minute:02d}"
 
 
 # ============================================================
-# GENERATE SCHEDULE
+# GENERATE DEPARTURE TIMES
 # ============================================================
 
-def generate_schedule(day):
+def generate_departure_times(day):
+
+    rules = get_rules(day)
+
+    departures = []
+
+    for start, end, interval in rules:
+
+        current = time_to_seconds(start)
+
+        end_seconds = time_to_seconds(end)
+
+        while current < end_seconds:
+
+            departures.append(
+                seconds_to_time(current)
+            )
+
+            current += interval
+
+    return departures
+
+
+# ============================================================
+# ASSIGN 25 RUNNING TRAINS
+# ============================================================
+#
+# Every scheduled departure gets one of the 25 running trains.
+#
+# Example:
+#
+# Departure 1  -> TRAIN-01
+# Departure 2  -> TRAIN-02
+# ...
+# Departure 25 -> TRAIN-25
+# Departure 26 -> TRAIN-01
+#
+# Therefore all 25 trains are used.
+#
+# TRAIN-26 → TRAIN-30 are NOT used normally.
+# ============================================================
+
+def assign_trains(departure_times):
 
     schedule = []
 
-    print()
-    print("=" * 80)
-    print("TRACKX - KOCHI METRO TRAIN SCHEDULE")
-    print("=" * 80)
+    for index, departure_time in enumerate(
+        departure_times
+    ):
 
-    print("Day:", day)
-    print("Schedule:", "6:00 AM - 11:00 PM")
+        train_id = RUNNING_TRAIN_IDS[
+            index % len(RUNNING_TRAIN_IDS)
+        ]
 
-    print("=" * 80)
+        schedule.append({
 
+            "train_id": train_id,
 
-    # 6 AM TO 11 PM
-    for hour in range(6, 24):
+            "train": train_id,
 
-        hourly_entries = []
+            "departure_time":
+                departure_time,
 
+            "status":
+                "ACTIVE"
 
-        # ----------------------------------------------------
-        # CHECK EVERY STATION PAIR
-        # ----------------------------------------------------
-
-        for from_station in stations:
-
-            for to_station in stations:
-
-                if from_station == to_station:
-                    continue
-
-
-                demand = predict_demand(
-                    day,
-                    hour,
-                    from_station,
-                    to_station
-                )
-
-
-                if demand <= 0:
-                    continue
-
-
-                trains_required = calculate_trains(
-                    demand
-                )
-
-
-                hourly_entries.append({
-
-                    "time": f"{hour:02d}:00",
-
-                    "from_station":
-                        from_station,
-
-                    "to_station":
-                        to_station,
-
-                    "predicted_demand":
-                        demand,
-
-                    "trains_required":
-                        trains_required
-
-                })
-
-
-        # ----------------------------------------------------
-        # SORT BY DEMAND
-        # ----------------------------------------------------
-
-        hourly_entries.sort(
-            key=lambda x:
-                x["predicted_demand"],
-            reverse=True
-        )
-
-
-        # Keep top 10 routes
-        hourly_entries = hourly_entries[:10]
-
-
-        schedule.extend(
-            hourly_entries
-        )
-
-
-        # ----------------------------------------------------
-        # DISPLAY
-        # ----------------------------------------------------
-
-        if hour < 12:
-
-            display_hour = hour
-            period = "AM"
-
-        elif hour == 12:
-
-            display_hour = 12
-            period = "PM"
-
-        else:
-
-            display_hour = hour - 12
-            period = "PM"
-
-
-        print()
-        print(
-            f"{display_hour}:00 {period}"
-        )
-
-        print("-" * 80)
-
-
-        if not hourly_entries:
-
-            print(
-                "No trains required."
-            )
-
-        else:
-
-            for entry in hourly_entries:
-
-                print(
-                    f"{entry['from_station']} "
-                    f"-> "
-                    f"{entry['to_station']} | "
-                    f"Demand: "
-                    f"{entry['predicted_demand']} | "
-                    f"Trains: "
-                    f"{entry['trains_required']}"
-                )
-
+        })
 
     return schedule
 
 
 # ============================================================
-# SAVE SCHEDULE
+# CREATE DAY SCHEDULE
 # ============================================================
 
-def save_schedule(
-    schedule,
-    day
-):
+def generate_schedule(day):
+
+    departure_times = (
+        generate_departure_times(day)
+    )
+
+    schedule = assign_trains(
+        departure_times
+    )
+
+    final_schedule = []
+
+    for record in schedule:
+
+        final_schedule.append({
+
+            "day":
+                day,
+
+            "train_id":
+                record["train_id"],
+
+            "train":
+                record["train"],
+
+            "departure_time":
+                record["departure_time"],
+
+            "status":
+                record["status"]
+
+        })
+
+    return final_schedule
+
+
+# ============================================================
+# SAVE CSV
+# ============================================================
+
+def save_schedule(day, schedule):
 
     filename = (
         f"schedule_{day.lower()}.csv"
     )
 
+    filepath = BASE_DIR / filename
 
-    schedule_df = pd.DataFrame(
-        schedule
+    fieldnames = [
+        "day",
+        "train_id",
+        "train",
+        "departure_time",
+        "status"
+    ]
+
+    with open(
+        filepath,
+        "w",
+        newline="",
+        encoding="utf-8"
+    ) as file:
+
+        writer = csv.DictWriter(
+            file,
+            fieldnames=fieldnames
+        )
+
+        writer.writeheader()
+
+        writer.writerows(
+            schedule
+        )
+
+    return filepath
+
+
+# ============================================================
+# VERIFY TRAIN USAGE
+# ============================================================
+
+def verify_train_usage(schedule):
+
+    used_trains = sorted(
+        set(
+            row["train_id"]
+            for row in schedule
+        )
     )
 
+    missing_running = [
+        train
+        for train in RUNNING_TRAIN_IDS
+        if train not in used_trains
+    ]
 
-    schedule_df.to_csv(
-        filename,
-        index=False
-    )
-
+    backup_used = [
+        train
+        for train in BACKUP_TRAIN_IDS
+        if train in used_trains
+    ]
 
     print()
-    print("=" * 80)
-    print("SCHEDULE SAVED SUCCESSFULLY")
-    print("=" * 80)
+    print("TRAIN USAGE CHECK")
+    print("-" * 50)
 
     print(
-        "File:",
-        filename
+        f"Running fleet : {len(RUNNING_TRAIN_IDS)}"
     )
 
-
-# ============================================================
-# MAIN PROGRAM
-# ============================================================
-
-if __name__ == "__main__":
-
-    print()
-    print("==========================================")
-    print("       TRACKX SCHEDULE GENERATOR")
-    print("==========================================")
-
-    print()
-    print("Select day:")
-
-    print("1. Monday")
-    print("2. Tuesday")
-    print("3. Wednesday")
-    print("4. Thursday")
-    print("5. Friday")
-    print("6. Saturday")
-    print("7. Sunday")
-
-
-    choice = input(
-        "\nEnter choice (1-7): "
+    print(
+        f"Used trains   : {len(used_trains)}"
     )
 
-
-    days = {
-
-        "1": "Monday",
-        "2": "Tuesday",
-        "3": "Wednesday",
-        "4": "Thursday",
-        "5": "Friday",
-        "6": "Saturday",
-        "7": "Sunday"
-
-    }
-
-
-    if choice not in days:
+    if missing_running:
 
         print(
-            "Invalid choice."
+            "Missing running trains:",
+            ", ".join(missing_running)
         )
 
     else:
 
-        selected_day = days[
-            choice
-        ]
-
-
-        schedule = generate_schedule(
-            selected_day
+        print(
+            "✓ TRAIN-01 to TRAIN-25 all used"
         )
 
+    if backup_used:
 
-        save_schedule(
-            schedule,
-            selected_day
+        print(
+            "WARNING: Backup trains used:",
+            ", ".join(backup_used)
         )
 
+    else:
+
+        print(
+            "✓ TRAIN-26 to TRAIN-30 not used"
+        )
+
+    print("-" * 50)
+
+
+# ============================================================
+# MAIN GENERATOR
+# ============================================================
+
+def main():
+
+    print()
+    print("=" * 60)
+    print("TRACKX AI SCHEDULE GENERATOR")
+    print("=" * 60)
+
+    print()
+    print("FLEET CONFIGURATION")
+    print("-" * 60)
+
+    print(
+        f"Total trains   : {TOTAL_TRAINS}"
+    )
+
+    print(
+        f"Running trains : {RUNNING_TRAINS}"
+    )
+
+    print(
+        f"Backup trains  : {BACKUP_TRAINS}"
+    )
+
+    print()
+
+    print(
+        "Running fleet:"
+    )
+
+    print(
+        ", ".join(RUNNING_TRAIN_IDS)
+    )
+
+    print()
+
+    print(
+        "Backup fleet:"
+    )
+
+    print(
+        ", ".join(BACKUP_TRAIN_IDS)
+    )
+
+    print()
+    print("=" * 60)
+
+    days = [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday"
+    ]
+
+    for day in days:
 
         print()
         print(
-            "Schedule generation completed!"
+            f"Generating AI schedule for {day}..."
         )
 
+        schedule = generate_schedule(day)
+
+        filepath = save_schedule(
+            day,
+            schedule
+        )
+
+        print(
+            f"✓ {day}: "
+            f"{len(schedule)} departures"
+        )
+
+        print(
+            f"✓ Saved: {filepath.name}"
+        )
+
+        verify_train_usage(
+            schedule
+        )
+
+    print()
+    print("=" * 60)
+    print("AI SCHEDULE GENERATION COMPLETE")
+    print("=" * 60)
+
+    print()
+    print("Generated files:")
+
+    for day in days:
+
+        print(
+            f"  ✓ schedule_{day.lower()}.csv"
+        )
+
+    print()
+    print(
+        "25 running trains are assigned to the schedule."
+    )
+
+    print(
+        "5 backup trains are reserved for employee replacement."
+    )
+
+    print()
+
+
+# ============================================================
+# RUN
+# ============================================================
+
+if __name__ == "__main__":
+    main()

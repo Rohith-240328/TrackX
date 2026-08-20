@@ -1,152 +1,235 @@
 import pandas as pd
 import joblib
+import os
 
-# Load trained model
-model = joblib.load("metro_demand_model.pkl")
+# =========================================================
+# LOAD MODEL FILES
+# =========================================================
 
-# Load encoders
-day_encoder = joblib.load("day_encoder.pkl")
-from_encoder = joblib.load("from_encoder.pkl")
-to_encoder = joblib.load("to_encoder.pkl")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+model = joblib.load(
+    os.path.join(BASE_DIR, "metro_demand_model.pkl")
+)
+
+day_encoder = joblib.load(
+    os.path.join(BASE_DIR, "day_encoder.pkl")
+)
+
+from_encoder = joblib.load(
+    os.path.join(BASE_DIR, "from_encoder.pkl")
+)
+
+to_encoder = joblib.load(
+    os.path.join(BASE_DIR, "to_encoder.pkl")
+)
 
 
-# -----------------------------
-# FUNCTION TO FIND STATION
-# -----------------------------
+# =========================================================
+# FIND STATION
+# =========================================================
+
 def find_station(name, encoder):
+
     name = name.strip().lower()
 
     for station in encoder.classes_:
+
         if station.lower() == name:
             return station
 
     return None
 
 
-# -----------------------------
-# GET USER INPUT
-# -----------------------------
-day = input("Enter day: ").strip().capitalize()
+# =========================================================
+# PREDICTION FUNCTION
+# =========================================================
 
-hour = int(input("Enter hour (0-23): "))
+def predict_demand(
+    day,
+    hour,
+    from_station,
+    to_station
+):
 
-from_input = input("Enter from station: ")
-to_input = input("Enter to station: ")
+    day = day.strip().capitalize()
 
+    from_station = find_station(
+        from_station,
+        from_encoder
+    )
 
-# -----------------------------
-# FIND CORRECT STATION NAMES
-# -----------------------------
-from_station = find_station(from_input, from_encoder)
-to_station = find_station(to_input, to_encoder)
+    to_station = find_station(
+        to_station,
+        to_encoder
+    )
 
+    # -----------------------------
+    # VALIDATION
+    # -----------------------------
 
-# -----------------------------
-# VALIDATE DAY
-# -----------------------------
-if day not in day_encoder.classes_:
+    if day not in day_encoder.classes_:
+        raise ValueError("Invalid day")
 
-    print()
-    print("❌ Invalid day!")
-    print("Available days:")
+    if from_station is None:
+        raise ValueError("Invalid FROM station")
 
-    for d in day_encoder.classes_:
-        print("-", d)
+    if to_station is None:
+        raise ValueError("Invalid TO station")
 
-    exit()
+    if from_station == to_station:
+        raise ValueError(
+            "FROM and TO stations cannot be the same"
+        )
 
+    # -----------------------------
+    # WEEKEND
+    # -----------------------------
 
-# -----------------------------
-# VALIDATE FROM STATION
-# -----------------------------
-if from_station is None:
+    is_weekend = int(
+        day in ["Saturday", "Sunday"]
+    )
 
-    print()
-    print("❌ Invalid FROM station!")
-    print("Available stations:")
+    # -----------------------------
+    # ENCODE
+    # -----------------------------
 
-    for station in from_encoder.classes_:
-        print("-", station)
+    day_encoded = day_encoder.transform(
+        [day]
+    )[0]
 
-    exit()
+    from_encoded = from_encoder.transform(
+        [from_station]
+    )[0]
 
+    to_encoded = to_encoder.transform(
+        [to_station]
+    )[0]
 
-# -----------------------------
-# VALIDATE TO STATION
-# -----------------------------
-if to_station is None:
+    # -----------------------------
+    # INPUT DATA
+    # -----------------------------
 
-    print()
-    print("❌ Invalid TO station!")
-    print("Available stations:")
+    input_data = pd.DataFrame([
+        {
+            "day_of_week": day_encoded,
+            "hour": hour,
+            "is_weekend": is_weekend,
+            "from_station": from_encoded,
+            "to_station": to_encoded
+        }
+    ])
 
-    for station in to_encoder.classes_:
-        print("-", station)
+    # -----------------------------
+    # PREDICT
+    # -----------------------------
 
-    exit()
+    prediction = model.predict(
+        input_data
+    )[0]
 
+    prediction = max(
+        0,
+        round(float(prediction))
+    )
 
-# -----------------------------
-# WEEKEND
-# -----------------------------
-is_weekend = int(day in ["Saturday", "Sunday"])
+    # -----------------------------
+    # TRAIN RECOMMENDATION
+    # -----------------------------
 
+    TRAIN_CAPACITY = 300
 
-# -----------------------------
-# ENCODE INPUT
-# -----------------------------
-day_encoded = day_encoder.transform([day])[0]
+    recommended_trains = max(
+        1,
+        (prediction + TRAIN_CAPACITY - 1)
+        // TRAIN_CAPACITY
+    )
 
-from_encoded = from_encoder.transform([from_station])[0]
-
-to_encoded = to_encoder.transform([to_station])[0]
-
-
-# -----------------------------
-# CREATE INPUT DATA
-# -----------------------------
-input_data = pd.DataFrame([
-    {
-        "day_of_week": day_encoded,
+    return {
+        "day": day,
         "hour": hour,
-        "is_weekend": is_weekend,
-        "from_station": from_encoded,
-        "to_station": to_encoded
+        "from_station": from_station,
+        "to_station": to_station,
+        "predicted_passengers": prediction,
+        "train_capacity": TRAIN_CAPACITY,
+        "recommended_trains": recommended_trains
     }
-])
 
 
-# -----------------------------
-# ML PREDICTION
-# -----------------------------
-prediction = model.predict(input_data)[0]
-# -----------------------------
-# TRAIN RECOMMENDATION
-# -----------------------------
+# =========================================================
+# COMMAND LINE TEST
+# =========================================================
 
-TRAIN_CAPACITY = 300
+if __name__ == "__main__":
 
-recommended_trains = max(
-    1,
-    int((prediction + TRAIN_CAPACITY - 1) // TRAIN_CAPACITY)
-)
+    day = input(
+        "Enter day: "
+    ).strip()
 
-# -----------------------------
-# DISPLAY RESULT
-# -----------------------------
-print()
-print("===================================")
-print("       TRACKX ML PREDICTION")
-print("===================================")
+    hour = int(
+        input("Enter hour (0-23): ")
+    )
 
-print("Day:", day)
-print("Time:", f"{hour}:00")
+    from_input = input(
+        "Enter from station: "
+    )
 
-print("From:", from_station)
+    to_input = input(
+        "Enter to station: "
+    )
 
-print("To:", to_station)
+    try:
 
-print("Predicted passenger demand:", round(prediction))
-print("Train capacity:", TRAIN_CAPACITY)
-print("Recommended trains:", recommended_trains)
-print("===================================")
+        result = predict_demand(
+            day,
+            hour,
+            from_input,
+            to_input
+        )
+
+        print()
+        print("===================================")
+        print("       TRACKX ML PREDICTION")
+        print("===================================")
+
+        print(
+            "Day:",
+            result["day"]
+        )
+
+        print(
+            "Time:",
+            f'{result["hour"]}:00'
+        )
+
+        print(
+            "From:",
+            result["from_station"]
+        )
+
+        print(
+            "To:",
+            result["to_station"]
+        )
+
+        print(
+            "Predicted passenger demand:",
+            result["predicted_passengers"]
+        )
+
+        print(
+            "Train capacity:",
+            result["train_capacity"]
+        )
+
+        print(
+            "Recommended trains:",
+            result["recommended_trains"]
+        )
+
+        print("===================================")
+
+    except ValueError as error:
+
+        print()
+        print("❌", error)

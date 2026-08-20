@@ -1,0 +1,553 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #07070b;
+    color: #f5f5f7;
+}
+
+button,
+input,
+select {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+.employee-app {
+    min-height: 100vh;
+}
+
+
+/* HEADER */
+
+.employee-header {
+    min-height: 76px;
+    padding: 15px 35px;
+    background: #0d0d14;
+    border-bottom: 1px solid #292936;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo {
+    width: 43px;
+    height: 43px;
+    display: grid;
+    place-items: center;
+    background: #7c3aed;
+    border-radius: 11px;
+    font-weight: bold;
+}
+
+.brand h1 {
+    font-size: 21px;
+}
+
+.brand span {
+    display: block;
+    color: #777789;
+    font-size: 8px;
+    letter-spacing: 2px;
+    margin-top: 3px;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    color: #888897;
+    font-size: 12px;
+}
+
+.backend-status {
+    font-size: 11px;
+}
+
+.backend-status.online {
+    color: #4fe18b;
+}
+
+.backend-status.offline {
+    color: #ff6262;
+}
+
+.refresh-btn,
+.logout-btn {
+    border: 1px solid #333341;
+    background: #15151e;
+    color: white;
+    border-radius: 8px;
+    padding: 10px 15px;
+}
+
+.refresh-btn:hover,
+.logout-btn:hover {
+    border-color: #7c3aed;
+}
+
+
+/* LOGIN */
+
+.login-section {
+    min-height: calc(100vh - 76px);
+    display: grid;
+    place-items: center;
+    padding: 30px;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 430px;
+    padding: 40px;
+    background: #101017;
+    border: 1px solid #2a2a38;
+    border-radius: 18px;
+}
+
+.login-icon {
+    font-size: 35px;
+    margin-bottom: 18px;
+}
+
+.small-label {
+    color: #8b5cf6;
+    font-size: 10px;
+    letter-spacing: 2px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.login-card h2 {
+    font-size: 30px;
+    margin-bottom: 10px;
+}
+
+.login-card p {
+    color: #858593;
+    font-size: 13px;
+    line-height: 1.6;
+    margin-bottom: 25px;
+}
+
+.login-card label {
+    display: block;
+    color: #888895;
+    font-size: 11px;
+    margin: 14px 0 7px;
+}
+
+.login-card input {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid #30303d;
+    background: #171720;
+    color: white;
+    border-radius: 8px;
+    outline: none;
+}
+
+.login-card input:focus {
+    border-color: #7c3aed;
+}
+
+.login-btn {
+    width: 100%;
+    padding: 13px;
+    margin-top: 22px;
+    border: 0;
+    border-radius: 8px;
+    color: white;
+    background: #7c3aed;
+}
+
+.login-message {
+    min-height: 20px;
+    margin-top: 14px;
+    color: #ff6666;
+    font-size: 12px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+
+/* DASHBOARD */
+
+.dashboard {
+    padding: 35px;
+    max-width: 1600px;
+    margin: auto;
+}
+
+.page-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 30px;
+}
+
+.page-title h2 {
+    font-size: 35px;
+    margin-bottom: 8px;
+}
+
+.page-title p {
+    color: #888895;
+    font-size: 13px;
+}
+
+
+/* SUMMARY */
+
+.fleet-summary {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.summary-card {
+    padding: 23px;
+    border-radius: 13px;
+    background: #111119;
+    border: 1px solid #292936;
+}
+
+.summary-card span {
+    display: block;
+    color: #777789;
+    font-size: 10px;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+}
+
+.summary-card strong {
+    font-size: 30px;
+}
+
+.summary-card.available strong {
+    color: #51df8a;
+}
+
+.summary-card.unavailable strong {
+    color: #ff6767;
+}
+
+.summary-card.backup strong {
+    color: #a487ff;
+}
+
+
+/* SECTION */
+
+.control-section {
+    margin-bottom: 30px;
+    background: #0e0e15;
+    border: 1px solid #272733;
+    border-radius: 15px;
+    padding: 25px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 22px;
+}
+
+.section-header h2 {
+    font-size: 24px;
+}
+
+.section-header p {
+    color: #777786;
+    font-size: 12px;
+    margin-top: 6px;
+}
+
+.section-header select {
+    background: #171720;
+    color: white;
+    border: 1px solid #333341;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+
+/* TRAIN COLUMNS */
+
+.train-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.train-column {
+    border: 1px solid #292936;
+    border-radius: 12px;
+    background: #101017;
+    overflow: hidden;
+}
+
+.available-column {
+    border-top: 3px solid #32d583;
+}
+
+.unavailable-column {
+    border-top: 3px solid #ff5555;
+}
+
+.column-header {
+    padding: 18px;
+    border-bottom: 1px solid #292936;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.column-header h3 {
+    font-size: 17px;
+}
+
+.column-header span {
+    color: #777789;
+    font-size: 11px;
+    display: block;
+    margin-top: 5px;
+}
+
+.column-header strong {
+    font-size: 25px;
+}
+
+
+/* TRAIN LIST */
+
+.train-list {
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 650px;
+    overflow-y: auto;
+}
+
+.train-item {
+    background: #171720;
+    border: 1px solid #2a2a37;
+    border-radius: 9px;
+    padding: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.train-info strong {
+    display: block;
+    font-size: 14px;
+}
+
+.train-info span {
+    display: block;
+    color: #777789;
+    font-size: 9px;
+    margin-top: 5px;
+}
+
+.train-action {
+    border: 1px solid #393947;
+    background: #20202b;
+    color: white;
+    border-radius: 7px;
+    padding: 8px 10px;
+    font-size: 10px;
+}
+
+.train-action:hover {
+    border-color: #7c3aed;
+}
+
+.train-action.unavailable:hover {
+    border-color: #ff5555;
+}
+
+.train-action.restore:hover {
+    border-color: #32d583;
+}
+
+
+/* BACKUP */
+
+.backup-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+}
+
+.backup-card {
+    padding: 18px;
+    background: #111119;
+    border: 1px solid #292936;
+    border-radius: 11px;
+}
+
+.backup-card strong {
+    display: block;
+    margin-bottom: 8px;
+}
+
+.backup-card span {
+    color: #9a7dff;
+    font-size: 10px;
+}
+
+.backup-card.assigned {
+    border-color: #7c3aed;
+}
+
+
+/* STATIONS */
+
+.stations-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+}
+
+.station-card {
+    background: #111119;
+    border: 1px solid #292936;
+    border-radius: 9px;
+    padding: 15px;
+}
+
+.station-number {
+    color: #7958d9;
+    font-size: 9px;
+    margin-bottom: 8px;
+}
+
+
+/* SCHEDULE */
+
+.schedule {
+    border: 1px solid #292936;
+    border-radius: 11px;
+    overflow: hidden;
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+.schedule-row {
+    display: grid;
+    grid-template-columns: 90px 120px 1fr 1fr 100px;
+    padding: 13px 15px;
+    border-bottom: 1px solid #252530;
+    background: #111119;
+    align-items: center;
+}
+
+.schedule-row:last-child {
+    border-bottom: 0;
+}
+
+.schedule-time {
+    color: #a486ff;
+    font-weight: bold;
+}
+
+.schedule-train {
+    font-weight: bold;
+}
+
+.schedule-route {
+    color: #858592;
+    font-size: 11px;
+}
+
+.schedule-status {
+    color: #4fe08a;
+    font-size: 9px;
+}
+
+
+/* LOADING */
+
+.loading,
+.empty {
+    text-align: center;
+    color: #777789;
+    padding: 35px;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 1000px) {
+
+    .fleet-summary {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .train-columns {
+        grid-template-columns: 1fr;
+    }
+
+    .backup-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .stations-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 650px) {
+
+    .employee-header {
+        padding: 15px;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .header-right {
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 8px;
+    }
+
+    .dashboard {
+        padding: 18px;
+    }
+
+    .page-title {
+        gap: 15px;
+    }
+
+    .fleet-summary,
+    .backup-grid,
+    .stations-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .schedule-row {
+        grid-template-columns: 1fr;
+        gap: 5px;
+    }
+
+}

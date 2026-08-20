@@ -3,7 +3,19 @@ __pycache__/
 .venv/
 venv/
 .env
-*.log
-frontend/ML Model Training Plan_files/
-frontend/ML Model Training Plan.html
-kochi_metro.db
+.vscode/
+
+# Old/duplicate TrackX projects
+backend_server_backup.py
+employee_backend.py
+employee_frontend/
+frontend/
+user_frontend/
+data/
+fix_trains.py
+reset_trackx.py
+set_trains.py
+kochi_metro_backup_before_reset.db
+
+# Old standalone schedule
+schedule_monday.csv
