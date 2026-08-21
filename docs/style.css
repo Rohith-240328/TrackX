@@ -487,6 +487,59 @@ nav {
     padding: 6px 9px;
     border-radius: 20px;
 }
+/* ============================================================
+   RUNNING TRAIN STATUS
+   ============================================================ */
+
+.train-badge.upcoming {
+    color: #a685ff;
+    background: #21183a;
+    border: 1px solid #5b3ca8;
+}
+
+.train-badge.active {
+    color: #55df8c;
+    background: #153424;
+    border: 1px solid #286b45;
+}
+
+.train-badge.completed {
+    color: #9999a8;
+    background: #24242d;
+    border: 1px solid #3a3a46;
+}
+
+
+/* ============================================================
+   RUNNING DIRECTION SELECTOR
+   ============================================================ */
+
+.direction-selector {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 18px;
+}
+
+.direction-btn {
+    padding: 12px 18px;
+    border-radius: 9px;
+    border: 1px solid #30303d;
+    background: #14141d;
+    color: #9999a9;
+    font-size: 12px;
+    transition: 0.2s ease;
+}
+
+.direction-btn:hover {
+    border-color: #7c3aed;
+    color: white;
+}
+
+.direction-btn.active {
+    background: #7c3aed;
+    border-color: #7c3aed;
+    color: white;
+}
 
 .train-route {
     color: #9999a8;
@@ -676,4 +729,24 @@ footer {
         gap: 10px;
     }
 
+}
+/* TRAIN FLEET */
+
+.train-fleet {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #282833;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.train-fleet span {
+    color: #777;
+    font-size: 9px;
+}
+
+.train-fleet strong {
+    color: #aaa9b8;
+    font-size: 12px;
 }

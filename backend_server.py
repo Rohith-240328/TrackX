@@ -1777,56 +1777,297 @@ def restore_train(
 # Employee availability is still applied live.
 # ============================================================
 
+# ============================================================
+# USER — TRAINS RUNNING
+#
+# FEATURES:
+# ------------------------------------------------------------
+# 1. Direction selection
+#
+#    ALUVA_TO_TRIPUNITHURA
+#    TRIPUNITHURA_TO_ALUVA
+#
+# 2. Uses AI-generated schedule as the source of truth.
+#
+# 3. Shows every scheduled departure.
+#
+# 4. Same TRAIN-ID is preserved for return journeys.
+#
+# 5. Live status:
+#
+#       UPCOMING
+#       ACTIVE
+#       COMPLETED
+#
+# 6. Employee availability is still applied through
+#    get_final_schedule().
+#
+# 7. No new timings are generated here.
+# ============================================================
+
 @app.get("/train-running")
 def train_running(
-    day: str = "Monday"
+
+    day: str = "Monday",
+
+    direction: str = "ALUVA_TO_TRIPUNITHURA"
+
 ):
+
+    # ========================================================
+    # NORMALIZE DAY
+    # ========================================================
 
     matching_day = normalize_day(day)
 
-    # --------------------------------------------------------
+
+    # ========================================================
+    # VALIDATE DIRECTION
+    # ========================================================
+
+    valid_directions = {
+
+        "ALUVA_TO_TRIPUNITHURA",
+
+        "TRIPUNITHURA_TO_ALUVA"
+
+    }
+
+
+    direction = (
+        direction
+        .strip()
+        .upper()
+    )
+
+
+    if direction not in valid_directions:
+
+        raise HTTPException(
+
+            status_code=400,
+
+            detail=(
+                "Invalid direction. Use "
+                "ALUVA_TO_TRIPUNITHURA or "
+                "TRIPUNITHURA_TO_ALUVA."
+            )
+
+        )
+
+
+    # ========================================================
     # LOAD FINAL AI SCHEDULE
-    # --------------------------------------------------------
+    #
+    # This keeps:
+    #
+    # - AI timings
+    # - train IDs
+    # - return train IDs
+    # - employee availability
+    # - backup replacement logic
+    #
+    # untouched.
+    # ========================================================
 
     schedule = get_final_schedule(
+
         matching_day
+
     )
+
 
     running_trains = []
 
-    # --------------------------------------------------------
-    # EVERY SCHEDULED DEPARTURE
-    #
-    # Do NOT group by train_id.
-    # A physical train can have multiple scheduled
-    # departures during the day.
-    # --------------------------------------------------------
 
-    for index, item in enumerate(schedule):
+    # ========================================================
+    # CURRENT TIME
+    #
+    # Used only for LIVE status calculation.
+    # ========================================================
+
+    from datetime import datetime
+
+    now = datetime.now()
+
+
+    current_minutes = (
+
+        now.hour * 60
+
+        + now.minute
+
+        + now.second / 60
+
+    )
+
+
+    # ========================================================
+    # FILTER SELECTED DIRECTION
+    # ========================================================
+
+    direction_schedule = []
+
+
+    for item in schedule:
+
+        train_direction = (
+
+            item.get(
+                "direction"
+            )
+            or ""
+        ).strip().upper()
+
+
+        if train_direction != direction:
+
+            continue
+
+
+        direction_schedule.append(item)
+
+
+    # ========================================================
+    # SORT BY DEPARTURE TIME
+    # ========================================================
+
+    direction_schedule.sort(
+
+        key=lambda item:
+            time_to_minutes(
+                item.get(
+                    "departure_time",
+                    "00:00:00"
+                )
+            )
+
+    )
+
+
+    # ========================================================
+    # BUILD RUNNING TRAIN LIST
+    # ========================================================
+
+    for index, item in enumerate(
+        direction_schedule
+    ):
 
         train_id = item.get(
             "train_id"
         )
 
+
         departure_time = item.get(
             "departure_time"
         )
 
+
         # ----------------------------------------------------
-        # Ignore records with no assigned train
+        # Ignore incomplete records
         # ----------------------------------------------------
 
         if not train_id:
 
             continue
 
+
         if not departure_time:
 
             continue
 
-        # ----------------------------------------------------
-        # Add every schedule departure
-        # ----------------------------------------------------
+
+        departure_minutes = time_to_minutes(
+
+            departure_time
+
+        )
+
+
+        # ====================================================
+        # LIVE STATUS
+        #
+        # BEFORE departure:
+        #     UPCOMING
+        #
+        # AT departure:
+        #     ACTIVE
+        #
+        # AFTER departure:
+        #     COMPLETED
+        #
+        # This is intentionally based on the departure
+        # schedule and current clock time.
+        # ====================================================
+
+        if current_minutes < departure_minutes:
+
+            live_status = "UPCOMING"
+
+
+        elif current_minutes == departure_minutes:
+
+            live_status = "ACTIVE"
+
+
+        else:
+
+            live_status = "COMPLETED"
+
+
+        # ====================================================
+        # ROUTE
+        # ====================================================
+
+        if direction == (
+            "ALUVA_TO_TRIPUNITHURA"
+        ):
+
+            default_from = "Aluva"
+
+            default_to = (
+                "Tripunithura Terminal"
+            )
+
+            direction_label = "OUTBOUND"
+
+
+        else:
+
+            default_from = (
+                "Tripunithura Terminal"
+            )
+
+            default_to = "Aluva"
+
+            direction_label = "RETURN"
+
+
+        from_station = (
+
+            item.get(
+                "from_station"
+            )
+
+            or default_from
+
+        )
+
+
+        to_station = (
+
+            item.get(
+                "to_station"
+            )
+
+            or default_to
+
+        )
+
+
+        # ====================================================
+        # ADD DEPARTURE
+        # ====================================================
 
         running_trains.append({
 
@@ -1839,18 +2080,6 @@ def train_running(
             "train":
                 train_id,
 
-            "status":
-                item.get(
-                    "status",
-                    "ACTIVE"
-                ),
-
-            "fleet_type":
-                item.get(
-                    "fleet_type",
-                    "RUNNING"
-                ),
-
             "original_train":
                 item.get(
                     "original_train",
@@ -1862,23 +2091,46 @@ def train_running(
                     "replacement_for"
                 ),
 
-            "from_station":
+            # IMPORTANT:
+            # This is the live operational status.
+            "status":
+                live_status,
+
+            # Preserve the original availability status too.
+            "availability_status":
                 item.get(
-                    "from_station",
-                    STATIONS[0]
+                    "status",
+                    "ACTIVE"
                 ),
 
-            "to_station":
+            "fleet_type":
                 item.get(
-                    "to_station",
-                    STATIONS[-1]
+                    "fleet_type",
+                    "RUNNING"
                 ),
+
+            "direction":
+                direction,
+
+            "direction_label":
+                direction_label,
+
+            "from_station":
+                from_station,
+
+            "to_station":
+                to_station,
+
+            "departure_time":
+                departure_time,
 
             "next_departure":
                 departure_time,
 
-            "departure_time":
-                departure_time,
+            "arrival_time":
+                item.get(
+                    "arrival_time"
+                ),
 
             "predicted_demand":
                 item.get(
@@ -1892,9 +2144,10 @@ def train_running(
 
         })
 
-    # --------------------------------------------------------
-    # RETURN ALL DEPARTURES
-    # --------------------------------------------------------
+
+    # ========================================================
+    # RETURN RESPONSE
+    # ========================================================
 
     return {
 
@@ -1903,6 +2156,22 @@ def train_running(
 
         "day":
             matching_day,
+
+        "direction":
+            direction,
+
+        "direction_label":
+            (
+                "OUTBOUND"
+                if direction ==
+                "ALUVA_TO_TRIPUNITHURA"
+                else "RETURN"
+            ),
+
+        "current_time":
+            now.strftime(
+                "%H:%M:%S"
+            ),
 
         "total_running":
             len(running_trains),

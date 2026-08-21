@@ -1,579 +1,573 @@
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>TrackX — Kochi Metro Smart Scheduler</title>
+```
+<title>TrackX — Kochi Metro Smart Scheduler</title>
 
-    <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css">
+```
+
 </head>
 
 <body>
 
 <div class="app">
 
-    <!-- SIDEBAR -->
-    <aside class="sidebar">
+```
+<!-- SIDEBAR -->
+<aside class="sidebar">
 
-        <div class="logo">
+    <div class="logo">
 
-            <div class="logo-mark">
-                TX
+        <div class="logo-mark">
+            TX
+        </div>
+
+        <div>
+            <h2>TrackX</h2>
+            <span>KOCHI METRO</span>
+        </div>
+
+    </div>
+
+
+    <nav>
+
+        <button class="nav-item active"
+                onclick="showSection('home')">
+            <span>⌂</span>
+            Home
+        </button>
+
+        <button class="nav-item"
+                onclick="showSection('journey')">
+            <span>↗</span>
+            Plan Journey
+        </button>
+
+        <button class="nav-item"
+                onclick="showSection('running')">
+            <span>🚆</span>
+            Trains Running
+        </button>
+
+        <button class="nav-item"
+                onclick="showSection('stations')">
+            <span>◉</span>
+            Stations
+        </button>
+
+        <button class="nav-item"
+                onclick="showSection('upcoming')">
+            <span>◷</span>
+            Upcoming Trains
+        </button>
+
+    </nav>
+
+
+    <div class="sidebar-bottom">
+
+        <div id="backendStatus"
+             class="backend-status checking">
+
+            <span class="status-dot"></span>
+
+            Checking backend...
+
+        </div>
+
+
+        <a href="employee/index.html"
+           class="employee-link">
+
+            🔒 Employee Control Center
+
+        </a>
+
+    </div>
+
+</aside>
+
+
+<!-- MAIN -->
+<main class="main">
+
+    <header class="topbar">
+
+        <div>
+
+            <div class="small-label">
+                TRACKX SYSTEM
             </div>
 
-            <div>
-                <h2>TrackX</h2>
-                <span>KOCHI METRO</span>
+            <h1 id="pageTitle">
+                Welcome to TrackX
+            </h1>
+
+        </div>
+
+
+        <div class="top-info">
+
+            <span id="currentDay">
+                Loading...
+            </span>
+
+            <span>
+                ● LIVE
+            </span>
+
+        </div>
+
+    </header>
+
+
+    <!-- HOME -->
+    <section id="home"
+             class="page-section active-section">
+
+        <div class="hero">
+
+            <div class="hero-content">
+
+                <div class="eyebrow">
+                    KOCHI METRO SMART TRAIN SCHEDULER
+                </div>
+
+                <h2>
+                    Smarter journeys.
+                    <br>
+                    Better metro operations.
+                </h2>
+
+                <p>
+                    TrackX uses AI-generated train schedules
+                    to help passengers plan their journey
+                    quickly and efficiently.
+                </p>
+
+
+                <div class="hero-buttons">
+
+                    <button onclick="showSection('journey')"
+                            class="primary-btn">
+
+                        Plan Your Journey →
+
+                    </button>
+
+
+                    <button onclick="showSection('upcoming')"
+                            class="secondary-btn">
+
+                        View Schedule
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div class="hero-train">
+
+                <div class="train-icon">
+                    🚆
+                </div>
+
+                <div class="train-line"></div>
+
+
+                <!-- NEXT TWO DEPARTURES -->
+
+                <div class="hero-live">
+
+                    <span>
+                        NEXT DEPARTURES
+                    </span>
+
+                    <div class="hero-departure">
+
+                        <strong id="heroDeparture1">
+                            --:--
+                        </strong>
+
+                        <small id="heroRoute1">
+                            Waiting for schedule...
+                        </small>
+
+                    </div>
+
+
+                    <div class="hero-departure">
+
+                        <strong id="heroDeparture2">
+                            --:--
+                        </strong>
+
+                        <small id="heroRoute2">
+                            Waiting for schedule...
+                        </small>
+
+                    </div>
+
+                </div>
+
             </div>
 
         </div>
 
 
-        <nav>
+        <div class="stats-grid">
 
-            <button class="nav-item active"
-                    onclick="showSection('home')">
-                <span>⌂</span>
-                Home
-            </button>
-
-            <button class="nav-item"
-                    onclick="showSection('journey')">
-                <span>↗</span>
-                Plan Journey
-            </button>
-
-            <button class="nav-item"
-                    onclick="showSection('running')">
-                <span>🚆</span>
-                Trains Running
-            </button>
-
-            <button class="nav-item"
-                    onclick="showSection('stations')">
-                <span>◉</span>
-                Stations
-            </button>
-
-            <button class="nav-item"
-                    onclick="showSection('upcoming')">
-                <span>◷</span>
-                Upcoming Trains
-            </button>
-
-        </nav>
-
-
-        <div class="sidebar-bottom">
-
-            <div id="backendStatus"
-                 class="backend-status checking">
-
-                <span class="status-dot"></span>
-
-                Checking backend...
-
-            </div>
-
-
-            <a href="employee/index.html"
-               class="employee-link">
-
-                🔒 Employee Control Center
-
-            </a>
-
-        </div>
-
-    </aside>
-
-
-    <!-- MAIN -->
-    <main class="main">
-
-        <header class="topbar">
-
-            <div>
-
-                <div class="small-label">
-                    TRACKX SYSTEM
-                </div>
-
-                <h1 id="pageTitle">
-                    Welcome to TrackX
-                </h1>
-
-            </div>
-
-
-            <div class="top-info">
-
-                <span id="currentDay">
-                    Loading...
-                </span>
+            <div class="stat-card">
 
                 <span>
-                    ● LIVE
+                    METRO STATIONS
                 </span>
-
-            </div>
-
-        </header>
-
-
-        <!-- HOME -->
-        <section id="home"
-                 class="page-section active-section">
-
-            <div class="hero">
-
-                <div class="hero-content">
-
-                    <div class="eyebrow">
-                        KOCHI METRO SMART TRAIN SCHEDULER
-                    </div>
-
-                    <h2>
-                        Smarter journeys.
-                        <br>
-                        Better metro operations.
-                    </h2>
-
-                    <p>
-                        TrackX uses AI-generated train schedules
-                        to help passengers plan their journey
-                        quickly and efficiently.
-                    </p>
-
-
-                    <div class="hero-buttons">
-
-                        <button onclick="showSection('journey')"
-                                class="primary-btn">
-
-                            Plan Your Journey →
-
-                        </button>
-
-
-                        <button onclick="showSection('upcoming')"
-                                class="secondary-btn">
-
-                            View Schedule
-
-                        </button>
-
-                    </div>
-
-                </div>
-
-
-                <div class="hero-train">
-
-                    <div class="train-icon">
-                        🚆
-                    </div>
-
-                    <div class="train-line"></div>
-
-
-                    <!-- NEXT TWO DEPARTURES -->
-
-                    <div class="hero-live">
-
-                        <span>
-                            NEXT DEPARTURES
-                        </span>
-
-                        <div class="hero-departure">
-
-                            <strong id="heroDeparture1">
-                                --:--
-                            </strong>
-
-                            <small id="heroRoute1">
-                                Waiting for schedule...
-                            </small>
-
-                        </div>
-
-
-                        <div class="hero-departure">
-
-                            <strong id="heroDeparture2">
-                                --:--
-                            </strong>
-
-                            <small id="heroRoute2">
-                                Waiting for schedule...
-                            </small>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <div class="stats-grid">
-
-                <div class="stat-card">
-
-                    <span>
-                        METRO STATIONS
-                    </span>
-
-                    <strong id="stationCount">
-                        --
-                    </strong>
-
-                </div>
-
-
-                <div class="stat-card">
-
-                    <span>
-                        TRAIN FLEET
-                    </span>
-
-                    <strong id="fleetCount">
-                        30
-                    </strong>
-
-                </div>
-
-
-                <div class="stat-card">
-
-                    <span>
-                        NEXT DEPARTURE
-                    </span>
-
-                    <strong id="nextDeparture">
-                        --:--
-                    </strong>
-
-                    <small id="nextDepartureRoute">
-                        Waiting for schedule...
-                    </small>
-
-                </div>
-
-
-                <div class="stat-card">
-
-                    <span>
-                        SYSTEM
-                    </span>
-
-                    <strong>
-                        LIVE
-                    </strong>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- JOURNEY -->
-        <section id="journey"
-                 class="page-section">
-
-            <div class="section-heading">
-
-                <div>
-
-                    <div class="small-label">
-                        PASSENGER SERVICE
-                    </div>
-
-                    <h2>
-                        Plan Your Journey
-                    </h2>
-
-                </div>
-
-            </div>
-
-
-            <div class="journey-card">
-
-                <div class="field">
-
-                    <label>
-                        FROM
-                    </label>
-
-                    <select id="fromStation">
-
-                        <option>
-                            Loading stations...
-                        </option>
-
-                    </select>
-
-                </div>
-
-
-                <button class="swap-btn"
-                        onclick="swapStations()">
-
-                    ⇅
-
-                </button>
-
-
-                <div class="field">
-
-                    <label>
-                        TO
-                    </label>
-
-                    <select id="toStation">
-
-                        <option>
-                            Loading stations...
-                        </option>
-
-                    </select>
-
-                </div>
-
-
-                <div class="field">
-
-                    <label>
-                        DAY
-                    </label>
-
-                    <select id="journeyDay">
-
-                        <option>Monday</option>
-                        <option>Tuesday</option>
-                        <option>Wednesday</option>
-                        <option>Thursday</option>
-                        <option>Friday</option>
-                        <option>Saturday</option>
-                        <option>Sunday</option>
-
-                    </select>
-
-                </div>
-
-
-                <div class="field">
-
-                    <label>
-                        TIME
-                    </label>
-
-                    <input type="time"
-                           id="journeyTime"
-                           value="06:00">
-
-                </div>
-
-
-                <button class="primary-btn search-btn"
-                        onclick="findTrains()">
-
-                    Find Trains →
-
-                </button>
-
-            </div>
-
-
-            <div id="journeyMessage"
-                 class="message">
-            </div>
-
-
-            <div id="trainResults"
-                 class="results">
-            </div>
-
-        </section>
-
-
-        <!-- RUNNING -->
-        <section id="running"
-                 class="page-section">
-
-            <div class="section-heading">
-
-                <div>
-
-                    <div class="small-label">
-                        LIVE OPERATIONS
-                    </div>
-
-                    <h2>
-                        Trains Running
-                    </h2>
-
-                </div>
-
-
-                <button class="secondary-btn"
-                        onclick="loadRunningTrains()">
-
-                    ↻ Refresh
-
-                </button>
-
-            </div>
-
-
-            <div class="count-banner">
-
-                <span>
-                    Currently scheduled
-                </span>
-
-                <strong id="runningCount">
-                    --
-                </strong>
-
-            </div>
-
-
-            <div id="runningGrid"
-                 class="train-grid">
-            </div>
-
-        </section>
-
-
-        <!-- STATIONS -->
-        <section id="stations"
-                 class="page-section">
-
-            <div class="section-heading">
-
-                <div>
-
-                    <div class="small-label">
-                        KOCHI METRO NETWORK
-                    </div>
-
-                    <h2>
-                        Metro Stations
-                    </h2>
-
-                </div>
-
-
-                <button class="secondary-btn"
-                        onclick="loadStations()">
-
-                    ↻ Refresh
-
-                </button>
-
-            </div>
-
-
-            <div class="station-summary">
 
                 <strong id="stationCount">
                     --
                 </strong>
 
+            </div>
+
+
+            <div class="stat-card">
+
                 <span>
-                    Stations connected to TrackX
+                    TRAIN FLEET
                 </span>
 
-            </div>
-
-
-            <div id="stationGrid"
-                 class="station-grid">
-            </div>
-
-        </section>
-
-
-        <!-- UPCOMING -->
-        <section id="upcoming"
-                 class="page-section">
-
-            <div class="section-heading">
-
-                <div>
-
-                    <div class="small-label">
-                        AI GENERATED TIMETABLE
-                    </div>
-
-                    <h2>
-                        Upcoming Trains
-                    </h2>
-
-                </div>
-
-
-                <div class="day-selector">
-
-                    <select id="scheduleDay"
-                            onchange="loadUpcomingTrains()">
-
-                        <option>Monday</option>
-                        <option>Tuesday</option>
-                        <option>Wednesday</option>
-                        <option>Thursday</option>
-                        <option>Friday</option>
-                        <option>Saturday</option>
-                        <option>Sunday</option>
-
-                    </select>
-
-                </div>
-
-            </div>
-
-
-            <div id="upcomingList"
-                 class="schedule-list">
-
-                <div class="loading">
-                    Loading schedule...
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <footer>
-
-            <div>
-
-                <strong>
-                    TrackX
+                <strong id="fleetCount">
+                    30
                 </strong>
 
-                — Kochi Metro Smart Train Scheduler
+            </div>
+
+
+            <div class="stat-card">
+
+                <span>
+                    NEXT DEPARTURE
+                </span>
+
+                <strong id="nextDeparture">
+                    --:--
+                </strong>
+
+                <small id="nextDepartureRoute">
+                    Waiting for schedule...
+                </small>
 
             </div>
 
+
+            <div class="stat-card">
+
+                <span>
+                    SYSTEM
+                </span>
+
+                <strong>
+                    LIVE
+                </strong>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- JOURNEY -->
+    <section id="journey"
+             class="page-section">
+
+        <div class="section-heading">
 
             <div>
-                AI Powered • Real-Time Operations
+
+                <div class="small-label">
+                    PASSENGER SERVICE
+                </div>
+
+                <h2>
+                    Plan Your Journey
+                </h2>
+
             </div>
 
-        </footer>
+        </div>
 
-    </main>
+
+        <div class="journey-card">
+
+            <div class="field">
+
+                <label>
+                    FROM
+                </label>
+
+                <select id="fromStation">
+
+                    <option>
+                        Loading stations...
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <button class="swap-btn"
+                    onclick="swapStations()">
+
+                ⇅
+
+            </button>
+
+
+            <div class="field">
+
+                <label>
+                    TO
+                </label>
+
+                <select id="toStation">
+
+                    <option>
+                        Loading stations...
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    DAY
+                </label>
+
+                <select id="journeyDay">
+
+                    <option>Monday</option>
+                    <option>Tuesday</option>
+                    <option>Wednesday</option>
+                    <option>Thursday</option>
+                    <option>Friday</option>
+                    <option>Saturday</option>
+                    <option>Sunday</option>
+
+                </select>
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    TIME
+                </label>
+
+                <input type="time"
+                       id="journeyTime"
+                       value="06:00">
+
+            </div>
+
+
+            <button class="primary-btn search-btn"
+                    onclick="findTrains()">
+
+                Find Trains →
+
+            </button>
+
+        </div>
+
+
+        <div id="journeyMessage"
+             class="message">
+        </div>
+
+
+        <div id="trainResults"
+             class="results">
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         RUNNING
+    ====================================================== -->
+
+    <section id="running"
+             class="page-section">
+
+        <div class="section-heading">
+
+            <div>
+
+                <div class="small-label">
+                    LIVE OPERATIONS
+                </div>
+
+                <h2>
+                    Trains Running
+                </h2>
+
+            </div>
+
+
+            <button class="secondary-btn"
+                    onclick="loadRunningTrains()">
+
+                ↻ Refresh
+
+            </button>
+
+        </div>
+
+
+        <!-- DIRECTION SELECTOR -->
+
+        <div class="direction-selector">
+
+            <button
+                id="outboundRunningBtn"
+                class="direction-btn active"
+                onclick="setRunningDirection('ALUVA_TO_TRIPUNITHURA')">
+
+                Aluva → Tripunithura
+
+            </button>
+
+
+            <button
+                id="returnRunningBtn"
+                class="direction-btn"
+                onclick="setRunningDirection('TRIPUNITHURA_TO_ALUVA')">
+
+                Tripunithura → Aluva
+
+            </button>
+
+        </div>
+
+
+        <!-- RUNNING TRAIN COUNT -->
+
+        <div class="count-banner">
+
+            <span>
+                Currently scheduled
+            </span>
+
+            <strong id="runningCount">
+                --
+            </strong>
+
+        </div>
+
+
+        <!-- RUNNING TRAIN GRID -->
+
+        <div id="runningGrid"
+             class="train-grid">
+
+            <div class="loading">
+                Loading running trains...
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- UPCOMING -->
+    <section id="upcoming"
+             class="page-section">
+
+        <div class="section-heading">
+
+            <div>
+
+                <div class="small-label">
+                    AI GENERATED TIMETABLE
+                </div>
+
+                <h2>
+                    Upcoming Trains
+                </h2>
+
+            </div>
+
+
+            <div class="day-selector">
+
+                <select id="scheduleDay"
+                        onchange="loadUpcomingTrains()">
+
+                    <option>Monday</option>
+                    <option>Tuesday</option>
+                    <option>Wednesday</option>
+                    <option>Thursday</option>
+                    <option>Friday</option>
+                    <option>Saturday</option>
+                    <option>Sunday</option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+
+        <div id="upcomingList"
+             class="schedule-list">
+
+            <div class="loading">
+                Loading schedule...
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <footer>
+
+        <div>
+
+            <strong>
+                TrackX
+            </strong>
+
+            — Kochi Metro Smart Train Scheduler
+
+        </div>
+
+
+        <div>
+            AI Powered • Real-Time Operations
+        </div>
+
+    </footer>
+
+</main>
+```
 
 </div>
-
 
 <script src="script.js"></script>
 
