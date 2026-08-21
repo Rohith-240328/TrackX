@@ -1085,29 +1085,21 @@ async function loadRunningTrains() {
 
 /* ============================================================
    RENDER RUNNING TRAINS
+   LIVE STATUS BASED ON CURRENT TIME
    ============================================================ */
 
-function renderRunningTrains(
-    trains
-) {
+function renderRunningTrains(trains) {
 
     const container =
-        document.getElementById(
-            "runningGrid"
-        );
-
+        document.getElementById("runningGrid");
 
     if (!container) {
-
         return;
-
     }
-
 
     container.innerHTML = "";
 
-
-    if (!trains.length) {
+    if (!trains || !trains.length) {
 
         container.innerHTML = `
 
@@ -1127,55 +1119,99 @@ function renderRunningTrains(
 
         `;
 
-
         return;
-
     }
 
 
+    /* --------------------------------------------------------
+       CURRENT REAL TIME
+       -------------------------------------------------------- */
+
+    const now = new Date();
+
+    const currentMinutes =
+        now.getHours() * 60 +
+        now.getMinutes() +
+        now.getSeconds() / 60;
+
+
+    /* --------------------------------------------------------
+       SORT BY DEPARTURE TIME
+       -------------------------------------------------------- */
+
     const sortedTrains =
-        [...trains].sort(
-            (a, b) => {
+        [...trains].sort((a, b) => {
 
-                return (
-                    timeToMinutesFrontend(
-                        a.departure_time ||
-                        a.next_departure
-                    )
-                    -
-                    timeToMinutesFrontend(
-                        b.departure_time ||
-                        b.next_departure
-                    )
-                );
+            return (
+                timeToMinutesFrontend(
+                    a.departure_time ||
+                    a.next_departure
+                )
+                -
+                timeToMinutesFrontend(
+                    b.departure_time ||
+                    b.next_departure
+                )
+            );
 
-            }
-        );
+        });
 
+
+    /* --------------------------------------------------------
+       RENDER EVERY TRAIN
+       -------------------------------------------------------- */
 
     sortedTrains.forEach(
         (train, index) => {
-
-            const card =
-                document.createElement(
-                    "div"
-                );
-
-
-            card.className =
-                "train-card";
-
-
-            const trainId =
-                train.train_id ||
-                train.train ||
-                "TRAIN";
-
 
             const departure =
                 train.departure_time ||
                 train.next_departure ||
                 "--:--";
+
+
+            const departureMinutes =
+                timeToMinutesFrontend(
+                    departure
+                );
+
+
+            /*
+             * STATUS LOGIC
+             *
+             * 18:14 train at 18:14
+             *        ↓
+             *     COMPLETED
+             *
+             * 18:21 train at 18:14
+             *        ↓
+             *     UPCOMING
+             */
+
+            let status;
+
+            if (
+                departureMinutes <=
+                currentMinutes
+            ) {
+
+                status = "COMPLETED";
+
+            } else {
+
+                status = "UPCOMING";
+
+            }
+
+
+            /* ------------------------------------------------
+               TRAIN DETAILS
+               ------------------------------------------------ */
+
+            const trainId =
+                train.train_id ||
+                train.train ||
+                "TRAIN";
 
 
             const from =
@@ -1207,18 +1243,22 @@ function renderRunningTrains(
                 "RUNNING";
 
 
-            const status =
-                train.status ||
-                "UPCOMING";
-
+            /* ------------------------------------------------
+               BADGE CLASS
+               ------------------------------------------------ */
 
             let badgeClass =
                 "train-badge";
 
 
             if (
-                status === "UPCOMING"
+                status === "COMPLETED"
             ) {
+
+                badgeClass =
+                    "train-badge completed";
+
+            } else {
 
                 badgeClass =
                     "train-badge upcoming";
@@ -1226,24 +1266,18 @@ function renderRunningTrains(
             }
 
 
-            else if (
-                status === "ACTIVE"
-            ) {
+            /* ------------------------------------------------
+               CREATE CARD
+               ------------------------------------------------ */
 
-                badgeClass =
-                    "train-badge active";
+            const card =
+                document.createElement(
+                    "div"
+                );
 
-            }
 
-
-            else if (
-                status === "COMPLETED"
-            ) {
-
-                badgeClass =
-                    "train-badge completed";
-
-            }
+            card.className =
+                "train-card";
 
 
             card.innerHTML = `
@@ -1272,9 +1306,7 @@ function renderRunningTrains(
 
                     <span class="${badgeClass}">
 
-                        ${escapeHTML(
-                            status
-                        )}
+                        ${status}
 
                     </span>
 
