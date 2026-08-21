@@ -1159,6 +1159,7 @@ function renderRunningTrains(trains) {
 
     /* --------------------------------------------------------
        RENDER EVERY TRAIN
+       STATUS IS CALCULATED FROM CURRENT TIME
        -------------------------------------------------------- */
 
     sortedTrains.forEach(
@@ -1176,17 +1177,9 @@ function renderRunningTrains(trains) {
                 );
 
 
-            /*
-             * STATUS LOGIC
-             *
-             * 18:14 train at 18:14
-             *        ↓
-             *     COMPLETED
-             *
-             * 18:21 train at 18:14
-             *        ↓
-             *     UPCOMING
-             */
+            /* ------------------------------------------------
+               LIVE STATUS
+               ------------------------------------------------ */
 
             let status;
 
@@ -1244,11 +1237,20 @@ function renderRunningTrains(trains) {
 
 
             /* ------------------------------------------------
+               USE BACKEND SCHEDULE NUMBER
+               ------------------------------------------------ */
+
+            const scheduleNumber =
+                train.schedule_number ||
+                (index + 1);
+
+
+            /* ------------------------------------------------
                BADGE CLASS
                ------------------------------------------------ */
 
             let badgeClass =
-                "train-badge";
+                "train-badge upcoming";
 
 
             if (
@@ -1257,11 +1259,6 @@ function renderRunningTrains(trains) {
 
                 badgeClass =
                     "train-badge completed";
-
-            } else {
-
-                badgeClass =
-                    "train-badge upcoming";
 
             }
 
@@ -1288,7 +1285,7 @@ function renderRunningTrains(trains) {
 
                         <div class="schedule-number">
 
-                            DEPARTURE #${index + 1}
+                            DEPARTURE #${scheduleNumber}
 
                         </div>
 
