@@ -1,13 +1,14 @@
 const API_URL =
     "https://trackx-backend-nf6f.onrender.com";
 
+
 console.log("TRACKX USER FRONTEND");
 console.log("API:", API_URL);
 
 
 /* ============================================================
    RUNNING TRAIN DIRECTION
-   ============================================================ */
+============================================================ */
 
 let runningDirection =
     "ALUVA_TO_TRIPUNITHURA";
@@ -15,12 +16,15 @@ let runningDirection =
 
 function setRunningDirection(direction) {
 
-    runningDirection = direction;
+    runningDirection =
+        direction;
+
 
     const outboundBtn =
         document.getElementById(
             "outboundRunningBtn"
         );
+
 
     const returnBtn =
         document.getElementById(
@@ -57,11 +61,14 @@ function setRunningDirection(direction) {
 
 /* ============================================================
    NAVIGATION
-   ============================================================ */
+============================================================ */
 
 function showSection(sectionId) {
 
-    document.querySelectorAll(".page-section")
+    document
+        .querySelectorAll(
+            ".page-section"
+        )
         .forEach(section => {
 
             section.classList.remove(
@@ -72,7 +79,9 @@ function showSection(sectionId) {
 
 
     const section =
-        document.getElementById(sectionId);
+        document.getElementById(
+            sectionId
+        );
 
 
     if (section) {
@@ -84,24 +93,35 @@ function showSection(sectionId) {
     }
 
 
-    document.querySelectorAll(".nav-item")
+    document
+        .querySelectorAll(
+            ".nav-item"
+        )
         .forEach(button => {
 
-            button.classList.remove("active");
+            button.classList.remove(
+                "active"
+            );
 
 
             const onclick =
-                button.getAttribute("onclick");
+                button.getAttribute(
+                    "onclick"
+                );
 
 
             if (
                 onclick &&
                 onclick.includes(
-                    "'" + sectionId + "'"
+                    "'" +
+                    sectionId +
+                    "'"
                 )
             ) {
 
-                button.classList.add("active");
+                button.classList.add(
+                    "active"
+                );
 
             }
 
@@ -110,40 +130,63 @@ function showSection(sectionId) {
 
     const titles = {
 
-        home: "Welcome to TrackX",
+        home:
+            "Welcome to TrackX",
 
-        journey: "Plan Your Journey",
+        journey:
+            "Plan Your Journey",
 
-        running: "Trains Running",
+        running:
+            "Trains Running",
 
-        stations: "Metro Stations",
+        stations:
+            "Metro Stations",
 
-        upcoming: "Upcoming Trains"
+        upcoming:
+            "Upcoming Trains"
 
     };
 
 
-    document.getElementById("pageTitle")
-        .textContent =
-        titles[sectionId] ||
-        "TrackX";
+    const pageTitle =
+        document.getElementById(
+            "pageTitle"
+        );
 
 
-    if (sectionId === "running") {
+    if (pageTitle) {
+
+        pageTitle.textContent =
+            titles[sectionId] ||
+            "TrackX";
+
+    }
+
+
+    if (
+        sectionId ===
+        "running"
+    ) {
 
         loadRunningTrains();
 
     }
 
 
-    if (sectionId === "stations") {
+    if (
+        sectionId ===
+        "stations"
+    ) {
 
         loadStations();
 
     }
 
 
-    if (sectionId === "upcoming") {
+    if (
+        sectionId ===
+        "upcoming"
+    ) {
 
         loadUpcomingTrains();
 
@@ -154,7 +197,7 @@ function showSection(sectionId) {
 
 /* ============================================================
    API
-   ============================================================ */
+============================================================ */
 
 async function apiFetch(
     endpoint,
@@ -163,7 +206,8 @@ async function apiFetch(
 
     const response =
         await fetch(
-            API_URL + endpoint,
+            API_URL +
+            endpoint,
             options
         );
 
@@ -187,10 +231,16 @@ async function apiFetch(
 
             }
 
-        } catch (error) {}
+        }
+
+        catch (error) {
+
+        }
 
 
-        throw new Error(message);
+        throw new Error(
+            message
+        );
 
     }
 
@@ -202,7 +252,7 @@ async function apiFetch(
 
 /* ============================================================
    STATIONS
-   ============================================================ */
+============================================================ */
 
 async function loadStations() {
 
@@ -214,36 +264,90 @@ async function loadStations() {
 
     try {
 
-        grid.innerHTML = `
-            <div class="loading">
-                Loading stations...
-            </div>
-        `;
-
-
         const data =
             await apiFetch(
                 "/stations"
             );
 
 
-        document.querySelectorAll(
-            "#stationCount"
-        )
-            .forEach(element => {
+        /*
+         * Update Home station count.
+         */
 
-                element.textContent =
-                    data.length;
+        document
+            .querySelectorAll(
+                "#stationCount"
+            )
+            .forEach(
+                element => {
 
-            });
+                    element.textContent =
+                        Array.isArray(data)
+                            ? data.length
+                            : 0;
 
+                }
+            );
+
+
+        /*
+         * Populate Journey dropdowns.
+         */
 
         populateStationDropdowns(
             data
         );
 
 
-        grid.innerHTML = "";
+        /*
+         * IMPORTANT:
+         *
+         * If stationGrid does not exist,
+         * don't try to access innerHTML.
+         */
+
+        if (!grid) {
+
+            console.log(
+                "stationGrid not found. " +
+                "Station dropdowns loaded."
+            );
+
+            return;
+
+        }
+
+
+        grid.innerHTML =
+            "";
+
+
+        if (
+            !Array.isArray(data) ||
+            !data.length
+        ) {
+
+            grid.innerHTML = `
+
+                <div class="empty-state">
+
+                    <div>◉</div>
+
+                    <h3>
+                        No stations available
+                    </h3>
+
+                    <p>
+                        No metro stations were returned.
+                    </p>
+
+                </div>
+
+            `;
+
+            return;
+
+        }
 
 
         data.forEach(
@@ -262,48 +366,70 @@ async function loadStations() {
                 card.innerHTML = `
 
                     <div class="station-number">
-                        STATION ${String(index + 1).padStart(2, "0")}
+
+                        STATION
+                        ${String(
+                            index + 1
+                        ).padStart(
+                            2,
+                            "0"
+                        )}
+
                     </div>
 
+
                     <strong>
+
                         ${escapeHTML(
                             station.station_name
                         )}
+
                     </strong>
 
                 `;
 
 
-                grid.appendChild(card);
+                grid.appendChild(
+                    card
+                );
 
             }
         );
 
 
-    } catch (error) {
+    }
 
-        grid.innerHTML = `
+    catch (error) {
 
-            <div class="empty-state">
-
-                <div>⚠</div>
-
-                <h3>
-                    Unable to load stations
-                </h3>
-
-                <p>
-                    ${escapeHTML(
-                        error.message
-                    )}
-                </p>
-
-            </div>
-
-        `;
+        console.error(
+            "Failed to load stations:",
+            error
+        );
 
 
-        console.error(error);
+        if (grid) {
+
+            grid.innerHTML = `
+
+                <div class="empty-state">
+
+                    <div>⚠</div>
+
+                    <h3>
+                        Unable to load stations
+                    </h3>
+
+                    <p>
+                        ${escapeHTML(
+                            error.message
+                        )}
+                    </p>
+
+                </div>
+
+            `;
+
+        }
 
     }
 
@@ -312,7 +438,7 @@ async function loadStations() {
 
 /* ============================================================
    DROPDOWNS
-   ============================================================ */
+============================================================ */
 
 function populateStationDropdowns(
     stations
@@ -330,69 +456,98 @@ function populateStationDropdowns(
         );
 
 
-    from.innerHTML =
-        `
+    if (!from || !to) {
+
+        return;
+
+    }
+
+
+    from.innerHTML = `
+
         <option value="">
             Select starting station
         </option>
-        `;
+
+    `;
 
 
-    to.innerHTML =
-        `
+    to.innerHTML = `
+
         <option value="">
             Select destination station
         </option>
-        `;
+
+    `;
 
 
-    stations.forEach(station => {
+    if (
+        !Array.isArray(stations)
+    ) {
 
-        const option1 =
-            document.createElement(
-                "option"
+        return;
+
+    }
+
+
+    stations.forEach(
+        station => {
+
+            if (
+                !station.station_name
+            ) {
+
+                return;
+
+            }
+
+
+            const option1 =
+                document.createElement(
+                    "option"
+                );
+
+
+            option1.value =
+                station.station_name;
+
+
+            option1.textContent =
+                station.station_name;
+
+
+            const option2 =
+                document.createElement(
+                    "option"
+                );
+
+
+            option2.value =
+                station.station_name;
+
+
+            option2.textContent =
+                station.station_name;
+
+
+            from.appendChild(
+                option1
             );
 
 
-        option1.value =
-            station.station_name;
-
-
-        option1.textContent =
-            station.station_name;
-
-
-        const option2 =
-            document.createElement(
-                "option"
+            to.appendChild(
+                option2
             );
 
-
-        option2.value =
-            station.station_name;
-
-
-        option2.textContent =
-            station.station_name;
-
-
-        from.appendChild(
-            option1
-        );
-
-
-        to.appendChild(
-            option2
-        );
-
-    });
+        }
+    );
 
 }
 
 
 /* ============================================================
-   SWAP
-   ============================================================ */
+   SWAP STATIONS
+============================================================ */
 
 function swapStations() {
 
@@ -406,6 +561,13 @@ function swapStations() {
         document.getElementById(
             "toStation"
         );
+
+
+    if (!from || !to) {
+
+        return;
+
+    }
 
 
     const temp =
@@ -424,32 +586,32 @@ function swapStations() {
 
 /* ============================================================
    FIND TRAINS
-   ============================================================ */
+============================================================ */
 
 async function findTrains() {
 
-    const from =
+    const fromElement =
         document.getElementById(
             "fromStation"
-        ).value;
+        );
 
 
-    const to =
+    const toElement =
         document.getElementById(
             "toStation"
-        ).value;
+        );
 
 
-    const day =
+    const dayElement =
         document.getElementById(
             "journeyDay"
-        ).value;
+        );
 
 
-    const time =
+    const timeElement =
         document.getElementById(
             "journeyTime"
-        ).value;
+        );
 
 
     const message =
@@ -462,6 +624,36 @@ async function findTrains() {
         document.getElementById(
             "trainResults"
         );
+
+
+    if (
+        !fromElement ||
+        !toElement ||
+        !dayElement ||
+        !timeElement ||
+        !message ||
+        !results
+    ) {
+
+        return;
+
+    }
+
+
+    const from =
+        fromElement.value;
+
+
+    const to =
+        toElement.value;
+
+
+    const day =
+        dayElement.value;
+
+
+    const time =
+        timeElement.value;
 
 
     message.className =
@@ -488,7 +680,9 @@ async function findTrains() {
     }
 
 
-    if (from === to) {
+    if (
+        from === to
+    ) {
 
         message.textContent =
             "Starting and destination stations cannot be the same.";
@@ -528,7 +722,8 @@ async function findTrains() {
                     day,
 
                 time:
-                    time || "06:00"
+                    time ||
+                    "06:00"
 
             });
 
@@ -557,7 +752,9 @@ async function findTrains() {
                 "success"
             );
 
-        } else {
+        }
+
+        else {
 
             message.textContent =
                 "No trains found for the selected time.";
@@ -569,8 +766,9 @@ async function findTrains() {
 
         }
 
+    }
 
-    } catch (error) {
+    catch (error) {
 
         results.innerHTML = `
 
@@ -608,7 +806,7 @@ async function findTrains() {
 
 /* ============================================================
    DISPLAY SEARCH RESULTS
-   ============================================================ */
+============================================================ */
 
 function displayTrainResults(
     trains
@@ -618,6 +816,13 @@ function displayTrainResults(
         document.getElementById(
             "trainResults"
         );
+
+
+    if (!container) {
+
+        return;
+
+    }
 
 
     if (!trains.length) {
@@ -640,123 +845,119 @@ function displayTrainResults(
 
         `;
 
-
         return;
 
     }
 
 
-    container.innerHTML = "";
+    container.innerHTML =
+        "";
 
 
-    trains.forEach(train => {
+    trains.forEach(
+        train => {
 
-        const card =
-            document.createElement(
-                "div"
+            const card =
+                document.createElement(
+                    "div"
+                );
+
+
+            card.className =
+                "train-result";
+
+
+            card.innerHTML = `
+
+                <div class="result-time">
+
+                    ${escapeHTML(
+                        train.departure_time ||
+                        "--:--"
+                    )}
+
+                </div>
+
+
+                <div>
+
+                    <div class="train-name">
+
+                        ${escapeHTML(
+                            train.train_id ||
+                            "TRAIN"
+                        )}
+
+                    </div>
+
+
+                    <div class="route">
+
+                        ${escapeHTML(
+                            train.from_station ||
+                            ""
+                        )}
+
+                        →
+
+                        ${escapeHTML(
+                            train.to_station ||
+                            ""
+                        )}
+
+                    </div>
+
+                </div>
+
+
+                <div>
+
+                    <div class="train-name">
+
+                        ${escapeHTML(
+                            train.fleet_type ||
+                            "RUNNING"
+                        )}
+
+                    </div>
+
+
+                    <div class="route">
+                        Metro service
+                    </div>
+
+                </div>
+
+
+                <div>
+
+                    <span class="active-badge">
+
+                        ${escapeHTML(
+                            train.status ||
+                            "ACTIVE"
+                        )}
+
+                    </span>
+
+                </div>
+
+            `;
+
+
+            container.appendChild(
+                card
             );
 
-
-        card.className =
-            "train-result";
-
-
-        card.innerHTML = `
-
-            <div class="result-time">
-
-                ${escapeHTML(
-                    train.departure_time ||
-                    "--:--"
-                )}
-
-            </div>
-
-
-            <div>
-
-                <div class="train-name">
-
-                    ${escapeHTML(
-                        train.train_id ||
-                        "TRAIN"
-                    )}
-
-                </div>
-
-
-                <div class="route">
-
-                    ${escapeHTML(
-                        train.from_station
-                    )}
-
-                    →
-
-                    ${escapeHTML(
-                        train.to_station
-                    )}
-
-                </div>
-
-            </div>
-
-
-            <div>
-
-                <div class="train-name">
-
-                    ${escapeHTML(
-                        train.fleet_type ||
-                        "RUNNING"
-                    )}
-
-                </div>
-
-
-                <div class="route">
-                    Metro service
-                </div>
-
-            </div>
-
-
-            <div>
-
-                <span class="active-badge">
-
-                    ${escapeHTML(
-                        train.status ||
-                        "ACTIVE"
-                    )}
-
-                </span>
-
-            </div>
-
-        `;
-
-
-        container.appendChild(
-            card
-        );
-
-    });
+        }
+    );
 
 }
 
 
 /* ============================================================
    LOAD RUNNING TRAINS
-   ============================================================
-   
-   UPDATED ONLY FOR:
-   
-   - Direction selection
-   - Direction-specific API
-   - UPCOMING / ACTIVE / COMPLETED
-   - Automatic 30-second refresh
-   ============================================================ */
+============================================================ */
 
 async function loadRunningTrains() {
 
@@ -789,15 +990,15 @@ async function loadRunningTrains() {
 
 
         /*
-         * IMPORTANT:
-         *
-         * Send the selected direction
-         * to the new backend endpoint.
+         * Send selected direction
+         * to backend.
          */
 
         const endpoint =
             "/train-running?day=" +
-            encodeURIComponent(day) +
+            encodeURIComponent(
+                day
+            ) +
             "&direction=" +
             encodeURIComponent(
                 runningDirection
@@ -829,7 +1030,8 @@ async function loadRunningTrains() {
         }
 
 
-        container.innerHTML = "";
+        container.innerHTML =
+            "";
 
 
         if (!trains.length) {
@@ -870,232 +1072,42 @@ async function loadRunningTrains() {
 
 
         /*
-         * SORT BY DEPARTURE TIME
+         * Sort every departure.
          */
 
-        trains.sort((a, b) => {
+        trains.sort(
+            (a, b) => {
 
-            return (
-                timeToMinutesFrontend(
-                    a.departure_time ||
-                    a.next_departure
-                )
-                -
-                timeToMinutesFrontend(
-                    b.departure_time ||
-                    b.next_departure
-                )
-            );
+                return (
+                    timeToMinutesFrontend(
+                        a.departure_time ||
+                        a.next_departure
+                    )
+                    -
+                    timeToMinutesFrontend(
+                        b.departure_time ||
+                        b.next_departure
+                    )
+                );
 
-        });
+            }
+        );
 
 
         /*
-         * DISPLAY ALL TRAINS
+         * DISPLAY ALL DEPARTURES.
+         *
+         * We DO NOT limit this to 25.
          */
 
         trains.forEach(
             (train, index) => {
 
                 const card =
-                    document.createElement(
-                        "div"
+                    createRunningTrainCard(
+                        train,
+                        index
                     );
-
-
-                card.className =
-                    "train-card";
-
-
-                const trainId =
-                    train.train_id ||
-                    train.train ||
-                    "TRAIN";
-
-
-                const departure =
-                    train.departure_time ||
-                    train.next_departure ||
-                    "--:--";
-
-
-                const from =
-                    train.from_station ||
-                    (
-                        runningDirection ===
-                        "ALUVA_TO_TRIPUNITHURA"
-
-                        ? "Aluva"
-
-                        : "Tripunithura Terminal"
-                    );
-
-
-                const to =
-                    train.to_station ||
-                    (
-                        runningDirection ===
-                        "ALUVA_TO_TRIPUNITHURA"
-
-                        ? "Tripunithura Terminal"
-
-                        : "Aluva"
-                    );
-
-
-                const fleet =
-                    train.fleet_type ||
-                    "RUNNING";
-
-
-                /*
-                 * Backend now provides:
-                 *
-                 * UPCOMING
-                 * ACTIVE
-                 * COMPLETED
-                 */
-
-                const status =
-                    train.status ||
-                    "UPCOMING";
-
-
-                /*
-                 * STATUS CSS CLASS
-                 */
-
-                let badgeClass =
-                    "train-badge";
-
-
-                if (
-                    status ===
-                    "UPCOMING"
-                ) {
-
-                    badgeClass =
-                        "train-badge upcoming";
-
-                }
-
-
-                else if (
-                    status ===
-                    "ACTIVE"
-                ) {
-
-                    badgeClass =
-                        "train-badge active";
-
-                }
-
-
-                else if (
-                    status ===
-                    "COMPLETED"
-                ) {
-
-                    badgeClass =
-                        "train-badge completed";
-
-                }
-
-
-                else {
-
-                    badgeClass =
-                        "train-badge";
-
-                }
-
-
-                card.innerHTML = `
-
-                    <div class="train-card-top">
-
-                        <div>
-
-                            <div class="schedule-number">
-
-                                DEPARTURE #${index + 1}
-
-                            </div>
-
-
-                            <h3>
-
-                                ${escapeHTML(
-                                    trainId
-                                )}
-
-                            </h3>
-
-                        </div>
-
-
-                        <span class="${badgeClass}">
-
-                            ${escapeHTML(
-                                status
-                            )}
-
-                        </span>
-
-                    </div>
-
-
-                    <div class="train-route">
-
-                        ${escapeHTML(
-                            from
-                        )}
-
-                        →
-
-                        ${escapeHTML(
-                            to
-                        )}
-
-                    </div>
-
-
-                    <div class="train-departure">
-
-                        <span>
-                            DEPARTURE
-                        </span>
-
-
-                        <strong>
-
-                            ${escapeHTML(
-                                departure
-                            )}
-
-                        </strong>
-
-                    </div>
-
-
-                    <div class="train-fleet">
-
-                        <span>
-                            FLEET
-                        </span>
-
-
-                        <strong>
-
-                            ${escapeHTML(
-                                fleet
-                            )}
-
-                        </strong>
-
-                    </div>
-
-                `;
 
 
                 container.appendChild(
@@ -1107,10 +1119,7 @@ async function loadRunningTrains() {
 
 
         /*
-         * HOME
-         *
-         * Keep the existing home
-         * next-departure functionality.
+         * HOME NEXT DEPARTURES
          */
 
         updateNextDeparture(
@@ -1123,7 +1132,9 @@ async function loadRunningTrains() {
         );
 
 
-    } catch (error) {
+    }
+
+    catch (error) {
 
         console.error(
             "Failed to load running trains:",
@@ -1167,8 +1178,213 @@ async function loadRunningTrains() {
 
 
 /* ============================================================
+   CREATE RUNNING TRAIN CARD
+============================================================ */
+
+function createRunningTrainCard(
+    train,
+    index
+) {
+
+    const card =
+        document.createElement(
+            "div"
+        );
+
+
+    card.className =
+        "train-card";
+
+
+    const trainId =
+        train.train_id ||
+        train.train ||
+        "TRAIN";
+
+
+    const departure =
+        train.departure_time ||
+        train.next_departure ||
+        "--:--";
+
+
+    const from =
+        train.from_station ||
+        (
+            runningDirection ===
+            "ALUVA_TO_TRIPUNITHURA"
+
+                ? "Aluva"
+
+                : "Tripunithura Terminal"
+        );
+
+
+    const to =
+        train.to_station ||
+        (
+            runningDirection ===
+            "ALUVA_TO_TRIPUNITHURA"
+
+                ? "Tripunithura Terminal"
+
+                : "Aluva"
+        );
+
+
+    const fleet =
+        train.fleet_type ||
+        "RUNNING";
+
+
+    const status =
+        train.status ||
+        "UPCOMING";
+
+
+    let badgeClass =
+        "train-badge";
+
+
+    if (
+        status ===
+        "UPCOMING"
+    ) {
+
+        badgeClass =
+            "train-badge upcoming";
+
+    }
+
+    else if (
+        status ===
+        "ACTIVE"
+    ) {
+
+        badgeClass =
+            "train-badge active";
+
+    }
+
+    else if (
+        status ===
+        "COMPLETED"
+    ) {
+
+        badgeClass =
+            "train-badge completed";
+
+    }
+
+
+    card.innerHTML = `
+
+        <div class="train-card-top">
+
+
+            <div>
+
+
+                <div class="schedule-number">
+
+                    DEPARTURE #${index + 1}
+
+                </div>
+
+
+                <h3>
+
+                    ${escapeHTML(
+                        trainId
+                    )}
+
+                </h3>
+
+
+            </div>
+
+
+
+            <span class="${badgeClass}">
+
+                ${escapeHTML(
+                    status
+                )}
+
+            </span>
+
+
+        </div>
+
+
+
+        <div class="train-route">
+
+            ${escapeHTML(
+                from
+            )}
+
+            →
+
+            ${escapeHTML(
+                to
+            )}
+
+        </div>
+
+
+
+        <div class="train-departure">
+
+
+            <span>
+                DEPARTURE
+            </span>
+
+
+            <strong>
+
+                ${escapeHTML(
+                    departure
+                )}
+
+            </strong>
+
+
+        </div>
+
+
+
+        <div class="train-fleet">
+
+
+            <span>
+                FLEET
+            </span>
+
+
+            <strong>
+
+                ${escapeHTML(
+                    fleet
+                )}
+
+            </strong>
+
+
+        </div>
+
+    `;
+
+
+    return card;
+
+}
+
+
+/* ============================================================
    NEXT DEPARTURE
-   ============================================================ */
+============================================================ */
 
 function updateNextDeparture(
     trains
@@ -1323,7 +1539,7 @@ function updateNextDeparture(
 
 /* ============================================================
    HOME — NEXT TWO DEPARTURES
-   ============================================================ */
+============================================================ */
 
 function updateNextTwoDepartures(
     trains
@@ -1403,49 +1619,52 @@ function updateNextTwoDepartures(
 
     const upcoming =
         [...trains]
+            .filter(
+                train => {
 
-            .filter(train => {
-
-                const departure =
-                    train.departure_time ||
-                    train.next_departure;
+                    const departure =
+                        train.departure_time ||
+                        train.next_departure;
 
 
-                if (!departure) {
+                    if (!departure) {
 
-                    return false;
+                        return false;
+
+                    }
+
+
+                    return (
+                        timeToMinutesFrontend(
+                            departure
+                        ) >
+                        currentMinutes
+                    );
 
                 }
+            )
+            .sort(
+                (a, b) => {
+
+                    return (
+                        timeToMinutesFrontend(
+                            a.departure_time ||
+                            a.next_departure
+                        )
+                        -
+                        timeToMinutesFrontend(
+                            b.departure_time ||
+                            b.next_departure
+                        )
+                    );
+
+                }
+            );
 
 
-                return (
-                    timeToMinutesFrontend(
-                        departure
-                    ) >
-                    currentMinutes
-                );
-
-            })
-
-
-            .sort((a, b) => {
-
-                return (
-                    timeToMinutesFrontend(
-                        a.departure_time ||
-                        a.next_departure
-                    )
-                    -
-                    timeToMinutesFrontend(
-                        b.departure_time ||
-                        b.next_departure
-                    )
-                );
-
-            });
-
-
-    /* FIRST */
+    /*
+     * FIRST
+     */
 
     if (upcoming[0]) {
 
@@ -1462,7 +1681,9 @@ function updateNextTwoDepartures(
         route1.textContent =
             `${train.from_station || "Aluva"} → ${train.to_station || "Tripunithura Terminal"}`;
 
-    } else {
+    }
+
+    else {
 
         departure1.textContent =
             "--:--";
@@ -1474,7 +1695,9 @@ function updateNextTwoDepartures(
     }
 
 
-    /* SECOND */
+    /*
+     * SECOND
+     */
 
     if (upcoming[1]) {
 
@@ -1491,7 +1714,9 @@ function updateNextTwoDepartures(
         route2.textContent =
             `${train.from_station || "Aluva"} → ${train.to_station || "Tripunithura Terminal"}`;
 
-    } else {
+    }
+
+    else {
 
         departure2.textContent =
             "--:--";
@@ -1507,7 +1732,7 @@ function updateNextTwoDepartures(
 
 /* ============================================================
    TIME CONVERTER
-   ============================================================ */
+============================================================ */
 
 function timeToMinutesFrontend(
     value
@@ -1555,8 +1780,8 @@ function timeToMinutesFrontend(
 
 
 /* ============================================================
-   LIVE NEXT DEPARTURE + RUNNING TRAIN REFRESH
-   ============================================================ */
+   LIVE REFRESH
+============================================================ */
 
 function startNextDepartureTimer() {
 
@@ -1569,14 +1794,11 @@ function startNextDepartureTimer() {
                     getCurrentDay();
 
 
-                /*
-                 * Refresh the currently selected
-                 * running direction.
-                 */
-
                 const endpoint =
                     "/train-running?day=" +
-                    encodeURIComponent(day) +
+                    encodeURIComponent(
+                        day
+                    ) +
                     "&direction=" +
                     encodeURIComponent(
                         runningDirection
@@ -1608,9 +1830,8 @@ function startNextDepartureTimer() {
 
 
                 /*
-                 * If the user is currently
-                 * viewing Trains Running,
-                 * update the cards automatically.
+                 * Update Running page
+                 * if currently visible.
                  */
 
                 const runningSection =
@@ -1632,8 +1853,9 @@ function startNextDepartureTimer() {
 
                 }
 
+            }
 
-            } catch (error) {
+            catch (error) {
 
                 console.error(
                     "Running train update failed:",
@@ -1643,6 +1865,7 @@ function startNextDepartureTimer() {
             }
 
         },
+
         30000
     );
 
@@ -1651,11 +1874,7 @@ function startNextDepartureTimer() {
 
 /* ============================================================
    RENDER RUNNING TRAINS
-   ============================================================
-   
-   Separate rendering function so the 30-second
-   refresh does not duplicate the API logic.
-   ============================================================ */
+============================================================ */
 
 function renderRunningTrains(
     trains
@@ -1674,10 +1893,14 @@ function renderRunningTrains(
     }
 
 
-    container.innerHTML = "";
+    container.innerHTML =
+        "";
 
 
-    if (!trains.length) {
+    if (
+        !trains ||
+        !trains.length
+    ) {
 
         container.innerHTML = `
 
@@ -1697,208 +1920,38 @@ function renderRunningTrains(
 
         `;
 
-
         return;
 
     }
 
 
-    trains.sort((a, b) => {
+    trains.sort(
+        (a, b) => {
 
-        return (
-            timeToMinutesFrontend(
-                a.departure_time ||
-                a.next_departure
-            )
-            -
-            timeToMinutesFrontend(
-                b.departure_time ||
-                b.next_departure
-            )
-        );
+            return (
+                timeToMinutesFrontend(
+                    a.departure_time ||
+                    a.next_departure
+                )
+                -
+                timeToMinutesFrontend(
+                    b.departure_time ||
+                    b.next_departure
+                )
+            );
 
-    });
+        }
+    );
 
 
     trains.forEach(
         (train, index) => {
 
             const card =
-                document.createElement(
-                    "div"
+                createRunningTrainCard(
+                    train,
+                    index
                 );
-
-
-            card.className =
-                "train-card";
-
-
-            const trainId =
-                train.train_id ||
-                train.train ||
-                "TRAIN";
-
-
-            const departure =
-                train.departure_time ||
-                train.next_departure ||
-                "--:--";
-
-
-            const from =
-                train.from_station ||
-                (
-                    runningDirection ===
-                    "ALUVA_TO_TRIPUNITHURA"
-
-                    ? "Aluva"
-
-                    : "Tripunithura Terminal"
-                );
-
-
-            const to =
-                train.to_station ||
-                (
-                    runningDirection ===
-                    "ALUVA_TO_TRIPUNITHURA"
-
-                    ? "Tripunithura Terminal"
-
-                    : "Aluva"
-                );
-
-
-            const fleet =
-                train.fleet_type ||
-                "RUNNING";
-
-
-            const status =
-                train.status ||
-                "UPCOMING";
-
-
-            let badgeClass =
-                "train-badge";
-
-
-            if (
-                status === "UPCOMING"
-            ) {
-
-                badgeClass =
-                    "train-badge upcoming";
-
-            }
-
-
-            else if (
-                status === "ACTIVE"
-            ) {
-
-                badgeClass =
-                    "train-badge active";
-
-            }
-
-
-            else if (
-                status === "COMPLETED"
-            ) {
-
-                badgeClass =
-                    "train-badge completed";
-
-            }
-
-
-            card.innerHTML = `
-
-                <div class="train-card-top">
-
-                    <div>
-
-                        <div class="schedule-number">
-
-                            DEPARTURE #${index + 1}
-
-                        </div>
-
-
-                        <h3>
-
-                            ${escapeHTML(
-                                trainId
-                            )}
-
-                        </h3>
-
-                    </div>
-
-
-                    <span class="${badgeClass}">
-
-                        ${escapeHTML(
-                            status
-                        )}
-
-                    </span>
-
-                </div>
-
-
-                <div class="train-route">
-
-                    ${escapeHTML(
-                        from
-                    )}
-
-                    →
-
-                    ${escapeHTML(
-                        to
-                    )}
-
-                </div>
-
-
-                <div class="train-departure">
-
-                    <span>
-                        DEPARTURE
-                    </span>
-
-
-                    <strong>
-
-                        ${escapeHTML(
-                            departure
-                        )}
-
-                    </strong>
-
-                </div>
-
-
-                <div class="train-fleet">
-
-                    <span>
-                        FLEET
-                    </span>
-
-
-                    <strong>
-
-                        ${escapeHTML(
-                            fleet
-                        )}
-
-                    </strong>
-
-                </div>
-
-            `;
 
 
             container.appendChild(
@@ -1913,7 +1966,7 @@ function renderRunningTrains(
 
 /* ============================================================
    UPCOMING SCHEDULE
-   ============================================================ */
+============================================================ */
 
 async function loadUpcomingTrains() {
 
@@ -1923,10 +1976,24 @@ async function loadUpcomingTrains() {
         );
 
 
-    const day =
+    const dayElement =
         document.getElementById(
             "scheduleDay"
-        ).value;
+        );
+
+
+    if (
+        !container ||
+        !dayElement
+    ) {
+
+        return;
+
+    }
+
+
+    const day =
+        dayElement.value;
 
 
     try {
@@ -1950,7 +2017,8 @@ async function loadUpcomingTrains() {
             data.schedule || [];
 
 
-        container.innerHTML = "";
+        container.innerHTML =
+            "";
 
 
         if (!schedule.length) {
@@ -1974,103 +2042,107 @@ async function loadUpcomingTrains() {
 
             `;
 
-
             return;
 
         }
 
 
-        schedule.sort((a, b) => {
+        schedule.sort(
+            (a, b) => {
 
-            return (
-                timeToMinutesFrontend(
-                    a.departure_time
-                )
-                -
-                timeToMinutesFrontend(
-                    b.departure_time
-                )
-            );
-
-        });
-
-
-        schedule.forEach(train => {
-
-            const row =
-                document.createElement(
-                    "div"
+                return (
+                    timeToMinutesFrontend(
+                        a.departure_time
+                    )
+                    -
+                    timeToMinutesFrontend(
+                        b.departure_time
+                    )
                 );
 
-
-            row.className =
-                "schedule-row";
-
-
-            row.innerHTML = `
-
-                <div class="schedule-time">
-
-                    ${escapeHTML(
-                        train.departure_time ||
-                        "--:--"
-                    )}
-
-                </div>
+            }
+        );
 
 
-                <div class="schedule-train">
+        schedule.forEach(
+            train => {
 
-                    ${escapeHTML(
-                        train.train_id ||
-                        "TRAIN"
-                    )}
-
-                </div>
-
-
-                <div class="schedule-route">
-
-                    ${escapeHTML(
-                        train.from_station ||
-                        "Aluva"
-                    )}
-
-                </div>
+                const row =
+                    document.createElement(
+                        "div"
+                    );
 
 
-                <div class="schedule-route">
-
-                    →
-
-                    ${escapeHTML(
-                        train.to_station ||
-                        "Tripunithura Terminal"
-                    )}
-
-                </div>
+                row.className =
+                    "schedule-row";
 
 
-                <div class="schedule-status">
+                row.innerHTML = `
 
-                    ${escapeHTML(
-                        train.status ||
-                        "ACTIVE"
-                    )}
+                    <div class="schedule-time">
 
-                </div>
+                        ${escapeHTML(
+                            train.departure_time ||
+                            "--:--"
+                        )}
 
-            `;
-
-
-            container.appendChild(
-                row
-            );
-
-        });
+                    </div>
 
 
-    } catch (error) {
+                    <div class="schedule-train">
+
+                        ${escapeHTML(
+                            train.train_id ||
+                            "TRAIN"
+                        )}
+
+                    </div>
+
+
+                    <div class="schedule-route">
+
+                        ${escapeHTML(
+                            train.from_station ||
+                            "Aluva"
+                        )}
+
+                    </div>
+
+
+                    <div class="schedule-route">
+
+                        →
+
+                        ${escapeHTML(
+                            train.to_station ||
+                            "Tripunithura Terminal"
+                        )}
+
+                    </div>
+
+
+                    <div class="schedule-status">
+
+                        ${escapeHTML(
+                            train.status ||
+                            "ACTIVE"
+                        )}
+
+                    </div>
+
+                `;
+
+
+                container.appendChild(
+                    row
+                );
+
+            }
+        );
+
+    }
+
+    catch (error) {
 
         container.innerHTML = `
 
@@ -2093,7 +2165,9 @@ async function loadUpcomingTrains() {
         `;
 
 
-        console.error(error);
+        console.error(
+            error
+        );
 
     }
 
@@ -2102,7 +2176,7 @@ async function loadUpcomingTrains() {
 
 /* ============================================================
    CURRENT DAY
-   ============================================================ */
+============================================================ */
 
 function getCurrentDay() {
 
@@ -2132,29 +2206,53 @@ function setupCurrentDay() {
         getCurrentDay();
 
 
-    document.getElementById(
-        "currentDay"
-    ).textContent =
-        day;
+    const currentDay =
+        document.getElementById(
+            "currentDay"
+        );
 
 
-    document.getElementById(
-        "journeyDay"
-    ).value =
-        day;
+    const journeyDay =
+        document.getElementById(
+            "journeyDay"
+        );
 
 
-    document.getElementById(
-        "scheduleDay"
-    ).value =
-        day;
+    const scheduleDay =
+        document.getElementById(
+            "scheduleDay"
+        );
+
+
+    if (currentDay) {
+
+        currentDay.textContent =
+            day;
+
+    }
+
+
+    if (journeyDay) {
+
+        journeyDay.value =
+            day;
+
+    }
+
+
+    if (scheduleDay) {
+
+        scheduleDay.value =
+            day;
+
+    }
 
 }
 
 
 /* ============================================================
    BACKEND
-   ============================================================ */
+============================================================ */
 
 async function checkBackend() {
 
@@ -2167,7 +2265,9 @@ async function checkBackend() {
     try {
 
         const data =
-            await apiFetch("/");
+            await apiFetch(
+                "/"
+            );
 
 
         console.log(
@@ -2176,35 +2276,50 @@ async function checkBackend() {
         );
 
 
-        status.className =
-            "backend-status online";
+        if (status) {
+
+            status.className =
+                "backend-status online";
 
 
-        status.innerHTML = `
+            status.innerHTML = `
 
-            <span class="status-dot"></span>
+                <span class="status-dot"></span>
 
-            TRACKX SYSTEM ONLINE
+                TRACKX SYSTEM ONLINE
 
-        `;
+            `;
+
+        }
 
 
         return true;
 
+    }
 
-    } catch (error) {
+    catch (error) {
 
-        status.className =
-            "backend-status offline";
+        console.error(
+            "Backend connection failed:",
+            error
+        );
 
 
-        status.innerHTML = `
+        if (status) {
 
-            <span class="status-dot"></span>
+            status.className =
+                "backend-status offline";
 
-            BACKEND OFFLINE
 
-        `;
+            status.innerHTML = `
+
+                <span class="status-dot"></span>
+
+                BACKEND OFFLINE
+
+            `;
+
+        }
 
 
         return false;
@@ -2216,7 +2331,7 @@ async function checkBackend() {
 
 /* ============================================================
    ESCAPE HTML
-   ============================================================ */
+============================================================ */
 
 function escapeHTML(
     value
@@ -2264,39 +2379,91 @@ function escapeHTML(
 
 /* ============================================================
    INITIALIZE
-   ============================================================ */
+============================================================ */
 
 async function initializeTrackX() {
+
+    /*
+     * Set current day.
+     */
 
     setupCurrentDay();
 
 
     /*
-     * Default running direction.
+     * Set default direction
+     * WITHOUT calling loadRunningTrains()
+     * twice.
      */
 
-    setRunningDirection(
-        "ALUVA_TO_TRIPUNITHURA"
-    );
+    runningDirection =
+        "ALUVA_TO_TRIPUNITHURA";
 
+
+    const outboundBtn =
+        document.getElementById(
+            "outboundRunningBtn"
+        );
+
+
+    const returnBtn =
+        document.getElementById(
+            "returnRunningBtn"
+        );
+
+
+    if (outboundBtn) {
+
+        outboundBtn.classList.add(
+            "active"
+        );
+
+    }
+
+
+    if (returnBtn) {
+
+        returnBtn.classList.remove(
+            "active"
+        );
+
+    }
+
+
+    /*
+     * Check Render backend.
+     */
 
     await checkBackend();
 
 
+    /*
+     * Load stations.
+     */
+
     await loadStations();
 
+
+    /*
+     * Load default outbound
+     * train schedule.
+     */
 
     await loadRunningTrains();
 
 
     /*
-     * Start live updates.
+     * Start 30-second live refresh.
      */
 
     startNextDepartureTimer();
 
 }
 
+
+/* ============================================================
+   START TRACKX
+============================================================ */
 
 document.addEventListener(
     "DOMContentLoaded",
