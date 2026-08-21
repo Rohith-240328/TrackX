@@ -27,8 +27,10 @@ function showSection(sectionId) {
 
             const onclick = button.getAttribute("onclick");
 
-            if (onclick &&
-                onclick.includes("'" + sectionId + "'")) {
+            if (
+                onclick &&
+                onclick.includes("'" + sectionId + "'")
+            ) {
                 button.classList.add("active");
             }
         });
@@ -391,6 +393,7 @@ function displayTrainResults(trains) {
     });
 }
 
+
 /* ============================================================
    LOAD RUNNING TRAINS + LIVE NEXT DEPARTURE
    ============================================================ */
@@ -408,16 +411,7 @@ async function loadRunningTrains() {
             </div>
         `;
 
-        /* ----------------------------------------------------
-           GET TODAY'S DAY
-        ---------------------------------------------------- */
-
         const day = getCurrentDay();
-
-
-        /* ----------------------------------------------------
-           LOAD TODAY'S SCHEDULE
-        ---------------------------------------------------- */
 
         const data =
             await apiFetch(
@@ -425,14 +419,8 @@ async function loadRunningTrains() {
                 encodeURIComponent(day)
             );
 
-
         const trains =
             data.trains || [];
-
-
-        /* ----------------------------------------------------
-           TOTAL SCHEDULED DEPARTURES
-        ---------------------------------------------------- */
 
         const runningCount =
             document.getElementById(
@@ -444,16 +432,9 @@ async function loadRunningTrains() {
             runningCount.textContent =
                 data.total_departures ??
                 trains.length;
-
         }
 
-
         container.innerHTML = "";
-
-
-        /* ----------------------------------------------------
-           NO TRAINS
-        ---------------------------------------------------- */
 
         if (!trains.length) {
 
@@ -476,18 +457,11 @@ async function loadRunningTrains() {
 
             `;
 
-
             updateNextDeparture([]);
 
-
             return;
-
         }
 
-
-        /* ----------------------------------------------------
-           DISPLAY ALL DEPARTURES
-        ---------------------------------------------------- */
 
         trains.forEach(
             (train, index) => {
@@ -495,46 +469,51 @@ async function loadRunningTrains() {
                 const card =
                     document.createElement("div");
 
-
                 card.className =
                     "train-card";
-
 
                 const trainId =
                     train.train_id ||
                     train.train ||
                     "TRAIN";
 
-
                 const departure =
                     train.departure_time ||
                     train.next_departure ||
                     "--:--";
 
-
                 const from =
                     train.from_station ||
                     "Aluva";
-
 
                 const to =
                     train.to_station ||
                     "Tripunithura Terminal";
 
-
                 const fleet =
                     train.fleet_type ||
                     "RUNNING";
-
 
                 const status =
                     train.status ||
                     "ACTIVE";
 
+                const direction =
+                    train.direction ||
+                    (
+                        from === "Tripunithura Terminal"
+                            ? "TRIPUNITHURA_TO_ALUVA"
+                            : "ALUVA_TO_TRIPUNITHURA"
+                    );
+
+                const directionLabel =
+                    direction ===
+                    "TRIPUNITHURA_TO_ALUVA"
+                        ? "RETURN"
+                        : "OUTBOUND";
 
                 let badgeClass =
                     "train-badge";
-
 
                 if (
                     status === "UNAVAILABLE"
@@ -544,7 +523,6 @@ async function loadRunningTrains() {
                         "train-badge unavailable";
 
                 }
-
 
                 card.innerHTML = `
 
@@ -562,8 +540,13 @@ async function loadRunningTrains() {
                                 )}
                             </h3>
 
-                        </div>
+                            <div class="schedule-direction">
+                                ${escapeHTML(
+                                    directionLabel
+                                )}
+                            </div>
 
+                        </div>
 
                         <span class="${badgeClass}">
                             ${escapeHTML(
@@ -572,7 +555,6 @@ async function loadRunningTrains() {
                         </span>
 
                     </div>
-
 
                     <div class="train-route">
 
@@ -588,7 +570,6 @@ async function loadRunningTrains() {
 
                     </div>
 
-
                     <div class="train-departure">
 
                         <span>
@@ -602,7 +583,6 @@ async function loadRunningTrains() {
                         </strong>
 
                     </div>
-
 
                     <div class="train-fleet">
 
@@ -620,16 +600,11 @@ async function loadRunningTrains() {
 
                 `;
 
-
                 container.appendChild(card);
 
             }
         );
 
-
-        /* ----------------------------------------------------
-           UPDATE NEXT DEPARTURE
-        ---------------------------------------------------- */
 
         updateNextDeparture(trains);
 
@@ -640,7 +615,6 @@ async function loadRunningTrains() {
             "Failed to load running trains:",
             error
         );
-
 
         container.innerHTML = `
 
@@ -662,6 +636,244 @@ async function loadRunningTrains() {
 
         `;
 
+        updateNextDeparture([]);
+
+    }
+
+}
+
+
+/* ============================================================
+   LOAD RUNNING TRAINS
+   ============================================================ */
+
+async function loadRunningTrains() {
+
+    const container =
+        document.getElementById("runningGrid");
+
+    try {
+
+        container.innerHTML = `
+            <div class="loading">
+                Loading train schedule...
+            </div>
+        `;
+
+        const day = getCurrentDay();
+
+        const data =
+            await apiFetch(
+                "/train-running?day=" +
+                encodeURIComponent(day)
+            );
+
+        const trains =
+            data.trains || [];
+
+        const runningCount =
+            document.getElementById("runningCount");
+
+        if (runningCount) {
+
+            runningCount.textContent =
+                data.total_departures ??
+                trains.length;
+        }
+
+        container.innerHTML = "";
+
+        if (!trains.length) {
+
+            container.innerHTML = `
+                <div class="empty-state">
+
+                    <div>🚆</div>
+
+                    <h3>
+                        No scheduled trains
+                    </h3>
+
+                    <p>
+                        No train departures are
+                        available for ${escapeHTML(day)}.
+                    </p>
+
+                </div>
+            `;
+
+            updateNextDeparture([]);
+
+            return;
+        }
+
+
+        /* ----------------------------------------------------
+           SORT COMPLETE SCHEDULE
+        ---------------------------------------------------- */
+
+        trains.sort((a, b) => {
+
+            return (
+                timeToMinutesFrontend(
+                    a.departure_time ||
+                    a.next_departure
+                )
+                -
+                timeToMinutesFrontend(
+                    b.departure_time ||
+                    b.next_departure
+                )
+            );
+
+        });
+
+
+        /* ----------------------------------------------------
+           DISPLAY ALL DEPARTURES
+        ---------------------------------------------------- */
+
+        trains.forEach((train, index) => {
+
+            const card =
+                document.createElement("div");
+
+            card.className =
+                "train-card";
+
+            const trainId =
+                train.train_id ||
+                train.train ||
+                "TRAIN";
+
+            const departure =
+                train.departure_time ||
+                train.next_departure ||
+                "--:--";
+
+            const from =
+                train.from_station ||
+                "Aluva";
+
+            const to =
+                train.to_station ||
+                "Tripunithura Terminal";
+
+            const fleet =
+                train.fleet_type ||
+                "RUNNING";
+
+            const status =
+                train.status ||
+                "ACTIVE";
+
+            let badgeClass =
+                "train-badge";
+
+            if (
+                status === "UNAVAILABLE"
+            ) {
+
+                badgeClass =
+                    "train-badge unavailable";
+
+            }
+
+            card.innerHTML = `
+
+                <div class="train-card-top">
+
+                    <div>
+
+                        <div class="schedule-number">
+                            DEPARTURE #${index + 1}
+                        </div>
+
+                        <h3>
+                            ${escapeHTML(trainId)}
+                        </h3>
+
+                    </div>
+
+                    <span class="${badgeClass}">
+                        ${escapeHTML(status)}
+                    </span>
+
+                </div>
+
+
+                <div class="train-route">
+
+                    ${escapeHTML(from)}
+                    →
+                    ${escapeHTML(to)}
+
+                </div>
+
+
+                <div class="train-departure">
+
+                    <span>
+                        DEPARTURE
+                    </span>
+
+                    <strong>
+                        ${escapeHTML(departure)}
+                    </strong>
+
+                </div>
+
+
+                <div class="train-fleet">
+
+                    <span>
+                        FLEET
+                    </span>
+
+                    <strong>
+                        ${escapeHTML(fleet)}
+                    </strong>
+
+                </div>
+
+            `;
+
+            container.appendChild(card);
+
+        });
+
+
+        /* ----------------------------------------------------
+           HOME PAGE NEXT DEPARTURE
+        ---------------------------------------------------- */
+
+        updateNextDeparture(trains);
+
+
+    } catch (error) {
+
+        console.error(
+            "Failed to load running trains:",
+            error
+        );
+
+        container.innerHTML = `
+
+            <div class="empty-state">
+
+                <div>⚠</div>
+
+                <h3>
+                    Train schedule unavailable
+                </h3>
+
+                <p>
+                    ${escapeHTML(error.message)}
+                </p>
+
+            </div>
+
+        `;
 
         updateNextDeparture([]);
 
@@ -671,143 +883,18 @@ async function loadRunningTrains() {
 
 
 /* ============================================================
-   FIND NEXT DEPARTURE BASED ON CURRENT TIME
-   ============================================================ */
-
-function updateNextDeparture(
-    trains
-) {
-
-    const nextElement =
-        document.getElementById(
-            "nextDeparture"
-        );
-
-
-    if (!nextElement) {
-
-        return;
-
-    }
-
-
-    if (
-        !trains ||
-        !trains.length
-    ) {
-
-        nextElement.textContent =
-            "--:--";
-
-        return;
-
-    }
-
-
-    /* --------------------------------------------------------
-       CURRENT TIME
-       -------------------------------------------------------- */
-
-    const now =
-        new Date();
-
-
-    const currentMinutes =
-        now.getHours() * 60 +
-        now.getMinutes() +
-        (
-            now.getSeconds() / 60
-        );
-
-
-    /* --------------------------------------------------------
-       FIND FIRST DEPARTURE AFTER CURRENT TIME
-       -------------------------------------------------------- */
-
-    let nextTrain = null;
-
-
-    for (
-        const train of trains
-    ) {
-
-        const departure =
-            train.departure_time ||
-            train.next_departure;
-
-
-        if (!departure) {
-
-            continue;
-
-        }
-
-
-        const departureMinutes =
-            timeToMinutesFrontend(
-                departure
-            );
-
-
-        if (
-            departureMinutes >
-            currentMinutes
-        ) {
-
-            nextTrain = train;
-
-            break;
-
-        }
-
-    }
-
-
-    /* --------------------------------------------------------
-       NO MORE TRAINS TODAY
-       -------------------------------------------------------- */
-
-    if (!nextTrain) {
-
-        nextElement.textContent =
-            "No more trains";
-
-        return;
-
-    }
-
-
-    /* --------------------------------------------------------
-       SHOW NEXT DEPARTURE
-       -------------------------------------------------------- */
-
-    nextElement.textContent =
-        nextTrain.departure_time ||
-        nextTrain.next_departure ||
-        "--:--";
-
-}
-
-
-/* ============================================================
    CONVERT HH:MM / HH:MM:SS TO MINUTES
    ============================================================ */
 
-function timeToMinutesFrontend(
-    value
-) {
+function timeToMinutesFrontend(value) {
 
     if (!value) {
-
         return 0;
-
     }
-
 
     const parts =
         String(value)
             .split(":");
-
 
     const hour =
         parseInt(
@@ -815,20 +902,17 @@ function timeToMinutesFrontend(
             10
         ) || 0;
 
-
     const minute =
         parseInt(
             parts[1],
             10
         ) || 0;
 
-
     const second =
         parseInt(
             parts[2],
             10
         ) || 0;
-
 
     return (
         hour * 60 +
@@ -838,16 +922,144 @@ function timeToMinutesFrontend(
 
 }
 
+ /* ============================================================
+   NEXT DEPARTURE — HOME PAGE
+   ============================================================ */
+
+function updateNextDeparture(trains) {
+
+    const nextElement =
+        document.getElementById("nextDeparture");
+
+    const routeElement =
+        document.getElementById("nextDepartureRoute");
+
+
+    if (!nextElement) {
+        return;
+    }
+
+
+    /* --------------------------------------------------------
+       NO SCHEDULE
+    -------------------------------------------------------- */
+
+    if (!trains || !trains.length) {
+
+        nextElement.textContent = "--:--";
+
+        if (routeElement) {
+            routeElement.textContent =
+                "No scheduled trains";
+        }
+
+        return;
+    }
+
+
+    /* --------------------------------------------------------
+       CURRENT TIME
+    -------------------------------------------------------- */
+
+    const now = new Date();
+
+    const currentMinutes =
+        now.getHours() * 60 +
+        now.getMinutes() +
+        now.getSeconds() / 60;
+
+
+    /* --------------------------------------------------------
+       FIND NEXT DEPARTURE
+    -------------------------------------------------------- */
+
+    let nextTrain = null;
+    let nextDepartureMinutes = Infinity;
+
+
+    for (const train of trains) {
+
+        const departure =
+            train.departure_time ||
+            train.next_departure;
+
+        if (!departure) {
+            continue;
+        }
+
+
+        const departureMinutes =
+            timeToMinutesFrontend(departure);
+
+
+        if (
+            departureMinutes > currentMinutes &&
+            departureMinutes < nextDepartureMinutes
+        ) {
+
+            nextTrain = train;
+            nextDepartureMinutes =
+                departureMinutes;
+        }
+    }
+
+
+    /* --------------------------------------------------------
+       NO MORE TRAINS TODAY
+       SERVICE ENDS AFTER 23:00
+    -------------------------------------------------------- */
+
+    if (!nextTrain) {
+
+        nextElement.textContent =
+            "No more trains";
+
+        if (routeElement) {
+
+            routeElement.textContent =
+                "Today's service completed";
+        }
+
+        return;
+    }
+
+
+    /* --------------------------------------------------------
+       SHOW NEXT DEPARTURE TIME
+    -------------------------------------------------------- */
+
+    nextElement.textContent =
+        nextTrain.departure_time ||
+        nextTrain.next_departure ||
+        "--:--";
+
+
+    /* --------------------------------------------------------
+       SHOW ROUTE
+    -------------------------------------------------------- */
+
+    if (routeElement) {
+
+        const from =
+            nextTrain.from_station ||
+            "Aluva";
+
+        const to =
+            nextTrain.to_station ||
+            "Tripunithura Terminal";
+
+
+        routeElement.textContent =
+            `${from} → ${to}`;
+    }
+}
+
 
 /* ============================================================
    LIVE NEXT-DEPARTURE REFRESH
    ============================================================ */
 
 function startNextDepartureTimer() {
-
-    /* --------------------------------------------------------
-       Update every 30 seconds
-       -------------------------------------------------------- */
 
     setInterval(
         async function () {
@@ -857,18 +1069,15 @@ function startNextDepartureTimer() {
                 const day =
                     getCurrentDay();
 
-
                 const data =
                     await apiFetch(
                         "/train-running?day=" +
                         encodeURIComponent(day)
                     );
 
-
                 updateNextDeparture(
                     data.trains || []
                 );
-
 
             } catch (error) {
 
@@ -885,6 +1094,7 @@ function startNextDepartureTimer() {
 
 }
 
+
 /* ============================================================
    UPCOMING SCHEDULE
    ============================================================ */
@@ -894,102 +1104,245 @@ async function loadUpcomingTrains() {
     const container =
         document.getElementById("upcomingList");
 
+    const dayElement =
+        document.getElementById("scheduleDay");
+
     const day =
-        document.getElementById("scheduleDay").value;
+        dayElement
+            ? dayElement.value
+            : getCurrentDay();
 
     try {
 
-        container.innerHTML =
-            `<div class="loading">
-                Loading AI schedule...
-            </div>`;
+        container.innerHTML = `
+            <div class="loading">
+                Loading ${escapeHTML(day)} AI schedule...
+            </div>
+        `;
+
 
         const data =
             await apiFetch(
                 `/schedule?day=${encodeURIComponent(day)}`
             );
 
+
         const schedule =
             data.schedule || [];
 
+
         container.innerHTML = "";
+
 
         if (!schedule.length) {
 
             container.innerHTML = `
                 <div class="empty-state">
+
                     <div>◷</div>
-                    <h3>No schedule available</h3>
-                    <p>No schedule found for ${escapeHTML(day)}.</p>
+
+                    <h3>
+                        No schedule available
+                    </h3>
+
+                    <p>
+                        No schedule found for
+                        ${escapeHTML(day)}.
+                    </p>
+
                 </div>
             `;
 
             return;
         }
 
-        /*
-         * IMPORTANT:
-         * Do NOT use slice(0, 50).
-         * The complete schedule is displayed.
-         */
 
-        schedule.forEach(train => {
+        /* ----------------------------------------------------
+           SORT BY DEPARTURE TIME
+        ---------------------------------------------------- */
 
-            const row =
-                document.createElement("div");
+        schedule.sort(
+            (a, b) => {
 
-            row.className = "schedule-row";
+                return (
+                    timeToMinutesFrontend(
+                        a.departure_time
+                    )
+                    -
+                    timeToMinutesFrontend(
+                        b.departure_time
+                    )
+                );
 
-            row.innerHTML = `
+            }
+        );
 
-                <div class="schedule-time">
-                    ${escapeHTML(
-                        train.departure_time || "--:--"
-                    )}
-                </div>
 
-                <div class="schedule-train">
-                    ${escapeHTML(
-                        train.train_id || "TRAIN"
-                    )}
-                </div>
+        /* ----------------------------------------------------
+           DISPLAY COMPLETE SCHEDULE
+        ---------------------------------------------------- */
 
-                <div class="schedule-route">
-                    ${escapeHTML(
-                        train.from_station || "Aluva"
-                    )}
-                </div>
+        schedule.forEach(
+            (train, index) => {
 
-                <div class="schedule-route">
-                    →
-                    ${escapeHTML(
-                        train.to_station ||
+                const row =
+                    document.createElement("div");
+
+                row.className =
+                    "schedule-row";
+
+
+                const trainId =
+                    train.train_id ||
+                    train.train ||
+                    "TRAIN";
+
+
+                const departure =
+                    train.departure_time ||
+                    "--:--:--";
+
+
+                const from =
+                    train.from_station ||
+                    "Aluva";
+
+
+                const to =
+                    train.to_station ||
+                    "Tripunithura Terminal";
+
+
+                const status =
+                    train.status ||
+                    "ACTIVE";
+
+
+                const isReturn =
+                    (
+                        train.direction ===
+                        "TRIPUNITHURA_TO_ALUVA"
+                    )
+                    ||
+                    (
+                        from === "Tripunithura"
+                        ||
+                        from ===
                         "Tripunithura Terminal"
-                    )}
-                </div>
+                    );
 
-                <div class="schedule-status">
-                    ${escapeHTML(
-                        train.status || "ACTIVE"
-                    )}
-                </div>
-            `;
 
-            container.appendChild(row);
-        });
+                const directionLabel =
+                    isReturn
+                        ? "RETURN"
+                        : "OUTBOUND";
+
+
+                row.innerHTML = `
+
+                    <div class="schedule-time">
+
+                        ${escapeHTML(
+                            departure
+                        )}
+
+                    </div>
+
+
+                    <div class="schedule-train">
+
+                        <strong>
+                            ${escapeHTML(
+                                trainId
+                            )}
+                        </strong>
+
+                        <small>
+                            ${directionLabel}
+                        </small>
+
+                    </div>
+
+
+                    <div class="schedule-route">
+
+                        ${escapeHTML(
+                            from
+                        )}
+
+                    </div>
+
+
+                    <div class="schedule-route">
+
+                        →
+
+                        ${escapeHTML(
+                            to
+                        )}
+
+                    </div>
+
+
+                    <div class="schedule-status">
+
+                        ${escapeHTML(
+                            status
+                        )}
+
+                    </div>
+
+                `;
+
+                container.appendChild(row);
+
+            }
+        );
+
+
+        const scheduleCount =
+            document.getElementById(
+                "scheduleCount"
+            );
+
+
+        if (scheduleCount) {
+
+            scheduleCount.textContent =
+                schedule.length;
+
+        }
+
 
     } catch (error) {
 
         container.innerHTML = `
+
             <div class="empty-state">
+
                 <div>⚠</div>
-                <h3>Schedule unavailable</h3>
-                <p>${escapeHTML(error.message)}</p>
+
+                <h3>
+                    Schedule unavailable
+                </h3>
+
+                <p>
+                    ${escapeHTML(
+                        error.message
+                    )}
+                </p>
+
             </div>
+
         `;
 
-        console.error(error);
+        console.error(
+            "Failed to load schedule:",
+            error
+        );
+
     }
+
 }
 
 
@@ -1009,13 +1362,16 @@ function getCurrentDay() {
         "Saturday"
     ];
 
-    return days[new Date().getDay()];
+    return days[
+        new Date().getDay()
+    ];
 }
 
 
 function setupCurrentDay() {
 
-    const day = getCurrentDay();
+    const day =
+        getCurrentDay();
 
     document.getElementById("currentDay")
         .textContent = day;
@@ -1035,7 +1391,9 @@ function setupCurrentDay() {
 async function checkBackend() {
 
     const status =
-        document.getElementById("backendStatus");
+        document.getElementById(
+            "backendStatus"
+        );
 
     try {
 
@@ -1078,16 +1436,34 @@ async function checkBackend() {
 
 function escapeHTML(value) {
 
-    if (value === null || value === undefined) {
+    if (
+        value === null ||
+        value === undefined
+    ) {
         return "";
     }
 
     return String(value)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
 }
 
 
@@ -1104,6 +1480,9 @@ async function initializeTrackX() {
     await loadStations();
 
     await loadRunningTrains();
+
+    /* Start live Home-page next-departure updates */
+    startNextDepartureTimer();
 }
 
 
