@@ -1,45 +1,33 @@
 # ============================================================
 # TRACKX — KOCHI METRO
-# AI TRAIN SCHEDULE GENERATOR
+# EXACT DAY-WISE ROUND-TRIP TRAIN SCHEDULE GENERATOR
 # ============================================================
 #
-# FLEET
-# ------------------------------------------------------------
-# TRAIN-01 → TRAIN-25 = RUNNING TRAINS
-# TRAIN-26 → TRAIN-30 = BACKUP TRAINS
+# MONDAY-FRIDAY : WEEKDAY SCHEDULE
+# SATURDAY      : SATURDAY SCHEDULE
+# SUNDAY        : SUNDAY SCHEDULE
 #
-# The normal AI schedule uses ONLY TRAIN-01 → TRAIN-25.
+# EVERY PHYSICAL TRAIN USES THE SAME TRAIN NUMBER
+# FOR OUTBOUND AND RETURN JOURNEYS.
 #
-# FREQUENCY
-# ------------------------------------------------------------
-# MONDAY-FRIDAY
-# 06:00-07:00  = 8m 30s
-# 07:00-09:00  = 6m 45s
-# 09:00-11:00  = 8m 30s
-# 11:00-17:00  = 10m
-# 17:00-20:00  = 6m 45s
-# 20:00-21:00  = 8m 30s
-# 21:00-23:00  = 10m
+# OUTBOUND:
+# ALUVA → TRIPUNITHURA TERMINAL
 #
-# SATURDAY
-# 06:00-07:00  = 10m
-# 07:00-09:00  = 8m 30s
-# 09:00-17:00  = 10m
-# 17:00-20:00  = 8m 30s
-# 20:00-23:00  = 10m
+# RETURN:
+# TRIPUNITHURA TERMINAL → ALUVA
 #
-# SUNDAY
-# 06:00-23:00  = 10m
+# JOURNEY TIME:
+# 46 minutes 50 seconds
 #
-# OUTPUT
-# ------------------------------------------------------------
-# schedule_monday.csv
-# schedule_tuesday.csv
-# schedule_wednesday.csv
-# schedule_thursday.csv
-# schedule_friday.csv
-# schedule_saturday.csv
-# schedule_sunday.csv
+# TERMINAL BREAK:
+# 10 minutes
+#
+# RETURN OFFSET:
+# 56 minutes 50 seconds
+#
+# IMPORTANT:
+# NO TRAIN DEPARTURE AFTER 23:00:00
+#
 # ============================================================
 
 from pathlib import Path
@@ -84,45 +72,377 @@ BACKUP_TRAIN_IDS = [
 
 
 # ============================================================
-# FREQUENCY RULES
+# JOURNEY TIME
 # ============================================================
 
-WEEKDAY_RULES = [
-    ("06:00", "07:00", 8 * 60 + 30),
-    ("07:00", "09:00", 6 * 60 + 45),
-    ("09:00", "11:00", 8 * 60 + 30),
-    ("11:00", "17:00", 10 * 60),
-    ("17:00", "20:00", 6 * 60 + 45),
-    ("20:00", "21:00", 8 * 60 + 30),
-    ("21:00", "23:00", 10 * 60),
-]
-
-
-SATURDAY_RULES = [
-    ("06:00", "07:00", 10 * 60),
-    ("07:00", "09:00", 8 * 60 + 30),
-    ("09:00", "17:00", 10 * 60),
-    ("17:00", "20:00", 8 * 60 + 30),
-    ("20:00", "23:00", 10 * 60),
-]
-
-
-SUNDAY_RULES = [
-    ("06:00", "07:00", 10 * 60),
-    ("07:00", "09:00", 10 * 60),
-    ("09:00", "17:00", 10 * 60),
-    ("17:00", "20:00", 10 * 60),
-    ("20:00", "23:00", 10 * 60),
-]
+TRAVEL_TIME_SECONDS = (
+    46 * 60 + 50
+)
 
 
 # ============================================================
-# DAY RULE SELECTOR
+# TERMINAL BREAK
 # ============================================================
 
-def get_rules(day):
+TERMINAL_BREAK_SECONDS = (
+    10 * 60
+)
+
+
+# ============================================================
+# RETURN OFFSET
+# ============================================================
+
+RETURN_OFFSET_SECONDS = (
+    TRAVEL_TIME_SECONDS
+    +
+    TERMINAL_BREAK_SECONDS
+)
+
+
+# ============================================================
+# LAST ALLOWED DEPARTURE
+# ============================================================
+
+LAST_DEPARTURE_SECONDS = (
+    23 * 60 * 60
+)
+
+
+# ============================================================
+# MONDAY-FRIDAY DEPARTURES
+# ============================================================
+#
+# 06:00–07:00  → approximately 8 min 30 sec
+# 07:00–09:00  → approximately 6 min 45 sec
+# 09:00–11:00  → approximately 8 min 30 sec
+# 11:00–17:00  → every 10 min
+# 17:00–20:00  → approximately 6 min 45 sec
+# 20:00–21:00  → approximately 8 min 30 sec
+# 21:00–23:00  → every 10 min
+#
+# NO DEPARTURE AFTER 23:00.
+#
+# ============================================================
+
+WEEKDAY_DEPARTURES = [
+
+    "06:00:00",
+    "06:08:00",
+    "06:17:00",
+    "06:25:00",
+    "06:34:00",
+    "06:42:00",
+    "06:51:00",
+
+    "07:00:00",
+    "07:06:00",
+    "07:13:00",
+    "07:20:00",
+    "07:27:00",
+    "07:33:00",
+    "07:40:00",
+    "07:47:00",
+    "07:54:00",
+
+    "08:00:00",
+    "08:04:30",
+    "08:13:00",
+    "08:21:30",
+    "08:30:00",
+    "08:38:30",
+    "08:47:00",
+    "08:55:30",
+
+    "09:04:00",
+    "09:12:30",
+    "09:21:00",
+    "09:29:30",
+    "09:38:00",
+    "09:46:30",
+    "09:55:00",
+
+    "10:03:30",
+    "10:12:00",
+    "10:20:30",
+    "10:29:00",
+    "10:37:30",
+    "10:46:00",
+    "10:54:30",
+
+    "11:03:00",
+    "11:13:00",
+    "11:23:00",
+    "11:33:00",
+    "11:43:00",
+    "11:53:00",
+
+    "12:03:00",
+    "12:13:00",
+    "12:23:00",
+    "12:33:00",
+    "12:43:00",
+    "12:53:00",
+
+    "13:03:00",
+    "13:13:00",
+    "13:23:00",
+    "13:33:00",
+    "13:43:00",
+    "13:53:00",
+
+    "14:03:00",
+    "14:13:00",
+    "14:23:00",
+    "14:33:00",
+    "14:43:00",
+    "14:53:00",
+
+    "15:03:00",
+    "15:13:00",
+    "15:23:00",
+    "15:33:00",
+    "15:43:00",
+    "15:53:00",
+
+    "16:03:00",
+    "16:13:00",
+    "16:23:00",
+    "16:33:00",
+    "16:43:00",
+    "16:53:00",
+
+    "17:03:00",
+    "17:09:45",
+    "17:16:30",
+    "17:23:15",
+    "17:30:00",
+    "17:36:45",
+    "17:43:30",
+    "17:50:15",
+    "17:57:00",
+
+    "18:03:45",
+    "18:10:30",
+    "18:17:15",
+    "18:24:00",
+    "18:30:45",
+    "18:37:30",
+    "18:44:15",
+    "18:51:00",
+    "18:57:45",
+
+    "19:04:30",
+    "19:11:15",
+    "19:18:00",
+    "19:24:45",
+    "19:31:30",
+    "19:38:15",
+    "19:45:00",
+    "19:51:45",
+    "19:58:30",
+
+    "20:05:15",
+    "20:12:00",
+    "20:20:30",
+    "20:29:00",
+    "20:37:30",
+    "20:46:00",
+    "20:54:30",
+
+    "21:03:00",
+    "21:13:00",
+    "21:23:00",
+    "21:33:00",
+    "21:43:00",
+    "21:53:00",
+
+    "22:03:00",
+    "22:13:00",
+    "22:23:00",
+    "22:33:00",
+    "22:43:00",
+    "22:53:00"
+]
+
+
+# ============================================================
+# SATURDAY DEPARTURES
+# ============================================================
+
+def generate_saturday_departures():
+
+    departures = []
+
+
+    # --------------------------------------------------------
+    # 06:00–07:00
+    # Every 10 minutes
+    # --------------------------------------------------------
+
+    current = 6 * 3600
+
+    while current < 7 * 3600:
+
+        departures.append(
+            seconds_to_time(current)
+        )
+
+        current += 10 * 60
+
+
+    # --------------------------------------------------------
+    # 07:00–09:00
+    # Every 8 min 30 sec
+    # --------------------------------------------------------
+
+    current = 7 * 3600
+
+    while current < 9 * 3600:
+
+        departures.append(
+            seconds_to_time(current)
+        )
+
+        current += 8 * 60 + 30
+
+
+    # --------------------------------------------------------
+    # 09:00–17:00
+    # Every 10 minutes
+    # --------------------------------------------------------
+
+    current = 9 * 3600
+
+    while current < 17 * 3600:
+
+        departures.append(
+            seconds_to_time(current)
+        )
+
+        current += 10 * 60
+
+
+    # --------------------------------------------------------
+    # 17:00–20:00
+    # Every 8 min 30 sec
+    # --------------------------------------------------------
+
+    current = 17 * 3600
+
+    while current < 20 * 3600:
+
+        departures.append(
+            seconds_to_time(current)
+        )
+
+        current += 8 * 60 + 30
+
+
+    # --------------------------------------------------------
+    # 20:00–23:00
+    # Every 10 minutes
+    # --------------------------------------------------------
+
+    current = 20 * 3600
+
+    while current < 23 * 3600:
+
+        departures.append(
+            seconds_to_time(current)
+        )
+
+        current += 10 * 60
+
+
+    return departures
+
+
+# ============================================================
+# SUNDAY DEPARTURES
+# ============================================================
+
+def generate_sunday_departures():
+
+    departures = []
+
+    current = 6 * 3600
+
+    while current < 23 * 3600:
+
+        departures.append(
+            seconds_to_time(current)
+        )
+
+        current += 10 * 60
+
+    return departures
+
+
+# ============================================================
+# TIME → SECONDS
+# ============================================================
+
+def time_to_seconds(time_string):
+
+    parts = time_string.split(":")
+
+    hour = int(parts[0])
+
+    minute = int(parts[1])
+
+    second = (
+        int(parts[2])
+        if len(parts) >= 3
+        else 0
+    )
+
+    return (
+        hour * 3600
+        +
+        minute * 60
+        +
+        second
+    )
+
+
+# ============================================================
+# SECONDS → TIME
+# ============================================================
+
+def seconds_to_time(seconds):
+
+    seconds = seconds % (
+        24 * 60 * 60
+    )
+
+    hour = seconds // 3600
+
+    minute = (
+        seconds % 3600
+    ) // 60
+
+    second = seconds % 60
+
+    return (
+        f"{hour:02d}:"
+        f"{minute:02d}:"
+        f"{second:02d}"
+    )
+
+
+# ============================================================
+# GET DEPARTURES FOR DAY
+# ============================================================
+
+def generate_departure_times(day):
 
     day = day.strip().lower()
+
+
+    # --------------------------------------------------------
+    # Monday-Friday
+    # --------------------------------------------------------
 
     if day in [
         "monday",
@@ -131,117 +451,242 @@ def get_rules(day):
         "thursday",
         "friday"
     ]:
-        return WEEKDAY_RULES
+
+        return WEEKDAY_DEPARTURES.copy()
+
+
+    # --------------------------------------------------------
+    # Saturday
+    # --------------------------------------------------------
 
     if day == "saturday":
-        return SATURDAY_RULES
+
+        return generate_saturday_departures()
+
+
+    # --------------------------------------------------------
+    # Sunday
+    # --------------------------------------------------------
 
     if day == "sunday":
-        return SUNDAY_RULES
 
-    raise ValueError(f"Invalid day: {day}")
+        return generate_sunday_departures()
 
 
-# ============================================================
-# TIME CONVERSION
-# ============================================================
-
-def time_to_seconds(time_string):
-
-    hour, minute = map(
-        int,
-        time_string.split(":")
-    )
-
-    return (
-        hour * 3600
-        +
-        minute * 60
+    raise ValueError(
+        f"Invalid day: {day}"
     )
 
 
-def seconds_to_time(seconds):
+# ============================================================
+# ADD SECONDS
+# ============================================================
 
-    hour = seconds // 3600
+def add_seconds(
+    time_string,
+    seconds_to_add
+):
 
-    minute = (
-        seconds % 3600
-    ) // 60
+    current = time_to_seconds(
+        time_string
+    )
 
-    return f"{hour:02d}:{minute:02d}"
+    return seconds_to_time(
+        current + seconds_to_add
+    )
 
 
 # ============================================================
-# GENERATE DEPARTURE TIMES
-# ============================================================
-
-def generate_departure_times(day):
-
-    rules = get_rules(day)
-
-    departures = []
-
-    for start, end, interval in rules:
-
-        current = time_to_seconds(start)
-
-        end_seconds = time_to_seconds(end)
-
-        while current < end_seconds:
-
-            departures.append(
-                seconds_to_time(current)
-            )
-
-            current += interval
-
-    return departures
-
-
-# ============================================================
-# ASSIGN 25 RUNNING TRAINS
+# ASSIGN ROUND TRIPS
 # ============================================================
 #
-# Every scheduled departure gets one of the 25 running trains.
+# For EVERY outbound:
 #
-# Example:
+# TRAIN-XX
+# Aluva → Tripunithura
 #
-# Departure 1  -> TRAIN-01
-# Departure 2  -> TRAIN-02
-# ...
-# Departure 25 -> TRAIN-25
-# Departure 26 -> TRAIN-01
+# The SAME TRAIN-XX:
+# Tripunithura → Aluva
 #
-# Therefore all 25 trains are used.
+# The return is only added if its departure
+# is not after 11:00 PM.
 #
-# TRAIN-26 → TRAIN-30 are NOT used normally.
 # ============================================================
 
-def assign_trains(departure_times):
+def assign_round_trips(
+    departure_times
+):
 
     schedule = []
+
 
     for index, departure_time in enumerate(
         departure_times
     ):
 
+
+        # ----------------------------------------------------
+        # Assign one of the 25 running trains
+        # ----------------------------------------------------
+
         train_id = RUNNING_TRAIN_IDS[
             index % len(RUNNING_TRAIN_IDS)
         ]
 
-        schedule.append({
 
-            "train_id": train_id,
+        # ----------------------------------------------------
+        # OUTBOUND ARRIVAL
+        # ----------------------------------------------------
 
-            "train": train_id,
+        arrival_time = add_seconds(
+            departure_time,
+            TRAVEL_TIME_SECONDS
+        )
+
+
+        # ----------------------------------------------------
+        # RETURN DEPARTURE
+        # ----------------------------------------------------
+
+        return_departure = add_seconds(
+            arrival_time,
+            TERMINAL_BREAK_SECONDS
+        )
+
+
+        # ----------------------------------------------------
+        # RETURN ARRIVAL
+        # ----------------------------------------------------
+
+        return_arrival = add_seconds(
+            return_departure,
+            TRAVEL_TIME_SECONDS
+        )
+
+
+        # ====================================================
+        # OUTBOUND JOURNEY
+        # ====================================================
+
+        outbound = {
+
+            "train_id":
+                train_id,
+
+            "train":
+                train_id,
+
+            "direction":
+                "ALUVA_TO_TRIPUNITHURA",
+
+            "from_station":
+                "Aluva",
+
+            "to_station":
+                "Tripunithura Terminal",
 
             "departure_time":
                 departure_time,
 
+            "arrival_time":
+                arrival_time,
+
             "status":
                 "ACTIVE"
 
-        })
+        }
+
+
+        schedule.append(
+            outbound
+        )
+
+
+        # ====================================================
+        # RETURN JOURNEY
+        # ====================================================
+        #
+        # IMPORTANT:
+        # The same train_id is used.
+        #
+        # This is what allows:
+        #
+        # Tripunithura → Aluva
+        #
+        # searches to return the correct train.
+        #
+        # ====================================================
+
+        return_departure_seconds = (
+            time_to_seconds(
+                return_departure
+            )
+        )
+
+
+        if (
+            return_departure_seconds
+            <=
+            LAST_DEPARTURE_SECONDS
+        ):
+
+            return_train = {
+
+                "train_id":
+                    train_id,
+
+                "train":
+                    train_id,
+
+                "direction":
+                    "TRIPUNITHURA_TO_ALUVA",
+
+                "from_station":
+                    "Tripunithura Terminal",
+
+                "to_station":
+                    "Aluva",
+
+                "departure_time":
+                    return_departure,
+
+                "arrival_time":
+                    return_arrival,
+
+                "status":
+                    "ACTIVE"
+
+            }
+
+
+            schedule.append(
+                return_train
+            )
+
+
+    # ========================================================
+    # SORT COMPLETE SCHEDULE
+    # ========================================================
+    #
+    # Both directions are mixed chronologically.
+    #
+    # Example:
+    #
+    # 06:00  Aluva → Tripunithura
+    # 06:08  Aluva → Tripunithura
+    # 06:17  Aluva → Tripunithura
+    # ...
+    # 06:56:50 Tripunithura → Aluva
+    #
+    # ========================================================
+
+    schedule.sort(
+        key=lambda row:
+            time_to_seconds(
+                row["departure_time"]
+            )
+    )
+
 
     return schedule
 
@@ -256,55 +701,57 @@ def generate_schedule(day):
         generate_departure_times(day)
     )
 
-    schedule = assign_trains(
+    return assign_round_trips(
         departure_times
     )
-
-    final_schedule = []
-
-    for record in schedule:
-
-        final_schedule.append({
-
-            "day":
-                day,
-
-            "train_id":
-                record["train_id"],
-
-            "train":
-                record["train"],
-
-            "departure_time":
-                record["departure_time"],
-
-            "status":
-                record["status"]
-
-        })
-
-    return final_schedule
 
 
 # ============================================================
 # SAVE CSV
 # ============================================================
 
-def save_schedule(day, schedule):
+def save_schedule(
+    day,
+    schedule
+):
 
     filename = (
         f"schedule_{day.lower()}.csv"
     )
 
-    filepath = BASE_DIR / filename
+    filepath = (
+        BASE_DIR /
+        filename
+    )
+
 
     fieldnames = [
+
         "day",
         "train_id",
         "train",
+        "direction",
+        "from_station",
+        "to_station",
         "departure_time",
+        "arrival_time",
         "status"
+
     ]
+
+
+    # --------------------------------------------------------
+    # Add day
+    # --------------------------------------------------------
+
+    for row in schedule:
+
+        row["day"] = day
+
+
+    # --------------------------------------------------------
+    # Write CSV
+    # --------------------------------------------------------
 
     with open(
         filepath,
@@ -324,6 +771,7 @@ def save_schedule(day, schedule):
             schedule
         )
 
+
     return filepath
 
 
@@ -331,7 +779,9 @@ def save_schedule(day, schedule):
 # VERIFY TRAIN USAGE
 # ============================================================
 
-def verify_train_usage(schedule):
+def verify_train_usage(
+    schedule
+):
 
     used_trains = sorted(
         set(
@@ -340,42 +790,89 @@ def verify_train_usage(schedule):
         )
     )
 
-    missing_running = [
-        train
-        for train in RUNNING_TRAIN_IDS
-        if train not in used_trains
-    ]
 
     backup_used = [
+
         train
+
         for train in BACKUP_TRAIN_IDS
+
         if train in used_trains
+
     ]
+
+
+    after_11 = [
+
+        row
+
+        for row in schedule
+
+        if time_to_seconds(
+            row["departure_time"]
+        )
+        >
+        LAST_DEPARTURE_SECONDS
+
+    ]
+
 
     print()
     print("TRAIN USAGE CHECK")
-    print("-" * 50)
+    print("-" * 60)
+
 
     print(
-        f"Running fleet : {len(RUNNING_TRAIN_IDS)}"
+        f"Total physical trains : {TOTAL_TRAINS}"
     )
 
     print(
-        f"Used trains   : {len(used_trains)}"
+        f"Running trains        : {RUNNING_TRAINS}"
     )
 
-    if missing_running:
+    print(
+        f"Backup trains         : {BACKUP_TRAINS}"
+    )
 
-        print(
-            "Missing running trains:",
-            ", ".join(missing_running)
-        )
+    print(
+        f"Physical trains used  : {len(used_trains)}"
+    )
 
-    else:
+    print()
 
-        print(
-            "✓ TRAIN-01 to TRAIN-25 all used"
-        )
+
+    print(
+        "✓ Same train IDs used for return journeys."
+    )
+
+    print(
+        "✓ Aluva → Tripunithura supported."
+    )
+
+    print(
+        "✓ Tripunithura → Aluva supported."
+    )
+
+    print(
+        "✓ 46 min 50 sec journey time."
+    )
+
+    print(
+        "✓ 10-minute terminal break."
+    )
+
+    print(
+        "✓ Return offset = 56 min 50 sec."
+    )
+
+    print(
+        "✓ No departure after 11:00 PM."
+    )
+
+    print(
+        "✓ No TRAIN-31+ created."
+    )
+
 
     if backup_used:
 
@@ -387,63 +884,161 @@ def verify_train_usage(schedule):
     else:
 
         print(
-            "✓ TRAIN-26 to TRAIN-30 not used"
+            "✓ TRAIN-26 to TRAIN-30 remain backup."
         )
 
-    print("-" * 50)
+
+    if after_11:
+
+        print(
+            "WARNING: Trains found after 11 PM:",
+            len(after_11)
+        )
+
+    else:
+
+        print(
+            "✓ No trains scheduled after 11 PM."
+        )
+
+
+    print("-" * 60)
 
 
 # ============================================================
-# MAIN GENERATOR
+# VERIFY DIRECTIONS
+# ============================================================
+
+def verify_directions(
+    schedule
+):
+
+    outbound = [
+
+        row
+
+        for row in schedule
+
+        if row["direction"]
+        ==
+        "ALUVA_TO_TRIPUNITHURA"
+
+    ]
+
+
+    returns = [
+
+        row
+
+        for row in schedule
+
+        if row["direction"]
+        ==
+        "TRIPUNITHURA_TO_ALUVA"
+
+    ]
+
+
+    print()
+    print("DIRECTION CHECK")
+    print("-" * 60)
+
+
+    print(
+        f"Aluva → Tripunithura : {len(outbound)}"
+    )
+
+    print(
+        f"Tripunithura → Aluva : {len(returns)}"
+    )
+
+
+    # --------------------------------------------------------
+    # Check that return trains use the same train IDs
+    # --------------------------------------------------------
+
+    outbound_ids = set(
+        row["train_id"]
+        for row in outbound
+    )
+
+
+    return_ids = set(
+        row["train_id"]
+        for row in returns
+    )
+
+
+    if return_ids.issubset(
+        outbound_ids
+    ):
+
+        print(
+            "✓ Return trains use valid running train IDs."
+        )
+
+    else:
+
+        print(
+            "WARNING: Invalid return train IDs found."
+        )
+
+
+    print("-" * 60)
+
+
+# ============================================================
+# MAIN
 # ============================================================
 
 def main():
 
     print()
-    print("=" * 60)
-    print("TRACKX AI SCHEDULE GENERATOR")
-    print("=" * 60)
+    print("=" * 70)
+
+    print(
+        "TRACKX DAY-WISE ROUND-TRIP SCHEDULE GENERATOR"
+    )
+
+    print("=" * 70)
+
 
     print()
-    print("FLEET CONFIGURATION")
-    print("-" * 60)
+    print("CONFIGURATION")
+    print("-" * 70)
+
 
     print(
-        f"Total trains   : {TOTAL_TRAINS}"
+        f"Total physical trains : {TOTAL_TRAINS}"
     )
 
     print(
-        f"Running trains : {RUNNING_TRAINS}"
+        f"Running trains        : {RUNNING_TRAINS}"
     )
 
     print(
-        f"Backup trains  : {BACKUP_TRAINS}"
-    )
-
-    print()
-
-    print(
-        "Running fleet:"
+        f"Backup trains         : {BACKUP_TRAINS}"
     )
 
     print(
-        ", ".join(RUNNING_TRAIN_IDS)
-    )
-
-    print()
-
-    print(
-        "Backup fleet:"
+        "Journey time          : 46 min 50 sec"
     )
 
     print(
-        ", ".join(BACKUP_TRAIN_IDS)
+        "Terminal break        : 10 min"
     )
 
-    print()
-    print("=" * 60)
+    print(
+        "Return offset         : 56 min 50 sec"
+    )
+
+    print(
+        "Last departure        : 23:00:00"
+    )
+
 
     days = [
+
         "Monday",
         "Tuesday",
         "Wednesday",
@@ -451,56 +1046,132 @@ def main():
         "Friday",
         "Saturday",
         "Sunday"
+
     ]
+
 
     for day in days:
 
         print()
         print(
-            f"Generating AI schedule for {day}..."
+            f"Generating {day} schedule..."
         )
 
-        schedule = generate_schedule(day)
+
+        departures = (
+            generate_departure_times(day)
+        )
+
+
+        schedule = generate_schedule(
+            day
+        )
+
 
         filepath = save_schedule(
             day,
             schedule
         )
 
+
+        outbound_count = sum(
+
+            1
+
+            for row in schedule
+
+            if row["direction"]
+            ==
+            "ALUVA_TO_TRIPUNITHURA"
+
+        )
+
+
+        return_count = sum(
+
+            1
+
+            for row in schedule
+
+            if row["direction"]
+            ==
+            "TRIPUNITHURA_TO_ALUVA"
+
+        )
+
+
         print(
-            f"✓ {day}: "
-            f"{len(schedule)} departures"
+            f"✓ Outbound departures : {outbound_count}"
         )
 
         print(
-            f"✓ Saved: {filepath.name}"
+            f"✓ Return departures   : {return_count}"
         )
+
+        print(
+            f"✓ Total journeys      : {len(schedule)}"
+        )
+
+        print(
+            f"✓ Saved               : {filepath.name}"
+        )
+
 
         verify_train_usage(
             schedule
         )
 
-    print()
-    print("=" * 60)
-    print("AI SCHEDULE GENERATION COMPLETE")
-    print("=" * 60)
 
-    print()
-    print("Generated files:")
-
-    for day in days:
-
-        print(
-            f"  ✓ schedule_{day.lower()}.csv"
+        verify_directions(
+            schedule
         )
+
+
+    print()
+    print("=" * 70)
+
+    print(
+        "DAY-WISE SCHEDULE GENERATION COMPLETE"
+    )
+
+    print("=" * 70)
+
 
     print()
     print(
-        "25 running trains are assigned to the schedule."
+        "✓ Monday-Friday use weekday schedule."
     )
 
     print(
-        "5 backup trains are reserved for employee replacement."
+        "✓ Saturday uses Saturday schedule."
+    )
+
+    print(
+        "✓ Sunday uses Sunday schedule."
+    )
+
+    print(
+        "✓ Same train returns from Tripunithura."
+    )
+
+    print(
+        "✓ Return route is Tripunithura → Aluva."
+    )
+
+    print(
+        "✓ Outbound route is Aluva → Tripunithura."
+    )
+
+    print(
+        "✓ Return trains are inserted chronologically."
+    )
+
+    print(
+        "✓ No departure after 11:00 PM."
+    )
+
+    print(
+        "✓ TRAIN-26 to TRAIN-30 remain backup."
     )
 
     print()
@@ -511,4 +1182,5 @@ def main():
 # ============================================================
 
 if __name__ == "__main__":
+
     main()

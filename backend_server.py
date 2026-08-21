@@ -508,12 +508,39 @@ def get_stations():
 # LOAD AI SCHEDULE
 # ============================================================
 
+# ============================================================
+# LOAD AI SCHEDULE
+#
+# IMPORTANT:
+# ------------------------------------------------------------
+# The generated CSV is the SINGLE SOURCE OF TRUTH.
+#
+# It already contains:
+#
+# 1. Outbound journeys
+#       Aluva -> Tripunithura
+#
+# 2. Return journeys
+#       Tripunithura -> Aluva
+#
+# 3. Exact train IDs
+#       TRAIN-01 -> TRAIN-25
+#
+# 4. Exact departure times
+#
+# 5. Exact arrival times
+#
+# 6. Separate Monday-Friday,
+#    Saturday and Sunday schedules
+#
+# The backend must NOT generate new timings here.
+# ============================================================
+
 def load_ai_schedule(day: str):
 
     day = normalize_day(day)
 
     file_path = SCHEDULE_FILES[day]
-
 
     if not file_path.exists():
 
@@ -524,32 +551,22 @@ def load_ai_schedule(day: str):
 
         return []
 
-
     schedules = []
-
 
     try:
 
         with open(
-
             file_path,
-
             "r",
-
             encoding="utf-8-sig",
-
             newline=""
-
         ) as file:
-
 
             reader = csv.DictReader(file)
 
-
             print()
             print(
-                f"Loading AI schedule: "
-                f"{file_path.name}"
+                f"Loading AI schedule: {file_path.name}"
             )
 
             print(
@@ -557,124 +574,114 @@ def load_ai_schedule(day: str):
                 reader.fieldnames
             )
 
-
             for row in reader:
 
+                # ------------------------------------------------
+                # TIME
+                # ------------------------------------------------
 
                 departure_time = (
-
                     row.get("departure_time")
-
-                    or
-
-                    row.get("time")
-
-                    or
-
-                    row.get("departure")
-
-                    or
-
-                    ""
-
+                    or row.get("time")
+                    or row.get("departure")
+                    or ""
                 ).strip()
 
+                if not departure_time:
+                    continue
 
                 departure_time = normalize_time(
                     departure_time
                 )
 
+                # ------------------------------------------------
+                # ARRIVAL TIME
+                # ------------------------------------------------
 
-                if not departure_time:
+                arrival_time = (
+                    row.get("arrival_time")
+                    or ""
+                ).strip()
 
-                    continue
+                arrival_time = normalize_time(
+                    arrival_time
+                )
 
+                # ------------------------------------------------
+                # TRAIN ID
+                # ------------------------------------------------
+
+                train_id = (
+                    row.get("train_id")
+                    or row.get("train")
+                    or ""
+                ).strip()
+
+                # ------------------------------------------------
+                # DIRECTION
+                # ------------------------------------------------
+
+                direction = (
+                    row.get("direction")
+                    or ""
+                ).strip()
+
+                # ------------------------------------------------
+                # STATIONS
+                # ------------------------------------------------
 
                 from_station = (
-
                     row.get("from_station")
-
-                    or
-
-                    row.get("from")
-
-                    or
-
-                    STATIONS[0]
-
+                    or row.get("from")
+                    or STATIONS[0]
                 ).strip()
-
 
                 to_station = (
-
                     row.get("to_station")
-
-                    or
-
-                    row.get("to")
-
-                    or
-
-                    STATIONS[-1]
-
+                    or row.get("to")
+                    or STATIONS[-1]
                 ).strip()
 
+                # ------------------------------------------------
+                # DEMAND
+                # ------------------------------------------------
 
                 demand = (
-
                     row.get("predicted_demand")
-
-                    or
-
-                    row.get("demand")
-
-                    or
-
-                    ""
-
+                    or row.get("demand")
+                    or ""
                 )
 
+                # ------------------------------------------------
+                # TRAINS REQUIRED
+                # ------------------------------------------------
 
                 trains_required = (
-
                     row.get("trains_required")
-
-                    or
-
-                    row.get("required_trains")
-
-                    or
-
-                    ""
-
+                    or row.get("required_trains")
+                    or ""
                 )
 
-
-                existing_train_id = (
-
-                    row.get("train_id")
-
-                    or
-
-                    row.get("train")
-
-                    or
-
-                    ""
-
-                ).strip()
-
+                # ------------------------------------------------
+                # ADD RECORD
+                # ------------------------------------------------
 
                 schedules.append({
 
                     "train":
-                        existing_train_id,
+                        train_id,
 
                     "train_id":
-                        existing_train_id,
+                        train_id,
+
+                    "direction":
+                        direction,
 
                     "departure_time":
                         departure_time,
+
+                    "arrival_time":
+                        arrival_time,
 
                     "day":
                         day,
@@ -696,93 +703,39 @@ def load_ai_schedule(day: str):
 
                 })
 
+        # ========================================================
+        # SORT EVERYTHING CHRONOLOGICALLY
+        #
+        # This puts return trains BETWEEN outbound trains.
+        #
+        # Example:
+        #
+        # 06:51 TRAIN-07  Aluva -> Tripunithura
+        # 06:56:50 TRAIN-01 Tripunithura -> Aluva
+        # 06:59 TRAIN-08  Aluva -> Tripunithura
+        # 07:04:50 TRAIN-02 Tripunithura -> Aluva
+        # 07:06 TRAIN-10  Aluva -> Tripunithura
+        #
+        # ========================================================
 
         schedules.sort(
-
             key=lambda item:
-
                 time_to_minutes(
                     item["departure_time"]
                 )
-
         )
-
-
-        # ====================================================
-        # ASSIGN TRAIN IDS IF CSV DOES NOT HAVE THEM
-        # ====================================================
-
-        departure_train_map = {}
-
-        next_train_index = 0
-
-
-        for item in schedules:
-
-            departure_time = item[
-                "departure_time"
-            ]
-
-
-            if item["train_id"]:
-
-                departure_train_map[
-                    departure_time
-                ] = item["train_id"]
-
-                continue
-
-
-            if departure_time in departure_train_map:
-
-                assigned_train = (
-                    departure_train_map[
-                        departure_time
-                    ]
-                )
-
-                item["train_id"] = assigned_train
-
-                item["train"] = assigned_train
-
-                continue
-
-
-            assigned_train = RUNNING_TRAIN_IDS[
-                next_train_index
-                %
-                len(RUNNING_TRAIN_IDS)
-            ]
-
-
-            departure_train_map[
-                departure_time
-            ] = assigned_train
-
-
-            item["train_id"] = assigned_train
-
-            item["train"] = assigned_train
-
-
-            next_train_index += 1
-
 
         print(
             f"✓ {day}: "
-            f"{len(schedules)} CSV records loaded"
+            f"{len(schedules)} schedule records loaded"
         )
-
 
         print(
             f"✓ {day}: "
-            f"{len(departure_train_map)} unique "
-            f"departure timings"
+            f"Outbound + return journeys preserved"
         )
-
 
         return schedules
-
 
     except Exception as error:
 
@@ -792,7 +745,6 @@ def load_ai_schedule(day: str):
         )
 
         return []
-
 
 # ============================================================
 # CALCULATE BACKUP ASSIGNMENTS
@@ -980,22 +932,73 @@ def apply_train_status(schedule):
 
 # ============================================================
 # FINAL SCHEDULE
+#
+# SERVICE HOURS:
+# 06:00:00 → 23:00:00
+#
+# 23:00 is the final allowed departure.
+# Anything after 23:00 is removed.
 # ============================================================
 
 def get_final_schedule(day: str):
 
     day = normalize_day(day)
 
-
     ai_schedule = load_ai_schedule(day)
-
 
     if not ai_schedule:
 
         return []
 
 
-    return apply_train_status(ai_schedule)
+    # --------------------------------------------------------
+    # SERVICE TIME LIMIT
+    # --------------------------------------------------------
+
+    SERVICE_START = time_to_minutes("06:00:00")
+    SERVICE_END = time_to_minutes("23:00:00")
+
+
+    # --------------------------------------------------------
+    # REMOVE TRAINS OUTSIDE SERVICE HOURS
+    # --------------------------------------------------------
+
+    filtered_schedule = []
+
+    for item in ai_schedule:
+
+        departure_time = item.get(
+            "departure_time",
+            ""
+        )
+
+        if not departure_time:
+            continue
+
+
+        departure_minutes = time_to_minutes(
+            departure_time
+        )
+
+
+        if (
+            departure_minutes < SERVICE_START
+            or
+            departure_minutes > SERVICE_END
+        ):
+            continue
+
+
+        filtered_schedule.append(item)
+
+
+    # --------------------------------------------------------
+    # APPLY LIVE TRAIN AVAILABILITY
+    # --------------------------------------------------------
+
+    return apply_train_status(
+        filtered_schedule
+    )
 
 
 # ============================================================
@@ -1966,85 +1969,117 @@ def find_trains(
 
 ):
 
-    from_station = from_station.strip()
+    # ========================================================
+    # CLEAN INPUT
+    # ========================================================
 
+    from_station = from_station.strip()
     to_station = to_station.strip()
 
-
     station_lookup = {
-
-        station.lower():
-            station
-
+        station.lower(): station
         for station in STATIONS
-
     }
 
+    # ========================================================
+    # VALIDATE STATIONS
+    # ========================================================
 
     if from_station.lower() not in station_lookup:
 
         raise HTTPException(
-
             status_code=400,
-
-            detail=
-                "Invalid starting station."
-
+            detail="Invalid starting station."
         )
-
 
     if to_station.lower() not in station_lookup:
 
         raise HTTPException(
-
             status_code=400,
-
-            detail=
-                "Invalid destination station."
-
+            detail="Invalid destination station."
         )
-
-
-    if from_station.lower() == to_station.lower():
-
-        raise HTTPException(
-
-            status_code=400,
-
-            detail=
-                "Starting and destination stations "
-                "cannot be the same."
-
-        )
-
 
     from_station = station_lookup[
         from_station.lower()
     ]
 
-
     to_station = station_lookup[
         to_station.lower()
     ]
 
+    if from_station.lower() == to_station.lower():
+
+        raise HTTPException(
+            status_code=400,
+            detail=
+                "Starting and destination stations "
+                "cannot be the same."
+        )
+
+    # ========================================================
+    # STATION POSITIONS
+    #
+    # STATIONS must be in metro order:
+    #
+    # Aluva
+    # Pulinchodu
+    # Companypady
+    # ...
+    # Tripunithura Terminal
+    #
+    # ========================================================
+
+    station_positions = {
+        station: index
+        for index, station in enumerate(STATIONS)
+    }
+
+    from_index = station_positions[from_station]
+    to_index = station_positions[to_station]
+
+    # ========================================================
+    # DETERMINE JOURNEY DIRECTION
+    # ========================================================
+
+    # Aluva -> Tripunithura
+    if from_index < to_index:
+
+        required_direction = (
+            "ALUVA_TO_TRIPUNITHURA"
+        )
+
+        direction = "OUTBOUND"
+
+    # Tripunithura -> Aluva
+    else:
+
+        required_direction = (
+            "TRIPUNITHURA_TO_ALUVA"
+        )
+
+        direction = "RETURN"
+
+    # ========================================================
+    # GET DAY SCHEDULE
+    # ========================================================
 
     matching_day = normalize_day(day)
-
 
     requested_minutes = time_to_minutes(
         time
     )
 
-
     schedule = get_final_schedule(
         matching_day
     )
-
 
     results = []
 
     seen = set()
 
+    # ========================================================
+    # SEARCH ONLY THE CORRECT DIRECTION
+    # ========================================================
 
     for train in schedule:
 
@@ -2052,48 +2087,57 @@ def find_trains(
             "train_id"
         )
 
-
         departure_time = train.get(
             "departure_time"
         )
 
+        train_direction = train.get(
+            "direction"
+        )
 
         if not train_id:
-
             continue
-
 
         if not departure_time:
-
             continue
 
+        # ----------------------------------------------------
+        # IMPORTANT:
+        # Only accept the correct physical direction.
+        # ----------------------------------------------------
+
+        if train_direction != required_direction:
+            continue
 
         departure_minutes = time_to_minutes(
             departure_time
         )
 
+        # ----------------------------------------------------
+        # Requested time
+        # ----------------------------------------------------
 
         if departure_minutes < requested_minutes:
-
             continue
 
+        # ----------------------------------------------------
+        # Prevent duplicate train/departure entries
+        # ----------------------------------------------------
 
         unique_key = (
-
             train_id,
-
-            departure_time
-
+            departure_time,
+            required_direction
         )
 
-
         if unique_key in seen:
-
             continue
-
 
         seen.add(unique_key)
 
+        # ====================================================
+        # BUILD RESULT
+        # ====================================================
 
         results.append({
 
@@ -2106,11 +2150,19 @@ def find_trains(
             "departure_time":
                 departure_time,
 
+            # User's actual selected route
             "from_station":
                 from_station,
 
             "to_station":
                 to_station,
+
+            # VERY IMPORTANT
+            "direction":
+                required_direction,
+
+            "direction_label":
+                direction,
 
             "status":
                 train.get(
@@ -2147,11 +2199,16 @@ def find_trains(
 
         })
 
+        # ----------------------------------------------------
+        # Return first 5 upcoming trains
+        # ----------------------------------------------------
 
         if len(results) >= 5:
-
             break
 
+    # ========================================================
+    # RESPONSE
+    # ========================================================
 
     return {
 
@@ -2163,6 +2220,12 @@ def find_trains(
 
         "to_station":
             to_station,
+
+        "direction":
+            required_direction,
+
+        "direction_label":
+            direction,
 
         "day":
             matching_day,
