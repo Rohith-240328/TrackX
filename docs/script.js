@@ -630,8 +630,8 @@ async function loadRunningTrains() {
         /* ----------------------------------------------------
            UPDATE NEXT DEPARTURE
         ---------------------------------------------------- */
-
-        updateNextDeparture(trains);
+updateNextDeparture(trains);
+updateNextTwoDepartures(trains);
 
 
     } catch (error) {
@@ -664,6 +664,7 @@ async function loadRunningTrains() {
 
 
         updateNextDeparture([]);
+updateNextTwoDepartures([]);
 
     }
 
@@ -671,121 +672,129 @@ async function loadRunningTrains() {
 
 
 /* ============================================================
-   FIND NEXT DEPARTURE BASED ON CURRENT TIME
+   HOME — NEXT 2 DEPARTURES
    ============================================================ */
 
-function updateNextDeparture(
-    trains
-) {
+function updateNextTwoDepartures(trains) {
 
-    const nextElement =
-        document.getElementById(
-            "nextDeparture"
-        );
+    const departure1 =
+        document.getElementById("heroDeparture1");
 
+    const route1 =
+        document.getElementById("heroRoute1");
 
-    if (!nextElement) {
+    const departure2 =
+        document.getElementById("heroDeparture2");
 
-        return;
-
-    }
-
+    const route2 =
+        document.getElementById("heroRoute2");
 
     if (
-        !trains ||
-        !trains.length
+        !departure1 ||
+        !route1 ||
+        !departure2 ||
+        !route2
     ) {
-
-        nextElement.textContent =
-            "--:--";
-
         return;
-
     }
 
+    if (!trains || !trains.length) {
 
-    /* --------------------------------------------------------
-       CURRENT TIME
-       -------------------------------------------------------- */
+        departure1.textContent = "--:--";
+        route1.textContent = "No departure available";
 
-    const now =
-        new Date();
+        departure2.textContent = "--:--";
+        route2.textContent = "No departure available";
 
+        return;
+    }
+
+    /* Sort departures by time */
+
+    const sortedTrains = [...trains].sort((a, b) => {
+
+        return (
+            timeToMinutesFrontend(
+                a.departure_time ||
+                a.next_departure
+            )
+            -
+            timeToMinutesFrontend(
+                b.departure_time ||
+                b.next_departure
+            )
+        );
+
+    });
+
+    /* Current time */
+
+    const now = new Date();
 
     const currentMinutes =
         now.getHours() * 60 +
         now.getMinutes() +
-        (
-            now.getSeconds() / 60
-        );
+        now.getSeconds() / 60;
 
+    /* Find upcoming trains */
 
-    /* --------------------------------------------------------
-       FIND FIRST DEPARTURE AFTER CURRENT TIME
-       -------------------------------------------------------- */
-
-    let nextTrain = null;
-
-
-    for (
-        const train of trains
-    ) {
+    const upcoming = sortedTrains.filter(train => {
 
         const departure =
             train.departure_time ||
             train.next_departure;
 
-
         if (!departure) {
-
-            continue;
-
+            return false;
         }
 
-
-        const departureMinutes =
-            timeToMinutesFrontend(
-                departure
-            );
-
-
-        if (
-            departureMinutes >
+        return (
+            timeToMinutesFrontend(departure)
+            >
             currentMinutes
-        ) {
+        );
 
-            nextTrain = train;
+    });
 
-            break;
+    /* First departure */
 
-        }
+    if (upcoming.length >= 1) {
 
+        const train = upcoming[0];
+
+        departure1.textContent =
+            train.departure_time ||
+            train.next_departure ||
+            "--:--";
+
+        route1.textContent =
+            `${train.from_station || "Aluva"} → ${train.to_station || "Tripunithura Terminal"}`;
+
+    } else {
+
+        departure1.textContent = "--:--";
+        route1.textContent = "No more trains today";
     }
 
+    /* Second departure */
 
-    /* --------------------------------------------------------
-       NO MORE TRAINS TODAY
-       -------------------------------------------------------- */
+    if (upcoming.length >= 2) {
 
-    if (!nextTrain) {
+        const train = upcoming[1];
 
-        nextElement.textContent =
-            "No more trains";
+        departure2.textContent =
+            train.departure_time ||
+            train.next_departure ||
+            "--:--";
 
-        return;
+        route2.textContent =
+            `${train.from_station || "Aluva"} → ${train.to_station || "Tripunithura Terminal"}`;
 
+    } else {
+
+        departure2.textContent = "--:--";
+        route2.textContent = "No more trains today";
     }
-
-
-    /* --------------------------------------------------------
-       SHOW NEXT DEPARTURE
-       -------------------------------------------------------- */
-
-    nextElement.textContent =
-        nextTrain.departure_time ||
-        nextTrain.next_departure ||
-        "--:--";
-
 }
 
 
@@ -865,9 +874,13 @@ function startNextDepartureTimer() {
                     );
 
 
-                updateNextDeparture(
-                    data.trains || []
-                );
+               updateNextDeparture(
+    data.trains || []
+);
+
+updateNextTwoDepartures(
+    data.trains || []
+);
 
 
             } catch (error) {
