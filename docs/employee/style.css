@@ -551,3 +551,133 @@ button {
     }
 
 }
+/* ============================================================
+   OPERATIONAL ANALYTICS
+   ============================================================ */
+
+.operational-analytics {
+    margin-top: 30px;
+    padding: 28px;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.035);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+
+.analytics-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 24px;
+}
+
+
+.analytics-header h2 {
+    margin: 5px 0 6px;
+}
+
+
+.analytics-header p {
+    margin: 0;
+    opacity: 0.65;
+}
+
+
+.analytics-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(5, minmax(0, 1fr));
+
+    gap: 16px;
+}
+
+
+.analytics-card {
+    padding: 22px;
+    min-height: 110px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    border-radius: 15px;
+
+    background: rgba(255, 255, 255, 0.045);
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+
+.analytics-card span {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    opacity: 0.65;
+}
+
+
+.analytics-card strong {
+    margin-top: 15px;
+
+    font-size: 30px;
+    font-weight: 700;
+}
+
+
+.analytics-card.completed strong {
+    color: #72e6a8;
+}
+
+
+.analytics-card.upcoming strong {
+    color: #c9a7ff;
+}
+
+
+.analytics-card.running strong {
+    color: #72d5ff;
+}
+
+
+.analytics-card.backup strong {
+    color: #ffca70;
+}
+
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 1100px) {
+
+    .analytics-grid {
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr));
+    }
+
+}
+
+
+@media (max-width: 700px) {
+
+    .analytics-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .analytics-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+}
+
+
+@media (max-width: 450px) {
+
+    .analytics-grid {
+        grid-template-columns: 1fr;
+    }
+
+}

@@ -25,15 +25,20 @@ async function initializeEmployee() {
     const savedToken =
         sessionStorage.getItem("trackx_employee_token");
 
-    if (savedToken) {
+   if (savedToken) {
 
-        employeeToken = savedToken;
+    employeeToken = savedToken;
 
-        showDashboard();
+    showDashboard();
 
-        await refreshAll();
+    await refreshAll();
 
-    }
+    setInterval(
+        loadOperationalAnalytics,
+        30000
+    );
+
+}
 }
 
 
@@ -308,11 +313,12 @@ async function refreshAll() {
         return;
     }
 
-    await Promise.all([
-        loadFleet(),
-        loadStations(),
-        loadSchedule()
-    ]);
+   await Promise.all([
+    loadFleet(),
+    loadStations(),
+    loadSchedule(),
+    loadOperationalAnalytics()
+]);
 }
 
 
@@ -844,6 +850,317 @@ async function loadSchedule() {
 
         console.error(error);
     }
+}
+/* ============================================================
+   OPERATIONAL ANALYTICS
+   LIVE DEPARTURE + FLEET STATUS
+   ============================================================ */
+
+async function loadOperationalAnalytics() {
+
+    try {
+
+        const day =
+            document.getElementById("scheduleDay")?.value ||
+            getCurrentDayEmployee();
+
+
+        /* ----------------------------------------------------
+           GET COMPLETE DAILY SCHEDULE
+           ---------------------------------------------------- */
+
+        const scheduleData =
+            await apiFetch(
+                `/employee/schedule?day=${encodeURIComponent(day)}`
+            );
+
+
+        const schedule =
+            Array.isArray(scheduleData.schedule)
+                ? scheduleData.schedule
+                : [];
+
+
+        /* ----------------------------------------------------
+           TOTAL SCHEDULED DEPARTURES
+           ---------------------------------------------------- */
+
+        const totalDepartures =
+            schedule.length;
+
+
+        /* ----------------------------------------------------
+           CURRENT TIME
+           ---------------------------------------------------- */
+
+        const now =
+            new Date();
+
+
+        const currentMinutes =
+            now.getHours() * 60 +
+            now.getMinutes() +
+            now.getSeconds() / 60;
+
+
+        /* ----------------------------------------------------
+           COMPLETED DEPARTURES
+
+           A departure becomes COMPLETED when its
+           departure time has passed.
+           ---------------------------------------------------- */
+
+        let completedDepartures = 0;
+
+
+        schedule.forEach(train => {
+
+            const departure =
+                train.departure_time;
+
+
+            if (!departure) {
+                return;
+            }
+
+
+            const departureMinutes =
+                employeeTimeToMinutes(
+                    departure
+                );
+
+
+            if (
+                departureMinutes <=
+                currentMinutes
+            ) {
+
+                completedDepartures++;
+
+            }
+
+        });
+
+
+        /* ----------------------------------------------------
+           UPCOMING DEPARTURES
+           ---------------------------------------------------- */
+
+        const upcomingDepartures =
+            Math.max(
+                0,
+                totalDepartures -
+                completedDepartures
+            );
+
+
+        /* ----------------------------------------------------
+           GET CURRENT FLEET STATUS
+           ---------------------------------------------------- */
+
+        const fleetData =
+            await apiFetch(
+                "/employee/trains"
+            );
+
+
+        /*
+         * Total operational fleet:
+         *
+         * TRAIN-01 → TRAIN-25
+         */
+
+        const totalRunningFleet = 25;
+
+
+        /*
+         * Backup fleet:
+         *
+         * TRAIN-26 → TRAIN-30
+         */
+
+        const totalBackupFleet = 5;
+
+
+        /*
+         * Available running trains.
+         *
+         * The backend's available_count includes
+         * the currently available operational trains.
+         */
+
+        const availableRunning =
+            Math.min(
+                totalRunningFleet,
+                fleetData.available_count ?? 0
+            );
+
+
+        /*
+         * Backup trains currently available.
+         */
+
+        const backupAvailable =
+            Math.min(
+                totalBackupFleet,
+                fleetData.backup_count ?? 0
+            );
+
+
+        /* ----------------------------------------------------
+           UPDATE UI
+           ---------------------------------------------------- */
+
+        setAnalyticsValue(
+            "totalScheduledDepartures",
+            totalDepartures
+        );
+
+
+        setAnalyticsValue(
+            "completedDepartures",
+            completedDepartures
+        );
+
+
+        setAnalyticsValue(
+            "upcomingDepartures",
+            upcomingDepartures
+        );
+
+
+        setAnalyticsValue(
+            "runningFleet",
+            `${availableRunning} / ${totalRunningFleet}`
+        );
+
+
+        setAnalyticsValue(
+            "backupFleet",
+            `${backupAvailable} / ${totalBackupFleet}`
+        );
+
+
+        console.log(
+            "OPERATIONAL ANALYTICS:",
+            {
+                day,
+                totalDepartures,
+                completedDepartures,
+                upcomingDepartures,
+                runningFleet:
+                    `${availableRunning} / ${totalRunningFleet}`,
+                backupFleet:
+                    `${backupAvailable} / ${totalBackupFleet}`
+            }
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Operational analytics error:",
+            error
+        );
+
+    }
+
+}
+
+
+/* ============================================================
+   ANALYTICS VALUE HELPER
+   ============================================================ */
+
+function setAnalyticsValue(
+    elementId,
+    value
+) {
+
+    const element =
+        document.getElementById(
+            elementId
+        );
+
+
+    if (element) {
+
+        element.textContent =
+            value;
+
+    }
+
+}
+
+
+/* ============================================================
+   EMPLOYEE TIME CONVERTER
+   ============================================================ */
+
+function employeeTimeToMinutes(
+    value
+) {
+
+    if (!value) {
+        return 0;
+    }
+
+
+    const parts =
+        String(value).split(":");
+
+
+    const hour =
+        parseInt(
+            parts[0],
+            10
+        ) || 0;
+
+
+    const minute =
+        parseInt(
+            parts[1],
+            10
+        ) || 0;
+
+
+    const second =
+        parseInt(
+            parts[2],
+            10
+        ) || 0;
+
+
+    return (
+        hour * 60 +
+        minute +
+        second / 60
+    );
+
+}
+
+
+/* ============================================================
+   CURRENT DAY
+   ============================================================ */
+
+function getCurrentDayEmployee() {
+
+    const days = [
+        "Sunday",
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday"
+    ];
+
+
+    return days[
+        new Date().getDay()
+    ];
+
 }
 
 
